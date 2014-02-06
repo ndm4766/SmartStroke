@@ -25,6 +25,7 @@ namespace SmartStroke
         public MainPage()
         {
             this.InitializeComponent();
+            // the best comment
         }
     }
 }
