@@ -25,6 +25,7 @@ namespace SmartStroke
         public MainPage()
         {
             //2B | !2B
+            //Laramie's test commit
             this.InitializeComponent();
             // the best comment
         }
