@@ -24,6 +24,7 @@ namespace SmartStroke
     {
         public MainPage()
         {
+            //2B | !2B
             this.InitializeComponent();
             // the best comment
         }
