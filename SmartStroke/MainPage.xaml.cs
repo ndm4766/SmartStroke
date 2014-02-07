@@ -29,5 +29,10 @@ namespace SmartStroke
             //the best comment
             this.InitializeComponent();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(TrailsTest));
+        }
     }
 }
