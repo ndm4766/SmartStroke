@@ -28,7 +28,6 @@ namespace SmartStroke
             //Laramie's test commit
             //the best comment
             this.InitializeComponent();
-            // the best comment
         }
     }
 }
