@@ -26,6 +26,7 @@ namespace SmartStroke
         {
             //2B | !2B
             //Laramie's test commit
+            //the best comment
             this.InitializeComponent();
             // the best comment
         }
