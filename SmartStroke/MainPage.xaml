@@ -8,6 +8,7 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Button Content="Don't push the button..." HorizontalAlignment="Left" Margin="406,125,0,0" VerticalAlignment="Top" Height="254" Width="681" Click="Button_Click"/>
 
     </Grid>
 </Page>
