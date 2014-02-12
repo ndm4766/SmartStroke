@@ -23,21 +23,16 @@ using Windows.UI.ApplicationSettings;
 namespace SmartStroke
 {
     /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// The page for the trails test to be performed
     /// </summary>
     public sealed partial class TrailsTest : Page
     {
-        InkManager _inkKhaled = new Windows.UI.Input.Inking.InkManager();
-        private uint _penID;
-        private uint _touchID;
-        private Point _previousContactPt;
-        private Point currentContactPt;
-        private double x1;
-        private double y1;
-        private double x2;
-        private double y2;
-        bool righty;
-        int img_move_size;
+        //class member variables
+        InkManager ink_manager = new Windows.UI.Input.Inking.InkManager();
+        private uint pen_id;
+        private uint touch_id;
+        private Point previous_contact_pt;
+        private Point current_contact_pt;
 
         DispatcherTimer timer;
 
@@ -45,15 +40,13 @@ namespace SmartStroke
         {
             this.InitializeComponent();
 
+            //add all the event handlers for touch/pen/mouse input (pointer handles all 3)
             MyCanvas.PointerPressed += new PointerEventHandler(MyCanvas_PointerPressed);
             MyCanvas.PointerMoved += new PointerEventHandler(MyCanvas_PointerMoved);
             MyCanvas.PointerReleased += new PointerEventHandler(MyCanvas_PointerReleased);
             MyCanvas.PointerExited += new PointerEventHandler(MyCanvas_PointerReleased);
 
-
-            righty = true;
-            img_move_size = 350;
-
+            //initialize timer
             timer = new DispatcherTimer();
             timer.Interval = new TimeSpan(0, 0, 0, 0, 100);
             timer.Tick += timer_tick;
@@ -68,16 +61,16 @@ namespace SmartStroke
 
         private void clear_clicked(object sender, RoutedEventArgs e)
         {
-            _inkKhaled.Mode = Windows.UI.Input.Inking.InkManipulationMode.Erasing;
+            ink_manager.Mode = Windows.UI.Input.Inking.InkManipulationMode.Erasing;
 
-            var strokes = _inkKhaled.GetStrokes();
+            var strokes = ink_manager.GetStrokes();
 
             foreach (var stroke in strokes)
             {
                 stroke.Selected = true;
             }
 
-            _inkKhaled.DeleteSelected();
+            ink_manager.DeleteSelected();
             MyCanvas.Children.Clear();
         }
 
@@ -85,45 +78,40 @@ namespace SmartStroke
         #region PointerEvents
         private void MyCanvas_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
-            if (e.Pointer.PointerId == _penID)
+            if (e.Pointer.PointerId == pen_id)
             {
                 Windows.UI.Input.PointerPoint pt = e.GetCurrentPoint(MyCanvas);
 
                 // Pass the pointer information to the InkManager. 
-                _inkKhaled.ProcessPointerUp(pt);
+                ink_manager.ProcessPointerUp(pt);
             }
 
-            else if (e.Pointer.PointerId == _touchID)
+            else if (e.Pointer.PointerId == touch_id)
             {
-                // Process touch input
+                // Process touch input (finger input)
             }
 
-            _touchID = 0;
-            _penID = 0;
-
-            // Call an application-defined function to render the ink strokes.
-
+            touch_id = 0;
+            pen_id = 0;
 
             e.Handled = true;
         }
 
         private void MyCanvas_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
-            if (e.Pointer.PointerId == _penID)
+            double x1, y1, x2, y2;
+
+            if (e.Pointer.PointerId == pen_id)
             {
                 PointerPoint pt = e.GetCurrentPoint(MyCanvas);
 
-                // Render a red line on the canvas as the pointer moves. 
-                // Distance() is an application-defined function that tests
-                // whether the pointer has moved far enough to justify 
-                // drawing a new line.
-                currentContactPt = pt.Position;
-                x1 = _previousContactPt.X;
-                y1 = _previousContactPt.Y;
-                x2 = currentContactPt.X;
-                y2 = currentContactPt.Y;
+                current_contact_pt = pt.Position;
+                x1 = previous_contact_pt.X;
+                y1 = previous_contact_pt.Y;
+                x2 = current_contact_pt.X;
+                y2 = current_contact_pt.Y;
 
-                if (Distance(x1, y1, x2, y2) > 2.0) // We need to developp this method now 
+                if (Distance(x1, y1, x2, y2) > 2.0) //test whether the pointer has moved far enough to warrant drawing a new line
                 {
                     Line line = new Line()
                     {
@@ -135,54 +123,56 @@ namespace SmartStroke
                         Stroke = new SolidColorBrush(Colors.Blue)
                     };
 
-                    _previousContactPt = currentContactPt;
+                    previous_contact_pt = current_contact_pt;
 
                     // Draw the line on the canvas by adding the Line object as
                     // a child of the Canvas object.
                     MyCanvas.Children.Add(line);
 
                     // Pass the pointer information to the InkManager.
-                    _inkKhaled.ProcessPointerUpdate(pt);
+                    ink_manager.ProcessPointerUpdate(pt);
                 }
             }
 
-            else if (e.Pointer.PointerId == _touchID)
+            else if (e.Pointer.PointerId == touch_id)
             {
-                // Process touch input
-                int x = 0;
+                // Process touch input (finger input)
             }
 
         }
 
         private double Distance(double x1, double y1, double x2, double y2)
         {
-            double d = 0;
-            d = Math.Sqrt(Math.Pow((x2 - x1), 2) + Math.Pow((y2 - y1), 2));
-            return d;
+            return Math.Sqrt(Math.Pow((x2 - x1), 2) + Math.Pow((y2 - y1), 2));
         }
 
         private void MyCanvas_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
             // Get information about the pointer location.
             PointerPoint pt = e.GetCurrentPoint(MyCanvas);
-            _previousContactPt = pt.Position;
-
+            previous_contact_pt = pt.Position;
+            
             // Accept input only from a pen or mouse with the left button pressed. 
             PointerDeviceType pointerDevType = e.Pointer.PointerDeviceType;
-            if (pointerDevType == PointerDeviceType.Pen ||
-                    pointerDevType == PointerDeviceType.Mouse &&
-                    pt.Properties.IsLeftButtonPressed)
+            if (pointerDevType == PointerDeviceType.Pen || (pointerDevType == PointerDeviceType.Mouse && pt.Properties.IsLeftButtonPressed))
             {
-                // Pass the pointer information to the InkManager.
-                _inkKhaled.ProcessPointerDown(pt);
-                _penID = pt.PointerId;
+                //first check if the stylus' eraser is being used
+                if (pt.Properties.IsEraser)
+                {
+                    
+                }
+                else
+                {
+                    // Pass the pointer information to the InkManager.
+                    ink_manager.ProcessPointerDown(pt);
+                    pen_id = pt.PointerId;
 
-                e.Handled = true;
+                    e.Handled = true;
+                }
             }
-
             else if (pointerDevType == PointerDeviceType.Touch)
             {
-                // Process touch input
+                // Process touch input (from finger)
             }
         }
 
