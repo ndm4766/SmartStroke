@@ -33,6 +33,7 @@ namespace SmartStroke
         private uint touch_id;
         private Point previous_contact_pt;
         private Point current_contact_pt;
+        private Color current_color;
 
         DispatcherTimer timer;
 
@@ -45,6 +46,8 @@ namespace SmartStroke
             MyCanvas.PointerMoved += new PointerEventHandler(MyCanvas_PointerMoved);
             MyCanvas.PointerReleased += new PointerEventHandler(MyCanvas_PointerReleased);
             MyCanvas.PointerExited += new PointerEventHandler(MyCanvas_PointerReleased);
+
+            current_color = Colors.Blue;
 
             //initialize timer
             timer = new DispatcherTimer();
@@ -120,7 +123,7 @@ namespace SmartStroke
                         X2 = x2,
                         Y2 = y2,
                         StrokeThickness = 4.0,
-                        Stroke = new SolidColorBrush(Colors.Blue)
+                        Stroke = new SolidColorBrush(current_color)
                     };
 
                     previous_contact_pt = current_contact_pt;
@@ -159,10 +162,13 @@ namespace SmartStroke
                 //first check if the stylus' eraser is being used
                 if (pt.Properties.IsEraser)
                 {
-                    
+                    current_color = Colors.White;
+                    ink_manager.Mode = Windows.UI.Input.Inking.InkManipulationMode.Erasing;
+                    //selCanvas.style.cursor = "url(images/erase.cur), auto"; 
                 }
                 else
                 {
+                    current_color = Colors.Blue;
                     // Pass the pointer information to the InkManager.
                     ink_manager.ProcessPointerDown(pt);
                     pen_id = pt.PointerId;
