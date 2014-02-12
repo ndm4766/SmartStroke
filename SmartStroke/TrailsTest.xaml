@@ -9,8 +9,8 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-        <Button Name="modeButton" Content="Erase" Click="clear_clicked" Margin="1231,10,0,720" Width="125"  />
-        <Image Name="letter1" Source="images/trails_a.png" Margin="54,50,46,32" />
+        <Button Name="erase_button" Content="Erase" Click="clear_clicked" Margin="1231,10,0,720" Width="125"  />
+        <Image Name="trails_image" Source="images/trailsA.jpg" Margin="54,50,46,32" />
         <!--TextBlock Name="timer_box" Text="0:00" FontSize="50" Margin="80,34,1069,675" /-->
         <Canvas Name="MyCanvas" Background="Transparent" HorizontalAlignment="Left" Height="686" VerticalAlignment="Top" Width="939" Margin="217,50,0,0"/>
 
