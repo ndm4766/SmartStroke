@@ -102,6 +102,15 @@ namespace SmartStroke
             pen_id = 0;
 
             e.Handled = true;
+
+            //foreach (var stroke in ink_manager.GetStrokes())
+            {
+                var stroke = ink_manager.GetStrokes()[ink_manager.GetStrokes().Count-1].GetRenderingSegments();//only get the last stroke drawn
+                foreach (var curve in stroke)
+                {
+                    var x = curve;
+                }
+            }
         }
 
         private void MyCanvas_PointerMoved(object sender, PointerRoutedEventArgs e)
