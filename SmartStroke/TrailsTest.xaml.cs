@@ -13,10 +13,12 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Input.Inking;
 using Windows.UI.Input;
+using Windows.UI.Input.Inking;
 using Windows.UI.Xaml.Shapes;
 using Windows.UI;
 using Windows.Devices.Input;
 using Windows.UI.ApplicationSettings;
+using System;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -33,6 +35,7 @@ namespace SmartStroke
         private Color ERASE_COLOR = Colors.White;
         //class member variables
         InkManager ink_manager = new Windows.UI.Input.Inking.InkManager();
+        private InkDrawingAttributes drawingAttributes;
         private uint pen_id;
         private uint touch_id;
         private Point previous_contact_pt;
@@ -58,6 +61,22 @@ namespace SmartStroke
             timer.Interval = new TimeSpan(0, 0, 0, 0, 100);
             timer.Tick += timer_tick;
             //timer.Start();
+
+            //Set the ink to not use bezeir curves
+            drawingAttributes = new Windows.UI.Input.Inking.InkDrawingAttributes();
+            // True is the Default value for fitToCurve.
+            drawingAttributes.FitToCurve = false;
+            ink_manager.SetDefaultDrawingAttributes(drawingAttributes);
+        }
+
+        private bool HitTest(InkStroke s, Point test)
+        {
+            foreach(var p in s.GetRenderingSegments())
+            {
+                if (test.X == p.Position.X && test.Y == p.Position.Y)
+                    return true;
+            }
+                return false;
         }
 
         private void timer_tick(object sender, object e)
@@ -152,6 +171,17 @@ namespace SmartStroke
                             StrokeThickness = DRAW_WIDTH,
                             Stroke = new SolidColorBrush(DRAW_COLOR)
                         };
+                        var strokes = ink_manager.GetStrokes();
+                        Rect r;
+                        foreach (var stroke in strokes)
+                        {
+                            r = stroke.BoundingRect;
+                            if (HitTest(stroke, new Point(x2,y2)))
+                            {
+                                stroke.Selected = true;
+                             
+                            }
+                        }
                         MyCanvas.Children.Add(line);
                     }
                     
