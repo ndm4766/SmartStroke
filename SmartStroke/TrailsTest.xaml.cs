@@ -13,7 +13,6 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Input.Inking;
 using Windows.UI.Input;
-using Windows.UI.Input.Inking;
 using Windows.UI.Xaml.Shapes;
 using Windows.UI;
 using Windows.Devices.Input;
@@ -73,6 +72,9 @@ namespace SmartStroke
             // True is the Default value for fitToCurve.
             drawingAttributes.FitToCurve = false;
             ink_manager.SetDefaultDrawingAttributes(drawingAttributes);
+
+            var windowHeight = Windows.UI.Xaml.Window.Current.Bounds.Height;
+            var windowWidth = Windows.UI.Xaml.Window.Current.Bounds.Width;
         }
 
         private bool hit_test(InkStroke s, Point test)
@@ -138,6 +140,9 @@ namespace SmartStroke
                     var x = curve;
                 }
             }
+
+            var z = MyCanvas.Children.Count;
+            var y = z;
         }
 
         private void MyCanvas_PointerMoved(object sender, PointerRoutedEventArgs e)
