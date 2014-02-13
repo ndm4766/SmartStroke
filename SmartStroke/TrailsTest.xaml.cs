@@ -156,9 +156,20 @@ namespace SmartStroke
                             Margin = new Thickness(x1, y1, x2, y2),
                             Height = ERASE_WIDTH,
                             Width = ERASE_WIDTH,
-                            Fill = new SolidColorBrush(ERASE_COLOR)
+                            //Fill = new SolidColorBrush(ERASE_COLOR)
                         };
-                        MyCanvas.Children.Add(ellipse);
+
+                        Rect r;
+                        foreach (var stroke in ink_manager.GetStrokes())
+                        {
+                            r = stroke.BoundingRect;
+                            if (HitTest(stroke, new Point(x2, y2)))
+                            {
+                                stroke.Selected = true;
+                            }
+                        }
+                        ink_manager.DeleteSelected();
+                        //MyCanvas.Children.Add(ellipse);
                     }
                     else
                     {
@@ -171,17 +182,7 @@ namespace SmartStroke
                             StrokeThickness = DRAW_WIDTH,
                             Stroke = new SolidColorBrush(DRAW_COLOR)
                         };
-                        var strokes = ink_manager.GetStrokes();
-                        Rect r;
-                        foreach (var stroke in strokes)
-                        {
-                            r = stroke.BoundingRect;
-                            if (HitTest(stroke, new Point(x2,y2)))
-                            {
-                                stroke.Selected = true;
-                             
-                            }
-                        }
+                       
                         MyCanvas.Children.Add(line);
                     }
                     
