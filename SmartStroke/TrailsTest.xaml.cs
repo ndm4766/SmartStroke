@@ -104,6 +104,7 @@ namespace SmartStroke
             e.Handled = true;
 
             //foreach (var stroke in ink_manager.GetStrokes())
+            if(ink_manager.GetStrokes().Count > 0)
             {
                 var stroke = ink_manager.GetStrokes()[ink_manager.GetStrokes().Count-1].GetRenderingSegments();//only get the last stroke drawn
                 foreach (var curve in stroke)
@@ -162,6 +163,10 @@ namespace SmartStroke
                     // Pass the pointer information to the InkManager.
                     ink_manager.ProcessPointerUpdate(pt);
                 }
+
+                //for each stroke in the ink manager
+                //if the current stroke "intersects" the pen
+
             }
 
             else if (e.Pointer.PointerId == touch_id)
