@@ -172,13 +172,23 @@ namespace SmartStroke
                             {
                                 stroke.Selected = true;
 
+                                // erase strokes. DOES NOT WORK. FIX ME
                                 foreach (var child in MyCanvas.Children)
                                 {
                                     //if child is a line object, check if its x2 y2 match the stroke's x2 y2
                                     if(child.GetType() == typeof(Line))
                                     {
                                         Line l = (Line)child;
-                                        if(Math.Abs(l.X2 - x2) < 10 && Math.Abs(l.Y2 - y2) < 10)
+                                        if (l.X1 == l.X2) continue;
+                                        if ( ! (x2 >= l.X1 && x2 <= l.X2 && y2 >= l.Y1 && y2 <= l.Y2))
+                                        {
+                                            continue;
+                                        }
+                                        double realSlope = (l.Y2 - l.Y1)/(l.X2 - l.X1);
+                                        double fakeSlope = (l.Y2 - y2) / (l.X1 - x1);
+
+                                        //if(Math.Abs(l.X2 - x2) < 10 && Math.Abs(l.Y2 - y2) < 10)
+                                        if(realSlope == fakeSlope)
                                         {
                                             //actually remove the ink from the canvas
                                             MyCanvas.Children.Remove(child);
