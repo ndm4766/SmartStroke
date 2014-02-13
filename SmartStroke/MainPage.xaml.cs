@@ -30,7 +30,17 @@ namespace SmartStroke
             this.InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void trails_click(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(TrailsTest));
+        }
+
+        private void info_click(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(TrailsTest));
+        }
+
+        private void selection_click(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(TrailsTest));
         }

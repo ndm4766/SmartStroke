@@ -132,6 +132,9 @@ namespace SmartStroke
                     var x = curve;
                 }
             }
+
+            var z = MyCanvas.Children.Count;
+            var y = z;
         }
 
         private void MyCanvas_PointerMoved(object sender, PointerRoutedEventArgs e)
