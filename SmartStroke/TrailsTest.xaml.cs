@@ -69,11 +69,12 @@ namespace SmartStroke
             ink_manager.SetDefaultDrawingAttributes(drawingAttributes);
         }
 
-        private bool HitTest(InkStroke s, Point test)
+        private bool hit_test(InkStroke s, Point test)
         {
             foreach(var p in s.GetRenderingSegments())
             {
-                if (test.X == p.Position.X && test.Y == p.Position.Y)
+                if (Math.Abs(test.X - p.Position.X) < 10 && Math.Abs(test.Y - p.Position.Y) < 10)
+                //if (test.X == p.Position.X && test.Y == p.Position.Y)
                     return true;
             }
                 return false;
@@ -149,9 +150,10 @@ namespace SmartStroke
 
                 if (Distance(x1, y1, x2, y2) > 2.0) //test whether the pointer has moved far enough to warrant drawing a new line
                 {
-                    Ellipse ellipse;
+                    //Ellipse ellipse;
                     if (erasing)
                     {
+                        /*
                         ellipse = new Ellipse()
                         {
                             Margin = new Thickness(x1, y1, x2, y2),
@@ -159,18 +161,35 @@ namespace SmartStroke
                             Width = ERASE_WIDTH,
                             //Fill = new SolidColorBrush(ERASE_COLOR)
                         };
+                         */
 
-                        Rect r;
-                        foreach (var stroke in ink_manager.GetStrokes())
+                        //Rect r;
+                        var strokes = ink_manager.GetStrokes();
+                        foreach(var stroke in strokes)
                         {
-                            r = stroke.BoundingRect;
-                            if (HitTest(stroke, new Point(x2, y2)))
+                            //r = stroke.BoundingRect;
+                            if (hit_test(stroke, new Point(x2, y2)))
                             {
                                 stroke.Selected = true;
+
+                                foreach (var child in MyCanvas.Children)
+                                {
+                                    //if child is a line object, check if its x2 y2 match the stroke's x2 y2
+                                    if(child.GetType() == typeof(Line))
+                                    {
+                                        Line l = (Line)child;
+                                        if(Math.Abs(l.X2 - x2) < 10 && Math.Abs(l.Y2 - y2) < 10)
+                                        {
+                                            //actually remove the ink from the canvas
+                                            MyCanvas.Children.Remove(child);
+                                            break;
+                                        }
+                                    }
+                                }
                             }
                         }
+                        //tell the ink manager to stop tracking the strokes that were erased
                         ink_manager.DeleteSelected();
-                        //MyCanvas.Children.Add(ellipse);
                     }
                     else
                     {
@@ -189,15 +208,9 @@ namespace SmartStroke
                     
                     previous_contact_pt = current_contact_pt;
 
-                    //MyCanvas.Children.Add(ellipse);
-
                     // Pass the pointer information to the InkManager.
                     ink_manager.ProcessPointerUpdate(pt);
                 }
-
-                //for each stroke in the ink manager
-                //if the current stroke "intersects" the pen
-
             }
 
             else if (e.Pointer.PointerId == touch_id)
