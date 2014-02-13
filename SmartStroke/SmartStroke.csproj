@@ -119,6 +119,7 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TrailNode.cs" />
     <Compile Include="TrailsTest.xaml.cs">
       <DependentUpon>TrailsTest.xaml</DependentUpon>
     </Compile>

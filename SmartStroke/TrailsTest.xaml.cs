@@ -18,7 +18,6 @@ using Windows.UI.Xaml.Shapes;
 using Windows.UI;
 using Windows.Devices.Input;
 using Windows.UI.ApplicationSettings;
-using System;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -41,12 +40,19 @@ namespace SmartStroke
         private Point previous_contact_pt;
         private Point current_contact_pt;
         private bool erasing;
+        Rectangle e;
+        List<TrailNode> nodes;
 
         DispatcherTimer timer;
 
         public TrailsTest()
         {
             this.InitializeComponent();
+            Windows.Graphics.Display.DisplayProperties.AutoRotationPreferences = Windows.Graphics.Display.DisplayOrientations.Portrait;
+            nodes = new List<TrailNode>();
+            nodes.Add(new TrailNode(12, new Point(42,48), MyCanvas));
+            nodes.Add(new TrailNode(2, new Point(76, 155), MyCanvas));
+            nodes[nodes.Count - 1].setFillColor(new SolidColorBrush(Colors.Red));
 
             //add all the event handlers for touch/pen/mouse input (pointer handles all 3)
             MyCanvas.PointerPressed += new PointerEventHandler(MyCanvas_PointerPressed);
@@ -188,7 +194,7 @@ namespace SmartStroke
                                         double fakeSlope = (l.Y2 - y2) / (l.X1 - x1);
 
                                         //if(Math.Abs(l.X2 - x2) < 10 && Math.Abs(l.Y2 - y2) < 10)
-                                        if(realSlope == fakeSlope)
+                                        if(Math.Abs(realSlope - fakeSlope) < 5)
                                         {
                                             //actually remove the ink from the canvas
                                             MyCanvas.Children.Remove(child);
@@ -212,7 +218,7 @@ namespace SmartStroke
                             StrokeThickness = DRAW_WIDTH,
                             Stroke = new SolidColorBrush(DRAW_COLOR)
                         };
-                       
+
                         MyCanvas.Children.Add(line);
                     }
                     
@@ -280,5 +286,6 @@ namespace SmartStroke
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
         }
+
     }
 }
