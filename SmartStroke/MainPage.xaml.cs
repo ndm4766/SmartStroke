@@ -37,7 +37,7 @@ namespace SmartStroke
 
         private void info_click(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(TrailsTest));
+            this.Frame.Navigate(typeof(UserInfoPage));
         }
 
         private void selection_click(object sender, RoutedEventArgs e)
