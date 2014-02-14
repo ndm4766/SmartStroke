@@ -53,10 +53,21 @@ namespace SmartStroke
             // Create a TextBox inside the Ellipse
             text = new TextBlock();
             text.Text = display;
-            text.Margin = new Thickness(p.X + size/3, p.Y + size/4, 0, 0);      // Correction factor
+            if(text.Text.Length > 1)
+                text.Margin = new Thickness(p.X + size / 3 + size/2, p.Y + size/4 - 5, 0, 0);      // Correction factor - must add another size/2 to account for rotation
+            else
+                text.Margin = new Thickness(p.X + size / 3 + size/2, p.Y + size / 4, 0, 0);      // Correction factor - must add another size/2 to account for rotation
             text.FontSize = 25;
             text.Width = size;
             text.Height = size;
+
+            text.HorizontalAlignment = HorizontalAlignment.Right;
+
+            // Rotate the text 90 degrees
+            RotateTransform r = new RotateTransform();
+            r.Angle = 90.0;
+            text.RenderTransform = r;
+            
             c.Children.Add(text);
         }
         public void setFillColor(SolidColorBrush b)

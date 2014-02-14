@@ -47,11 +47,11 @@ namespace SmartStroke
         public TrailsTest()
         {
             this.InitializeComponent();
-            Windows.Graphics.Display.DisplayProperties.AutoRotationPreferences = Windows.Graphics.Display.DisplayOrientations.Portrait;
+            Windows.Graphics.Display.DisplayInformation.AutoRotationPreferences = Windows.Graphics.Display.DisplayOrientations.Portrait;
+            
+            // Create the trails test background. The test image is 117X917 px but to fit on a screen (surface) it is 686 X 939
             nodes = new List<TrailNode>();
-            nodes.Add(new TrailNode(12, new Point(42,48), MyCanvas));
-            nodes.Add(new TrailNode(2, new Point(76, 155), MyCanvas));
-            nodes[nodes.Count - 1].setFillColor(new SolidColorBrush(Colors.Red));
+            populateNodes('B', nodes);
 
             //add all the event handlers for touch/pen/mouse input (pointer handles all 3)
             MyCanvas.PointerPressed += new PointerEventHandler(MyCanvas_PointerPressed);
@@ -75,6 +75,65 @@ namespace SmartStroke
 
             var windowHeight = Windows.UI.Xaml.Window.Current.Bounds.Height;
             var windowWidth = Windows.UI.Xaml.Window.Current.Bounds.Width;
+        }
+
+        private void populateNodes(char kind, List<TrailNode> nodes)
+        {
+            if (kind == 'A')
+            {
+                nodes.Add(new TrailNode(1, new Point(257, 421), MyCanvas));
+                nodes[0].setFillColor(new SolidColorBrush(Colors.Green));
+                nodes.Add(new TrailNode(2, new Point(150, 322), MyCanvas));
+                nodes.Add(new TrailNode(3, new Point(150, 491), MyCanvas));
+                nodes.Add(new TrailNode(4, new Point(584, 501), MyCanvas));
+                nodes.Add(new TrailNode(5, new Point(480, 312), MyCanvas));
+                nodes.Add(new TrailNode(6, new Point(382, 402), MyCanvas));
+                nodes.Add(new TrailNode(7, new Point(320, 279), MyCanvas));
+                nodes.Add(new TrailNode(8, new Point(163, 127), MyCanvas));
+                nodes.Add(new TrailNode(9, new Point(76, 155), MyCanvas));
+                nodes.Add(new TrailNode(10, new Point(163, 241), MyCanvas));
+                nodes.Add(new TrailNode(11, new Point(52, 317), MyCanvas));
+                nodes.Add(new TrailNode(12, new Point(42, 48), MyCanvas));
+                nodes.Add(new TrailNode(13, new Point(446, 97), MyCanvas));
+                nodes.Add(new TrailNode(14, new Point(358, 44), MyCanvas));
+                nodes.Add(new TrailNode(15, new Point(829, 43), MyCanvas));
+                nodes.Add(new TrailNode(16, new Point(671, 109), MyCanvas));
+                nodes.Add(new TrailNode(17, new Point(890, 227), MyCanvas));
+                nodes.Add(new TrailNode(18, new Point(670, 273), MyCanvas));
+                nodes.Add(new TrailNode(19, new Point(745, 434), MyCanvas));
+                nodes.Add(new TrailNode(20, new Point(754, 316), MyCanvas));
+                nodes.Add(new TrailNode(21, new Point(900, 363), MyCanvas));
+                nodes.Add(new TrailNode(22, new Point(798, 618), MyCanvas));
+                nodes.Add(new TrailNode(23, new Point(79, 643), MyCanvas));
+                nodes.Add(new TrailNode(24, new Point(452, 565), MyCanvas));
+            }
+            else if(kind == 'B')
+            {
+                nodes.Add(new TrailNode(1, new Point(530, 355), MyCanvas));
+                nodes[0].setFillColor(new SolidColorBrush(Colors.Green));
+                nodes.Add(new TrailNode('A', new Point(240, 488), MyCanvas));
+                nodes.Add(new TrailNode(2, new Point(265, 249), MyCanvas));
+                nodes.Add(new TrailNode('B', new Point(766, 318), MyCanvas));
+                nodes.Add(new TrailNode(3, new Point(654, 394), MyCanvas));
+                nodes.Add(new TrailNode('C', new Point(453, 486), MyCanvas));
+                nodes.Add(new TrailNode(4, new Point(812, 488), MyCanvas));
+                nodes.Add(new TrailNode('D', new Point(797, 586), MyCanvas));
+                nodes.Add(new TrailNode(5, new Point(389, 582), MyCanvas));
+                nodes.Add(new TrailNode('E', new Point(168, 544), MyCanvas));
+                nodes.Add(new TrailNode(6, new Point(189, 373), MyCanvas));
+                nodes.Add(new TrailNode('F', new Point(103, 205), MyCanvas));
+                nodes.Add(new TrailNode(7, new Point(518, 162), MyCanvas));
+                nodes.Add(new TrailNode('G', new Point(402, 103), MyCanvas));
+                nodes.Add(new TrailNode(8, new Point(882, 83), MyCanvas));
+                nodes.Add(new TrailNode('H', new Point(681, 182), MyCanvas));
+                nodes.Add(new TrailNode(9, new Point(816, 185), MyCanvas));
+                nodes.Add(new TrailNode('I', new Point(892, 428), MyCanvas));
+                nodes.Add(new TrailNode(10, new Point(881, 638), MyCanvas));
+                nodes.Add(new TrailNode('J', new Point(302, 613), MyCanvas));
+                nodes.Add(new TrailNode(11, new Point(87, 642), MyCanvas));
+                nodes.Add(new TrailNode('K', new Point(56, 54), MyCanvas));
+                nodes.Add(new TrailNode(12, new Point(478, 45), MyCanvas));
+            }
         }
 
         private bool hit_test(InkStroke s, Point test)
