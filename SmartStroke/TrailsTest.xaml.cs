@@ -42,8 +42,9 @@ namespace SmartStroke
         private bool erasing;
         Rectangle e;
         List<TrailNode> nodes;
-        string nextItem = "1";                  // This will be the next item to look for - next node
+        string nextItem = "2";                  // This will be the next item to look for - next node
         string currentItem = "1";         // This is the item/node the user has most recently found
+        int nextIndex = 1;
         List<InkStroke> nodeToNode; // Keep a list of the strokes from node to node.
 
         DispatcherTimer timer;
@@ -142,8 +143,8 @@ namespace SmartStroke
             // Define a PointerEntered and a PointerExited event handler for each node.
             for(int i = 0; i < nodes.Count; i++)
             {
-                nodes[i].PointerEntered += new Windows.UI.Xaml.Input.PointerEventHandler(pointerEnteredCircle);
-                nodes[i].PointerEntered += new Windows.UI.Xaml.Input.PointerEventHandler(pointerLeftCircle);
+                nodes[i].getEllipse().PointerEntered += new Windows.UI.Xaml.Input.PointerEventHandler(pointerEnteredCircle);
+                nodes[i].getEllipse().PointerExited += new Windows.UI.Xaml.Input.PointerEventHandler(pointerLeftCircle);
             }
         }
 
@@ -152,12 +153,13 @@ namespace SmartStroke
         private void pointerEnteredCircle(object sender, PointerRoutedEventArgs e)
         {
             // Pointer Entered a Circle. Check if it is the correct cirlce they were expected to go to
-            TrailNode tn = new TrailNode();
-            tn = (TrailNode)sender;
-            if(tn.getNumber().ToString() == nextItem || tn.getLetter().ToString() == nextItem)
+            Ellipse circleEntered = (Ellipse)sender;
+
+            if (nodes[nextIndex].getEllipse() == circleEntered) //check if the next circle is the one entered
             {
-                nextItem = "2";
-                tn.setFillColor(new SolidColorBrush(Colors.Green));
+                //nextItem = (tn.getNumber() + 1).ToString();
+                nodes[nextIndex].setFillColor(new SolidColorBrush(Colors.Green));
+                nextIndex++;
             }
         }
 
@@ -219,19 +221,6 @@ namespace SmartStroke
             pen_id = 0;
 
             e.Handled = true;
-
-            //foreach (var stroke in ink_manager.GetStrokes())
-            if(ink_manager.GetStrokes().Count > 0)
-            {
-                var stroke = ink_manager.GetStrokes()[ink_manager.GetStrokes().Count-1].GetRenderingSegments();//only get the last stroke drawn
-                foreach (var curve in stroke)
-                {
-                    var x = curve;
-                }
-            }
-
-            var z = MyCanvas.Children.Count;
-            var y = z;
         }
 
         private void MyCanvas_PointerMoved(object sender, PointerRoutedEventArgs e)
@@ -244,7 +233,7 @@ namespace SmartStroke
 
                 current_contact_pt = pt.Position;
                 x1 = previous_contact_pt.X;
-                y1 = previous_contact_pt.Y;
+                y1 = previous_contact_pt.Y; 
                 x2 = current_contact_pt.X;
                 y2 = current_contact_pt.Y;
 
