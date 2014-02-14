@@ -18,6 +18,7 @@ using Windows.UI;
 using Windows.Devices.Input;
 using Windows.UI.ApplicationSettings;
 using System;
+using Windows.System.Profile;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -67,9 +68,9 @@ namespace SmartStroke
             drawingAttributes.FitToCurve = false;
             ink_manager.SetDefaultDrawingAttributes(drawingAttributes);
 
-            var windowHeight = Windows.UI.Xaml.Window.Current.Bounds.Height;
-            var windowWidth = Windows.UI.Xaml.Window.Current.Bounds.Width;
+            
         }
+
 
         private bool hit_test(InkStroke s, Point test)
         {
