@@ -156,6 +156,7 @@ namespace SmartStroke
             tn = (TrailNode)sender;
             if(tn.getNumber().ToString() == nextItem || tn.getLetter().ToString() == nextItem)
             {
+                nextItem = "2";
                 tn.setFillColor(new SolidColorBrush(Colors.Green));
             }
         }
