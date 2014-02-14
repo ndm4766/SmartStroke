@@ -12,7 +12,7 @@ using Windows.UI.Xaml.Shapes;
 
 namespace SmartStroke
 {
-    class TrailNode
+    public sealed class TrailNode : Shape
     {
         int number;
         char letter;
@@ -39,15 +39,22 @@ namespace SmartStroke
             createShapes(letter.ToString(), position, c);
         }
 
+        public int getNumber() { return number; }
+        public char getLetter() { return letter; }
+        public Ellipse getEllipse()
+        {
+            return e;
+        }
+
         private void createShapes(string display, Point p, Canvas c)
         {
             // Create the Ellipse around the point
             e = new Ellipse();
-            //e.Fill = new SolidColorBrush(Color.FromArgb(255,255,0,0));
             e.Width = size;
             e.Height = size;
             e.Margin = new Thickness(p.X, p.Y, 0,0);
             e.Stroke = new SolidColorBrush(Colors.White);
+            e.StrokeThickness = 3.0;
             c.Children.Add(e);
 
             // Create a TextBox inside the Ellipse
@@ -62,8 +69,7 @@ namespace SmartStroke
             text.Height = size;
 
             text.HorizontalAlignment = HorizontalAlignment.Right;
-
-            // Rotate the text 90 degrees
+            // Rotate the text 90 degree
             RotateTransform r = new RotateTransform();
             r.Angle = 90.0;
             text.RenderTransform = r;

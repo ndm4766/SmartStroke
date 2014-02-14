@@ -27,6 +27,7 @@ namespace SmartStroke
     /// </summary>
     public sealed partial class TrailsTest : Page
     {
+        string testVersion;
         const double DRAW_WIDTH = 4.0;
         const double ERASE_WIDTH = 30.0;
         private Color DRAW_COLOR = Colors.Blue;
@@ -41,6 +42,9 @@ namespace SmartStroke
         private bool erasing;
         Rectangle e;
         List<TrailNode> nodes;
+        string nextItem = "1";                  // This will be the next item to look for - next node
+        string currentItem = "1";         // This is the item/node the user has most recently found
+        List<InkStroke> nodeToNode; // Keep a list of the strokes from node to node.
 
         DispatcherTimer timer;
 
@@ -51,7 +55,7 @@ namespace SmartStroke
             
             // Create the trails test background. The test image is 117X917 px but to fit on a screen (surface) it is 686 X 939
             nodes = new List<TrailNode>();
-            populateNodes('B', nodes);
+            populateNodes(testVersion, nodes);
 
             //add all the event handlers for touch/pen/mouse input (pointer handles all 3)
             MyCanvas.PointerPressed += new PointerEventHandler(MyCanvas_PointerPressed);
@@ -77,9 +81,9 @@ namespace SmartStroke
             var windowWidth = Windows.UI.Xaml.Window.Current.Bounds.Width;
         }
 
-        private void populateNodes(char kind, List<TrailNode> nodes)
+        private void populateNodes(string kind, List<TrailNode> nodes)
         {
-            if (kind == 'A')
+            if (kind == "A")
             {
                 nodes.Add(new TrailNode(1, new Point(257, 421), MyCanvas));
                 nodes[0].setFillColor(new SolidColorBrush(Colors.Green));
@@ -107,7 +111,7 @@ namespace SmartStroke
                 nodes.Add(new TrailNode(23, new Point(79, 643), MyCanvas));
                 nodes.Add(new TrailNode(24, new Point(452, 565), MyCanvas));
             }
-            else if(kind == 'B')
+            else if(kind == "B")
             {
                 nodes.Add(new TrailNode(1, new Point(530, 355), MyCanvas));
                 nodes[0].setFillColor(new SolidColorBrush(Colors.Green));
@@ -134,8 +138,33 @@ namespace SmartStroke
                 nodes.Add(new TrailNode('K', new Point(56, 54), MyCanvas));
                 nodes.Add(new TrailNode(12, new Point(478, 45), MyCanvas));
             }
+
+            // Define a PointerEntered and a PointerExited event handler for each node.
+            for(int i = 0; i < nodes.Count; i++)
+            {
+                nodes[i].PointerEntered += new Windows.UI.Xaml.Input.PointerEventHandler(pointerEnteredCircle);
+                nodes[i].PointerEntered += new Windows.UI.Xaml.Input.PointerEventHandler(pointerLeftCircle);
+            }
         }
 
+        // The pointer (stylus) entered a circle. Change the color and update next circle
+        // Currently the program crashes on line 156
+        private void pointerEnteredCircle(object sender, PointerRoutedEventArgs e)
+        {
+            // Pointer Entered a Circle. Check if it is the correct cirlce they were expected to go to
+            TrailNode tn = new TrailNode();
+            tn = (TrailNode)sender;
+            if(tn.getNumber().ToString() == nextItem || tn.getLetter().ToString() == nextItem)
+            {
+                tn.setFillColor(new SolidColorBrush(Colors.Green));
+            }
+        }
+
+        // Pointer left a node. Restart the next stroke.
+        private void pointerLeftCircle(object sender, PointerRoutedEventArgs e)
+        {
+
+        }
         private bool hit_test(InkStroke s, Point test)
         {
             foreach(var p in s.GetRenderingSegments())
@@ -349,6 +378,11 @@ namespace SmartStroke
         /// property is typically used to configure the page.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            string vers = e.Parameter as string;    // This is the type of the trails test.
+            testVersion = vers;
+
+            nodes.Clear();
+            populateNodes(testVersion, nodes);      // (Re)Populate the list of trail nodes
         }
 
     }
