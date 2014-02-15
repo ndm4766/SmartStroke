@@ -145,8 +145,9 @@ namespace SmartStroke
             // Define a PointerEntered and a PointerExited event handler for each node.
             for(int i = 0; i < nodes.Count; i++)
             {
-                nodes[i].getEllipse().PointerEntered += new Windows.UI.Xaml.Input.PointerEventHandler(pointerEnteredCircle);
-                nodes[i].getEllipse().PointerExited += new Windows.UI.Xaml.Input.PointerEventHandler(pointerLeftCircle);
+                //nodes[i].getEllipse().PointerEntered += new Windows.UI.Xaml.Input.PointerEventHandler(pointerEnteredCircle);
+                //nodes[i].getEllipse().PointerExited += new Windows.UI.Xaml.Input.PointerEventHandler(pointerLeftCircle);
+                
             }
         }
 
@@ -154,6 +155,13 @@ namespace SmartStroke
         // Currently the program crashes on line 156
         private void pointerEnteredCircle(object sender, PointerRoutedEventArgs e)
         {
+            //hit.Text = "HIT";
+            //check if pointer is currently pressed 
+            if(!pressed)
+            {
+                return;
+            }
+
             // Pointer Entered a Circle. Check if it is the correct cirlce they were expected to go to
             Ellipse circleEntered = (Ellipse)sender;
 
@@ -187,9 +195,9 @@ namespace SmartStroke
         // Pointer left a node. Restart the next stroke.
         private void pointerLeftCircle(object sender, PointerRoutedEventArgs e)
         {
-            hit.Text = "No Hit";
+            //hit.Text = "No Hit";
         }
-        private bool hit_test(InkStroke s, Point test)
+        private bool eraser_hit_test(InkStroke s, Point test)
         {
             foreach(var p in s.GetRenderingSegments())
             {
@@ -198,6 +206,16 @@ namespace SmartStroke
                     return true;
             }
                 return false;
+        }
+
+        private bool stylus_hit_test(double x, double y)
+        {
+            int radius = 25;
+            double left = nodes[nextIndex].getEllipse().Margin.Left;
+            double top = nodes[nextIndex].getEllipse().Margin.Top;
+            double first = Math.Pow(x - (left + radius), 2);
+            double second =Math.Pow(y - (top + radius), 2);
+            return first + second < radius*radius;
         }
 
         private void timer_tick(object sender, object e)
@@ -261,6 +279,35 @@ namespace SmartStroke
 
                 if (Distance(x1, y1, x2, y2) > 2.0) //test whether the pointer has moved far enough to warrant drawing a new line
                 {
+                    if (!pressed)
+                    {
+                        return;
+                    }
+
+                    //TODO: need to handle the edge case of when the last node is checked (range err)
+                    if (stylus_hit_test(x2, y2))
+                    {
+                        nodes[nextIndex].setFillColor(new SolidColorBrush(Colors.Green));
+                        currentIndex = nextIndex;
+                        nextIndex++;
+                    }
+                    /*else      // The circle entered is not the correct cirlce
+                    {
+                        if (nodes[currentIndex].getEllipse().Fill.Equals(Colors.Green) == false
+                            || (currentIndex > 0 && nodes[currentIndex - 1].getEllipse().Fill.Equals(Colors.Green) == false))
+                        {
+                            if (currentIndex > 0)
+                            {
+                                nodes[currentIndex - 1].setFillColor(new SolidColorBrush(Colors.Yellow));
+                                nodes[currentIndex].setFillColor(new SolidColorBrush(Colors.Red));
+                            }
+                            else
+                            {
+                                nodes[currentIndex].setFillColor(new SolidColorBrush(Colors.Red));
+                            }
+                        }
+                    }*/
+
                     //Ellipse ellipse;
                     if (erasing)
                     {
@@ -279,11 +326,11 @@ namespace SmartStroke
                         foreach(var stroke in strokes)
                         {
                             //r = stroke.BoundingRect;
-                            if (hit_test(stroke, new Point(x2, y2)))
+                            if (eraser_hit_test(stroke, new Point(x2, y2)))
                             {
                                 stroke.Selected = true;
 
-                                // erase strokes. DOES NOT WORK. FIX ME
+                                // TODO:erase strokes. DOES NOT WORK. FIX ME
                                 foreach (var child in MyCanvas.Children)
                                 {
                                     //if child is a line object, check if its x2 y2 match the stroke's x2 y2
