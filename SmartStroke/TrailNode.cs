@@ -73,6 +73,8 @@ namespace SmartStroke
             RotateTransform r = new RotateTransform();
             r.Angle = 90.0;
             text.RenderTransform = r;
+
+            text.IsHitTestVisible = false;
             
             c.Children.Add(text);
         }
