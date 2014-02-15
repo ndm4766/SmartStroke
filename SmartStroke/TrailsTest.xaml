@@ -17,6 +17,7 @@
         <!--Image Name="trails_image" Source="images/trailsA.jpg" Margin="54,50,46,32" Grid.RowSpan="2" / -->
         <!--TextBlock Name="timer_box" Text="0:00" FontSize="50" Margin="80,34,1069,675" /-->
         <Canvas Name="MyCanvas" Background="Transparent" HorizontalAlignment="Left" Height="686" VerticalAlignment="Top" Width="939" Margin="217,50,0,0" Grid.RowSpan="2"/>
+        
 
     </Grid>
 </Page>

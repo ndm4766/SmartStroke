@@ -47,6 +47,7 @@ namespace SmartStroke
         int nextIndex = 0;
         int currentIndex = 0;
         List<InkStroke> nodeToNode; // Keep a list of the strokes from node to node.
+        bool pressed = false;
 
         DispatcherTimer timer;
 
@@ -153,7 +154,6 @@ namespace SmartStroke
         // Currently the program crashes on line 156
         private void pointerEnteredCircle(object sender, PointerRoutedEventArgs e)
         {
-            //TODO: check if pointer is currently pressed 
             // Pointer Entered a Circle. Check if it is the correct cirlce they were expected to go to
             Ellipse circleEntered = (Ellipse)sender;
 
@@ -187,7 +187,7 @@ namespace SmartStroke
         // Pointer left a node. Restart the next stroke.
         private void pointerLeftCircle(object sender, PointerRoutedEventArgs e)
         {
-
+            hit.Text = "No Hit";
         }
         private bool hit_test(InkStroke s, Point test)
         {
@@ -242,6 +242,7 @@ namespace SmartStroke
             pen_id = 0;
 
             e.Handled = true;
+            pressed = false;
         }
 
         private void MyCanvas_PointerMoved(object sender, PointerRoutedEventArgs e)
@@ -377,6 +378,8 @@ namespace SmartStroke
             {
                 // Process touch input (from finger)
             }
+
+            pressed = true;
         }
 
         #endregion
