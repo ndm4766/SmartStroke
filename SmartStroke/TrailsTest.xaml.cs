@@ -52,7 +52,7 @@ namespace SmartStroke
         public TrailsTest()
         {
             this.InitializeComponent();
-            Windows.Graphics.Display.DisplayInformation.AutoRotationPreferences = Windows.Graphics.Display.DisplayOrientations.Portrait;
+            Windows.Graphics.Display.DisplayInformation.AutoRotationPreferences = Windows.Graphics.Display.DisplayOrientations.Landscape;
             
             // Create the trails test background. The test image is 117X917 px but to fit on a screen (surface) it is 686 X 939
             nodes = new List<TrailNode>();
@@ -152,6 +152,7 @@ namespace SmartStroke
         // Currently the program crashes on line 156
         private void pointerEnteredCircle(object sender, PointerRoutedEventArgs e)
         {
+            //TODO: check if pointer is currently pressed 
             // Pointer Entered a Circle. Check if it is the correct cirlce they were expected to go to
             Ellipse circleEntered = (Ellipse)sender;
 
