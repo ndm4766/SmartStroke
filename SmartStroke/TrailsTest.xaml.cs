@@ -44,7 +44,8 @@ namespace SmartStroke
         List<TrailNode> nodes;
         string nextItem = "2";                  // This will be the next item to look for - next node
         string currentItem = "1";         // This is the item/node the user has most recently found
-        int nextIndex = 1;
+        int nextIndex = 0;
+        int currentIndex = 0;
         List<InkStroke> nodeToNode; // Keep a list of the strokes from node to node.
 
         DispatcherTimer timer;
@@ -156,11 +157,30 @@ namespace SmartStroke
             // Pointer Entered a Circle. Check if it is the correct cirlce they were expected to go to
             Ellipse circleEntered = (Ellipse)sender;
 
-            if (nodes[nextIndex].getEllipse() == circleEntered) //check if the next circle is the one entered
+            if (nodes[nextIndex].getEllipse().Equals(circleEntered)) //check if the next circle is the one entered
             {
                 //nextItem = (tn.getNumber() + 1).ToString();
                 nodes[nextIndex].setFillColor(new SolidColorBrush(Colors.Green));
+                currentIndex = nextIndex;
                 nextIndex++;
+            }
+            else if(nodes[currentIndex].getEllipse().Equals(circleEntered))
+            { }
+            else                                                 // The circle entered is not the correct cirlce
+            {
+                if (nodes[currentIndex].getEllipse().Fill.Equals(Colors.Green) == false
+                    || (currentIndex > 0 && nodes[currentIndex-1].getEllipse().Fill.Equals(Colors.Green) == false))
+                {
+                    if(currentIndex > 0)
+                    {
+                        nodes[currentIndex - 1].setFillColor(new SolidColorBrush(Colors.Yellow));
+                        nodes[currentIndex].setFillColor(new SolidColorBrush(Colors.Red));
+                    }
+                    else
+                    {
+                        nodes[currentIndex].setFillColor(new SolidColorBrush(Colors.Red));
+                    }
+                }
             }
         }
 
