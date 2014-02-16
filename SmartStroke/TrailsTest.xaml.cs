@@ -17,7 +17,6 @@ using Windows.UI.Xaml.Shapes;
 using Windows.UI;
 using Windows.Devices.Input;
 using Windows.UI.ApplicationSettings;
-using System;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -28,24 +27,47 @@ namespace SmartStroke
     /// </summary>
     public sealed partial class TrailsTest : Page
     {
-        const double DRAW_WIDTH = 4.0;
-        const double ERASE_WIDTH = 30.0;
+        //general globals
+        private string testVersion;
+        private const double DRAW_WIDTH = 4.0;
+        private const double ERASE_WIDTH = 30.0;
         private Color DRAW_COLOR = Colors.Blue;
         private Color ERASE_COLOR = Colors.White;
-        //class member variables
-        InkManager ink_manager = new Windows.UI.Input.Inking.InkManager();
+
+        //boolean program state flags
+        private bool erasing;
+        private bool pressed = false;
+
+        //ink drawing members
+        private InkManager ink_manager;
         private InkDrawingAttributes drawingAttributes;
         private uint pen_id;
         private uint touch_id;
         private Point previous_contact_pt;
         private Point current_contact_pt;
-        private bool erasing;
+        private List<Line> currentLine;
+        private Dictionary<InkStroke, List<Line>> allLines;
+        
+        //TrailNode handling members
+        private List<TrailNode> nodes;
+        private int nextIndex;
+        private int currentIndex;
+        private Queue<int> incorrectNodes = new Queue<int>();
 
-        DispatcherTimer timer;
+        private DispatcherTimer timer;
 
         public TrailsTest()
         {
             this.InitializeComponent();
+            Windows.Graphics.Display.DisplayInformation.AutoRotationPreferences = Windows.Graphics.Display.DisplayOrientations.Landscape;
+            
+            ink_manager = new Windows.UI.Input.Inking.InkManager();
+
+            // Create the trails test background. The test image is 117X917 px but to fit on a screen (surface) it is 686 X 939
+            nodes = new List<TrailNode>();
+            populateNodes(testVersion, nodes);
+            currentLine = new List<Line>();
+            allLines = new Dictionary<InkStroke, List<Line>>();
 
             //add all the event handlers for touch/pen/mouse input (pointer handles all 3)
             MyCanvas.PointerPressed += new PointerEventHandler(MyCanvas_PointerPressed);
@@ -54,6 +76,8 @@ namespace SmartStroke
             MyCanvas.PointerExited += new PointerEventHandler(MyCanvas_PointerReleased);
 
             erasing = false;
+            nextIndex = 0;
+            currentIndex = 0;
 
             //initialize timer
             timer = new DispatcherTimer();
@@ -71,15 +95,111 @@ namespace SmartStroke
             var windowWidth = Windows.UI.Xaml.Window.Current.Bounds.Width;
         }
 
-        private bool hit_test(InkStroke s, Point test)
+        private void populateNodes(string kind, List<TrailNode> nodes)
+        {
+            if (kind == "A")
+            {
+                nodes.Add(new TrailNode(1, new Point(257, 421), MyCanvas));
+                nodes[0].setFillColor(new SolidColorBrush(Colors.Green));
+                nodes.Add(new TrailNode(2, new Point(150, 322), MyCanvas));
+                nodes.Add(new TrailNode(3, new Point(150, 491), MyCanvas));
+                nodes.Add(new TrailNode(4, new Point(584, 501), MyCanvas));
+                nodes.Add(new TrailNode(5, new Point(480, 312), MyCanvas));
+                nodes.Add(new TrailNode(6, new Point(382, 402), MyCanvas));
+                nodes.Add(new TrailNode(7, new Point(320, 279), MyCanvas));
+                nodes.Add(new TrailNode(8, new Point(163, 127), MyCanvas));
+                nodes.Add(new TrailNode(9, new Point(76, 155), MyCanvas));
+                nodes.Add(new TrailNode(10, new Point(163, 241), MyCanvas));
+                nodes.Add(new TrailNode(11, new Point(52, 317), MyCanvas));
+                nodes.Add(new TrailNode(12, new Point(42, 48), MyCanvas));
+                nodes.Add(new TrailNode(13, new Point(446, 97), MyCanvas));
+                nodes.Add(new TrailNode(14, new Point(358, 44), MyCanvas));
+                nodes.Add(new TrailNode(15, new Point(829, 43), MyCanvas));
+                nodes.Add(new TrailNode(16, new Point(671, 109), MyCanvas));
+                nodes.Add(new TrailNode(17, new Point(890, 227), MyCanvas));
+                nodes.Add(new TrailNode(18, new Point(670, 273), MyCanvas));
+                nodes.Add(new TrailNode(19, new Point(745, 434), MyCanvas));
+                nodes.Add(new TrailNode(20, new Point(754, 316), MyCanvas));
+                nodes.Add(new TrailNode(21, new Point(900, 363), MyCanvas));
+                nodes.Add(new TrailNode(22, new Point(798, 618), MyCanvas));
+                nodes.Add(new TrailNode(23, new Point(79, 643), MyCanvas));
+                nodes.Add(new TrailNode(24, new Point(452, 565), MyCanvas));
+            }
+            else if(kind == "B")
+            {
+                nodes.Add(new TrailNode(1, new Point(530, 355), MyCanvas));
+                nodes[0].setFillColor(new SolidColorBrush(Colors.Green));
+                nodes.Add(new TrailNode('A', new Point(240, 488), MyCanvas));
+                nodes.Add(new TrailNode(2, new Point(265, 249), MyCanvas));
+                nodes.Add(new TrailNode('B', new Point(766, 318), MyCanvas));
+                nodes.Add(new TrailNode(3, new Point(654, 394), MyCanvas));
+                nodes.Add(new TrailNode('C', new Point(453, 486), MyCanvas));
+                nodes.Add(new TrailNode(4, new Point(812, 488), MyCanvas));
+                nodes.Add(new TrailNode('D', new Point(797, 586), MyCanvas));
+                nodes.Add(new TrailNode(5, new Point(389, 582), MyCanvas));
+                nodes.Add(new TrailNode('E', new Point(168, 544), MyCanvas));
+                nodes.Add(new TrailNode(6, new Point(189, 373), MyCanvas));
+                nodes.Add(new TrailNode('F', new Point(103, 205), MyCanvas));
+                nodes.Add(new TrailNode(7, new Point(518, 162), MyCanvas));
+                nodes.Add(new TrailNode('G', new Point(402, 103), MyCanvas));
+                nodes.Add(new TrailNode(8, new Point(882, 83), MyCanvas));
+                nodes.Add(new TrailNode('H', new Point(681, 182), MyCanvas));
+                nodes.Add(new TrailNode(9, new Point(816, 185), MyCanvas));
+                nodes.Add(new TrailNode('I', new Point(892, 428), MyCanvas));
+                nodes.Add(new TrailNode(10, new Point(881, 638), MyCanvas));
+                nodes.Add(new TrailNode('J', new Point(302, 613), MyCanvas));
+                nodes.Add(new TrailNode(11, new Point(87, 642), MyCanvas));
+                nodes.Add(new TrailNode('K', new Point(56, 54), MyCanvas));
+                nodes.Add(new TrailNode(12, new Point(478, 45), MyCanvas));
+            }
+
+        }
+
+        private bool eraser_hit_test(InkStroke s, Point testPoint)
         {
             foreach(var p in s.GetRenderingSegments())
             {
-                if (Math.Abs(test.X - p.Position.X) < 10 && Math.Abs(test.Y - p.Position.Y) < 10)
+                if (Math.Abs(testPoint.X - p.Position.X) < 10 && Math.Abs(testPoint.Y - p.Position.Y) < 10)
                 //if (test.X == p.Position.X && test.Y == p.Position.Y)
                     return true;
             }
                 return false;
+        }
+
+        // Return if the stylus has hit the correct next node
+        private bool stylus_hit_test(double x, double y, int correctIndex)
+        {
+            int radius = 25;
+            double left = nodes[nextIndex].getEllipse().Margin.Left;
+            double top = nodes[nextIndex].getEllipse().Margin.Top;
+            double first = Math.Pow(x - (left + radius), 2);
+            double second =Math.Pow(y - (top + radius), 2);
+            return first + second <= radius*radius;
+        }
+
+        // Return which index of node the user has hit
+        private int stylus_hit_test(double x, double y)
+        {
+            int radius = 25;
+            double left;
+            double top;
+            double first;
+            double second;
+            int index = -1;
+            
+            for(int i = 0; i < nodes.Count; i++)
+            {
+                left = nodes[i].getEllipse().Margin.Left;
+                top = nodes[i].getEllipse().Margin.Top;
+                first = Math.Pow(x - (left + radius), 2);
+                second = Math.Pow(y - (top + radius), 2);
+                if( (first + second <= radius * radius) == true)
+                {
+                    return i;
+                }
+            }
+
+            return index;
         }
 
         private void timer_tick(object sender, object e)
@@ -88,21 +208,55 @@ namespace SmartStroke
             //timer_box.Text = "time should be here";
         }
 
-        private void clear_clicked(object sender, RoutedEventArgs e)
+        // Go through and set anything that was yellow previously to Green
+        // If a node was red, reset it to be blank. There should just be
+        // One of each.
+        private void resetIncorrectNodes(int node)
         {
-            ink_manager.Mode = Windows.UI.Input.Inking.InkManipulationMode.Erasing;
-
-            var strokes = ink_manager.GetStrokes();
-
-            foreach (var stroke in strokes)
+            if (incorrectNodes.Count > 0)
             {
-                stroke.Selected = true;
+                int index;
+                index = incorrectNodes.Dequeue();
+                nodes[index].getEllipse().Fill = new SolidColorBrush(Colors.Green);
+
+                index = incorrectNodes.Dequeue();
+                nodes[index].getEllipse().Fill = null;
             }
+            /*SolidColorBrush yellow = new SolidColorBrush(Colors.Yellow);
+            SolidColorBrush red = new SolidColorBrush(Colors.Red);
+            if(node == 0)
+            {
+                // The first node was set to an incorrect color (i.e. Yellow)
+                if (nodes[node].getEllipse().Fill.Equals(yellow) || nodes[node].getEllipse().Fill.Equals(red))
+                    nodes[node].getEllipse().Fill = new SolidColorBrush(Colors.Green);
+            }
+            else
+            {
+                // Find all nodes less than the node that are yellow.
+                for(int i = 0; i <= node; i++)
+                {
+                    if (nodes[i].getEllipse().Fill == null) 
+                        continue;
+                    if (nodes[i].getEllipse().Fill == red)
+                    {
+                        nodes[i].getEllipse().Fill = new SolidColorBrush(Colors.Green);
+                        break;
+                    }
+                }
 
-            ink_manager.DeleteSelected();
-            MyCanvas.Children.Clear();
+                // Find all nodes above the current node that are red
+                for(int i = node; i < nodes.Count; i++)
+                {
+                    if (nodes[i].getEllipse().Fill == null)
+                        continue;
+                    if (nodes[i].getEllipse().Fill == red)
+                    {
+                        nodes[i].getEllipse().Fill = new SolidColorBrush(Colors.Green);
+                        break;
+                    }
+                }
+            }*/
         }
-
 
         #region PointerEvents
         private void MyCanvas_PointerReleased(object sender, PointerRoutedEventArgs e)
@@ -113,6 +267,14 @@ namespace SmartStroke
 
                 // Pass the pointer information to the InkManager. 
                 ink_manager.ProcessPointerUp(pt);
+
+                if(!erasing)
+                { 
+                    //create the link from the completed stroke to its list of lines on the canvas
+                    allLines.Add(ink_manager.GetStrokes()[ink_manager.GetStrokes().Count-1], currentLine);
+                    //cant just clear the list cuz its c#, have to point to a new list, not a memory leak
+                    currentLine = new List<Line>();
+                }
             }
 
             else if (e.Pointer.PointerId == touch_id)
@@ -124,24 +286,13 @@ namespace SmartStroke
             pen_id = 0;
 
             e.Handled = true;
-
-            //foreach (var stroke in ink_manager.GetStrokes())
-            if(ink_manager.GetStrokes().Count > 0)
-            {
-                var stroke = ink_manager.GetStrokes()[ink_manager.GetStrokes().Count-1].GetRenderingSegments();//only get the last stroke drawn
-                foreach (var curve in stroke)
-                {
-                    var x = curve;
-                }
-            }
-
-            var z = MyCanvas.Children.Count;
-            var y = z;
+            pressed = false;
         }
 
         private void MyCanvas_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
             double x1, y1, x2, y2;
+            int indexHit = -1;
 
             if (e.Pointer.PointerId == pen_id)
             {
@@ -149,82 +300,70 @@ namespace SmartStroke
 
                 current_contact_pt = pt.Position;
                 x1 = previous_contact_pt.X;
-                y1 = previous_contact_pt.Y;
+                y1 = previous_contact_pt.Y; 
                 x2 = current_contact_pt.X;
                 y2 = current_contact_pt.Y;
 
                 if (Distance(x1, y1, x2, y2) > 2.0) //test whether the pointer has moved far enough to warrant drawing a new line
                 {
-                    //Ellipse ellipse;
+                    if (!pressed)
+                    {
+                        return;
+                    }
+
+                    //TODO: need to handle the edge case of when the last node is checked (range err)
+                    if (stylus_hit_test(x2, y2, nextIndex))
+                    {
+                        nodes[nextIndex].setFillColor(new SolidColorBrush(Colors.Green));
+                        nodes[nextIndex].setComplete(true);
+                        resetIncorrectNodes(nextIndex);
+                        currentIndex = nextIndex;
+                        nextIndex++;
+                    }
+                    else if (((indexHit = stylus_hit_test(x2, y2)) >= 0) && indexHit != currentIndex)  // User hit a different node
+                    {
+                        if (!nodes[indexHit].getCompleted())
+                        {
+                            nodes[indexHit].setFillColor(new SolidColorBrush(Colors.Red));
+                            nodes[currentIndex].setFillColor(new SolidColorBrush(Colors.Yellow));
+
+                            if(!incorrectNodes.Contains(currentIndex)) incorrectNodes.Enqueue(currentIndex);
+                            if(!incorrectNodes.Contains(indexHit)) incorrectNodes.Enqueue(indexHit);
+                        }
+                    }
+
                     if (erasing)
                     {
-                        /*
-                        ellipse = new Ellipse()
+                        foreach(var stroke in ink_manager.GetStrokes())
                         {
-                            Margin = new Thickness(x1, y1, x2, y2),
-                            Height = ERASE_WIDTH,
-                            Width = ERASE_WIDTH,
-                            //Fill = new SolidColorBrush(ERASE_COLOR)
-                        };
-                         */
-
-                        //Rect r;
-                        var strokes = ink_manager.GetStrokes();
-                        foreach(var stroke in strokes)
-                        {
-                            //r = stroke.BoundingRect;
-                            if (hit_test(stroke, new Point(x2, y2)))
+                            if (eraser_hit_test(stroke, new Point(x2, y2)))
                             {
                                 stroke.Selected = true;
-
-                                // erase strokes. DOES NOT WORK. FIX ME
-                                foreach (var child in MyCanvas.Children)
+                                //remove each of the lines associated with this single stroke from canvas
+                                foreach (Line line in allLines[stroke])
                                 {
-                                    //if child is a line object, check if its x2 y2 match the stroke's x2 y2
-                                    if(child.GetType() == typeof(Line))
-                                    {
-                                        Line l = (Line)child;
-                                        if (l.X1 == l.X2) continue;
-                                        if ( ! (x2 >= l.X1 && x2 <= l.X2 && y2 >= l.Y1 && y2 <= l.Y2))
-                                        {
-                                            continue;
-                                        }
-                                        double realSlope = (l.Y2 - l.Y1)/(l.X2 - l.X1);
-                                        double fakeSlope = (l.Y2 - y2) / (l.X1 - x1);
-
-                                        //if(Math.Abs(l.X2 - x2) < 10 && Math.Abs(l.Y2 - y2) < 10)
-                                        if(realSlope == fakeSlope)
-                                        {
-                                            //actually remove the ink from the canvas
-                                            MyCanvas.Children.Remove(child);
-                                            break;
-                                        }
-                                    }
+                                    MyCanvas.Children.Remove(line);
+                                    allLines.Remove(stroke);
                                 }
                             }
                         }
                         //tell the ink manager to stop tracking the strokes that were erased
                         ink_manager.DeleteSelected();
                     }
-                    else
+                    else //if drawing
                     {
                         Line line = new Line()
                         {
-                            //Margin = new Thickness(x1, y1, x2, y2),
                             X1 = x1, X2 = x2, Y1 = y1, Y2 = y2,
-                            //Height = DRAW_WIDTH,
-                            //Width = DRAW_WIDTH,
                             StrokeThickness = DRAW_WIDTH,
                             Stroke = new SolidColorBrush(DRAW_COLOR)
                         };
-                       
+                        currentLine.Add(line);
                         MyCanvas.Children.Add(line);
                     }
-                    
-                    previous_contact_pt = current_contact_pt;
 
-                    // Pass the pointer information to the InkManager.
                     ink_manager.ProcessPointerUpdate(pt);
+                    previous_contact_pt = current_contact_pt;
                 }
             }
 
@@ -232,7 +371,7 @@ namespace SmartStroke
             {
                 // Process touch input (finger input)
             }
-
+            e.Handled = true;
         }
 
         private double Distance(double x1, double y1, double x2, double y2)
@@ -272,18 +411,20 @@ namespace SmartStroke
             {
                 // Process touch input (from finger)
             }
+
+            pressed = true;
         }
 
         #endregion
 
-
-        /// <summary>
-        /// Invoked when this page is about to be displayed in a Frame.
-        /// </summary>
-        /// <param name="e">Event data that describes how this page was reached.  The Parameter
-        /// property is typically used to configure the page.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            string vers = e.Parameter as string;    // This is the type of the trails test.
+            testVersion = vers;
+
+            nodes.Clear();
+            populateNodes(testVersion, nodes);      // (Re)Populate the list of trail nodes
         }
+
     }
 }
