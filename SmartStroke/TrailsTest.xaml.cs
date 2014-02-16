@@ -48,6 +48,7 @@ namespace SmartStroke
         int currentIndex = 0;
         List<InkStroke> nodeToNode; // Keep a list of the strokes from node to node.
         bool pressed = false;
+        Queue<int> incorrectNodes = new Queue<int>();
 
         DispatcherTimer timer;
 
@@ -290,9 +291,21 @@ namespace SmartStroke
             pressed = false;
         }
 
+        // Go through and set anything that was yellow previously to Green
+        // If a node was red, reset it to be blank. There should just be
+        // One of each.
         private void resetIncorrectNodes(int node)
         {
-            SolidColorBrush yellow = new SolidColorBrush(Colors.Yellow);
+            if (incorrectNodes.Count > 0)
+            {
+                int index;
+                index = incorrectNodes.Dequeue();
+                nodes[index].getEllipse().Fill = new SolidColorBrush(Colors.Green);
+
+                index = incorrectNodes.Dequeue();
+                nodes[index].getEllipse().Fill = null;
+            }
+            /*SolidColorBrush yellow = new SolidColorBrush(Colors.Yellow);
             SolidColorBrush red = new SolidColorBrush(Colors.Red);
             if(node == 0)
             {
@@ -303,9 +316,11 @@ namespace SmartStroke
             else
             {
                 // Find all nodes less than the node that are yellow.
-                for(int i = 0; i < node; i++)
+                for(int i = 0; i <= node; i++)
                 {
-                    if (nodes[i].getEllipse().Fill.Equals(yellow))
+                    if (nodes[i].getEllipse().Fill == null) 
+                        continue;
+                    if (nodes[i].getEllipse().Fill == red)
                     {
                         nodes[i].getEllipse().Fill = new SolidColorBrush(Colors.Green);
                         break;
@@ -315,13 +330,15 @@ namespace SmartStroke
                 // Find all nodes above the current node that are red
                 for(int i = node; i < nodes.Count; i++)
                 {
-                    if (nodes[i].getEllipse().Fill.Equals(red))
+                    if (nodes[i].getEllipse().Fill == null)
+                        continue;
+                    if (nodes[i].getEllipse().Fill == red)
                     {
                         nodes[i].getEllipse().Fill = new SolidColorBrush(Colors.Green);
                         break;
                     }
                 }
-            }
+            }*/
         }
 
         private void MyCanvas_PointerMoved(object sender, PointerRoutedEventArgs e)
@@ -351,14 +368,20 @@ namespace SmartStroke
                     {
                         nodes[nextIndex].setFillColor(new SolidColorBrush(Colors.Green));
                         nodes[nextIndex].setComplete(true);
-                        //resetIncorrectNodes(nextIndex);
+                        resetIncorrectNodes(nextIndex);
                         currentIndex = nextIndex;
                         nextIndex++;
                     }
-                    else if ((indexHit = stylus_hit_test(x2, y2)) >= 0)  // User hit a different node
+                    else if (((indexHit = stylus_hit_test(x2, y2)) >= 0) && indexHit != currentIndex)  // User hit a different node
                     {
-                        nodes[indexHit].setFillColor(new SolidColorBrush(Colors.Red));
-                        nodes[currentIndex].setFillColor(new SolidColorBrush(Colors.Yellow));
+                        if (!nodes[indexHit].getCompleted())
+                        {
+                            nodes[indexHit].setFillColor(new SolidColorBrush(Colors.Red));
+                            nodes[currentIndex].setFillColor(new SolidColorBrush(Colors.Yellow));
+
+                            if(!incorrectNodes.Contains(currentIndex)) incorrectNodes.Enqueue(currentIndex);
+                            if(!incorrectNodes.Contains(indexHit)) incorrectNodes.Enqueue(indexHit);
+                        }
                     }
                     /*else      // The circle entered is not the correct cirlce
                     {
@@ -454,7 +477,7 @@ namespace SmartStroke
             {
                 // Process touch input (finger input)
             }
-
+            e.Handled = true;
         }
 
         private double Distance(double x1, double y1, double x2, double y2)
