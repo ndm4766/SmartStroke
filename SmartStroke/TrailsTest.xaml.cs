@@ -209,14 +209,40 @@ namespace SmartStroke
                 return false;
         }
 
-        private bool stylus_hit_test(double x, double y)
+        // Return if the stylus has hit the correct next node
+        private bool stylus_hit_test(double x, double y, int correctIndex)
         {
             int radius = 25;
             double left = nodes[nextIndex].getEllipse().Margin.Left;
             double top = nodes[nextIndex].getEllipse().Margin.Top;
             double first = Math.Pow(x - (left + radius), 2);
             double second =Math.Pow(y - (top + radius), 2);
-            return first + second < radius*radius;
+            return first + second <= radius*radius;
+        }
+
+        // Return which index of node the user has hit
+        private int stylus_hit_test(double x, double y)
+        {
+            int radius = 25;
+            double left;
+            double top;
+            double first;
+            double second;
+            int index = -1;
+            
+            for(int i = 0; i < nodes.Count; i++)
+            {
+                left = nodes[i].getEllipse().Margin.Left;
+                top = nodes[i].getEllipse().Margin.Top;
+                first = Math.Pow(x - (left + radius), 2);
+                second = Math.Pow(y - (top + radius), 2);
+                if( (first + second <= radius * radius) == true)
+                {
+                    return i;
+                }
+            }
+
+            return index;
         }
 
         private void timer_tick(object sender, object e)
@@ -264,6 +290,40 @@ namespace SmartStroke
             pressed = false;
         }
 
+        private void resetIncorrectNodes(int node)
+        {
+            SolidColorBrush yellow = new SolidColorBrush(Colors.Yellow);
+            SolidColorBrush red = new SolidColorBrush(Colors.Red);
+            if(node == 0)
+            {
+                // The first node was set to an incorrect color (i.e. Yellow)
+                if (nodes[node].getEllipse().Fill.Equals(yellow) || nodes[node].getEllipse().Fill.Equals(red))
+                    nodes[node].getEllipse().Fill = new SolidColorBrush(Colors.Green);
+            }
+            else
+            {
+                // Find all nodes less than the node that are yellow.
+                for(int i = 0; i < node; i++)
+                {
+                    if (nodes[i].getEllipse().Fill.Equals(yellow))
+                    {
+                        nodes[i].getEllipse().Fill = new SolidColorBrush(Colors.Green);
+                        break;
+                    }
+                }
+
+                // Find all nodes above the current node that are red
+                for(int i = node; i < nodes.Count; i++)
+                {
+                    if (nodes[i].getEllipse().Fill.Equals(red))
+                    {
+                        nodes[i].getEllipse().Fill = new SolidColorBrush(Colors.Green);
+                        break;
+                    }
+                }
+            }
+        }
+
         private void MyCanvas_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
             double x1, y1, x2, y2;
@@ -278,6 +338,7 @@ namespace SmartStroke
                 x2 = current_contact_pt.X;
                 y2 = current_contact_pt.Y;
 
+                int indexHit;
                 if (Distance(x1, y1, x2, y2) > 2.0) //test whether the pointer has moved far enough to warrant drawing a new line
                 {
                     if (!pressed)
@@ -286,11 +347,18 @@ namespace SmartStroke
                     }
 
                     //TODO: need to handle the edge case of when the last node is checked (range err)
-                    if (stylus_hit_test(x2, y2))
+                    if (stylus_hit_test(x2, y2, nextIndex))
                     {
                         nodes[nextIndex].setFillColor(new SolidColorBrush(Colors.Green));
+                        nodes[nextIndex].setComplete(true);
+                        //resetIncorrectNodes(nextIndex);
                         currentIndex = nextIndex;
                         nextIndex++;
+                    }
+                    else if ((indexHit = stylus_hit_test(x2, y2)) >= 0)  // User hit a different node
+                    {
+                        nodes[indexHit].setFillColor(new SolidColorBrush(Colors.Red));
+                        nodes[currentIndex].setFillColor(new SolidColorBrush(Colors.Yellow));
                     }
                     /*else      // The circle entered is not the correct cirlce
                     {

@@ -20,6 +20,7 @@ namespace SmartStroke
         Ellipse e;
         TextBlock text;
         int size = 50;
+        bool completed = false;
         SolidColorBrush fill = new SolidColorBrush(Colors.White);
 
         public TrailNode() { }                             // Default constructor. Should not use
@@ -84,5 +85,10 @@ namespace SmartStroke
             e.Fill = fill;
         }
         
+        public void setComplete(bool val)
+        {
+            if (!completed)         // Cannot set a node to be not completed after it has been completed
+                completed = val;
+        }
     };
 }
