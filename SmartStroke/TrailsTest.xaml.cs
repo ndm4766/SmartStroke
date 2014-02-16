@@ -181,6 +181,7 @@ namespace SmartStroke
                     }
                 }
             }
+            e.Handled = true;
         }
 
         // Pointer left a node. Restart the next stroke.
