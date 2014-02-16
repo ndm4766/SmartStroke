@@ -44,6 +44,13 @@ namespace SmartStroke
             get { return this.navigationHelper; }
         }
 
+        private bool sexReady;
+        private bool educationReady;
+        public char sex;
+        public int age;
+        public DateTime birthday;
+        public string educationLevel;
+        public string name;
 
         public UserInfoPage()
         {
@@ -102,5 +109,58 @@ namespace SmartStroke
         }
 
         #endregion
+
+        private void SubmitButtonClicked(object sender, RoutedEventArgs e)
+        {
+            if (sexReady && educationReady)//make sure all info is valid
+            {
+                birthday = birthdayPicker.Date.Date;
+                age = DateTime.Today.Year-birthday.Year;
+                if (birthday > DateTime.Today.AddYears(-age))
+                {
+                    age--;
+                }
+                name = patientName.Text;
+                NavigationHelper.GoBack();
+            }
+        }
+        private void radioButtonClicked(object sender, RoutedEventArgs e)
+        {
+            sexReady = true;
+            //set sex
+            if ((bool)sexM.IsChecked)
+            {
+                sex = 'M';
+            }
+            else if ((bool)sexF.IsChecked)
+            {
+                sex = 'F';
+            }
+            if (educationReady && patientName.Text!="Patient Name")
+            {
+                SubmitButton.IsEnabled = true;
+            }
+        }
+        
+        private void educationChanged(object sender, RoutedEventArgs e)
+        {
+            educationReady = true;
+            educationLevel = (string)education.SelectedValue;
+            if (sexReady && patientName.Text != "Patient Name")
+            {
+                SubmitButton.IsEnabled = true; 
+            }
+        }
+        private void nameBeingChanged(object sender, RoutedEventArgs e)
+        {
+            if (sexReady && educationReady && patientName.Text!="")
+            {
+                SubmitButton.IsEnabled = true;
+            }
+        }
+
+        
+
+
     }
 }

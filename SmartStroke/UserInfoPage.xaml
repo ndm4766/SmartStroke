@@ -39,12 +39,22 @@
             </Grid.ColumnDefinitions>
             <Button x:Name="backButton" Margin="39,59,39,0" Command="{Binding NavigationHelper.GoBackCommand, ElementName=pageRoot}"
                         Style="{StaticResource NavigationBackButtonNormalStyle}"
-                        Background="Black"
                         VerticalAlignment="Top"
                         AutomationProperties.Name="Back"
                         AutomationProperties.AutomationId="BackButton"
                         AutomationProperties.ItemType="Navigation Button"/>
-            </Grid>
-        <TextBox BorderThickness="1" BorderBrush="#000000" HorizontalAlignment="Left" Margin="429,259,0,0" Grid.Row="1" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Height="136" Width="367"/>
+        </Grid>
+        <TextBox Name="patientName" FontFamily="Segoe UI Light" FontSize="48" BorderThickness="1" BorderBrush="#000000" HorizontalAlignment="Center" Margin="335,25,357,0" Grid.Row="1"  Text="Patient Name" VerticalAlignment="Top" Width="674" TextChanged="nameBeingChanged"/>
+        <RadioButton Name="sexM" GroupName="sex" Content="Male" Foreground="#2F5597" HorizontalAlignment="Left" Margin="259,266,0,0" Grid.Row="1" VerticalAlignment="Top" Checked="radioButtonClicked"/>
+        <RadioButton Name="sexF" GroupName="sex" Content="Female" Foreground="#2F5597" HorizontalAlignment="Left" Margin="259,301,0,0" Grid.Row="1" VerticalAlignment="Top" Checked="radioButtonClicked"/>
+        <DatePicker Name="birthdayPicker" Foreground="#2F5597" HorizontalAlignment="Left" Margin="389,263,0,0" Grid.Row="1" VerticalAlignment="Top" />
+        <ComboBox Name="education" PlaceholderText="Education Level" HorizontalAlignment="Left" Margin="751,269,0,0" Grid.Row="1" VerticalAlignment="Top" Width="240" SelectionChanged="educationChanged" >
+            <x:String>Highschool Diploma</x:String>
+            <x:String>College Degree</x:String>
+            <x:String>School of Hard Knocks</x:String>
+        </ComboBox>
+        <Button Name="SubmitButton" Content="Submit" Foreground="#FFFFFF" Background="#2F5597" HorizontalAlignment="Left" Margin="1089,269,0,0" Grid.Row="1" VerticalAlignment="Top" IsEnabled="False" Click="SubmitButtonClicked" />
+
+
     </Grid>
 </Page>
