@@ -17,6 +17,7 @@ using Windows.UI.Xaml.Shapes;
 using Windows.UI;
 using Windows.Devices.Input;
 using Windows.UI.ApplicationSettings;
+using System.Diagnostics;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -54,8 +55,8 @@ namespace SmartStroke
         private int currentIndex;
         private Queue<int> incorrectNodes = new Queue<int>();
 
-        private DispatcherTimer timer;
-        private TimeSpan currentTime;
+        private Stopwatch timer;
+        private DispatcherTimer disp;
 
         public TrailsTest()
         {
@@ -80,12 +81,11 @@ namespace SmartStroke
             nextIndex = 0;
             currentIndex = 0;
 
-            //initialize timer
-            timer = new DispatcherTimer();
-            timer.Interval = new TimeSpan(0, 0, 0, 0, 100);
-            timer.Tick += timer_tick;
-            currentTime = new TimeSpan();
-            //timer.Start();
+            timer = new Stopwatch();
+            disp = new DispatcherTimer();
+            disp.Interval = new TimeSpan(0, 0, 0, 0, 10);
+            disp.Tick += timer_tick;
+            disp.Start();
 
             //Set the ink to not use bezeir curves
             drawingAttributes = new Windows.UI.Input.Inking.InkDrawingAttributes();
@@ -245,8 +245,10 @@ namespace SmartStroke
 
         private void timer_tick(object sender, object e)
         {
-            currentTime = currentTime.Add(timer.Interval);
-            timer_box.Text = currentTime.Seconds.ToString() + ":" + currentTime.Milliseconds.ToString()[0];
+            timer_box.Text = String.Format("{0}:{1}:{2}", 
+                timer.Elapsed.Minutes.ToString(),
+                timer.Elapsed.Seconds.ToString("D2"),
+                (timer.Elapsed.Milliseconds/10).ToString("D2"));
         }
 
         // Go through and set anything that was yellow previously to Green
@@ -354,7 +356,7 @@ namespace SmartStroke
 
                     if (stylus_hit_test(x2, y2, nextIndex))
                     {
-                        if(!timer.IsEnabled)
+                        if(!timer.IsRunning)
                         {
                             timer.Start();
                         }

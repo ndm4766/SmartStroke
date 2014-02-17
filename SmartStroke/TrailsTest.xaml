@@ -14,7 +14,7 @@
         </Grid.RowDefinitions>
 
         <!--Image Name="trails_image" Source="images/trailsA.jpg" Margin="54,50,46,32" Grid.RowSpan="2" / -->
-        <TextBlock Name="timer_box" Foreground="Black" Text="0:0" FontSize="50" Margin="1236,33,0,31" />
+        <TextBlock Name="timer_box" Foreground="Black" Text="0:00:00" FontSize="50" Margin="1172,33,0,31" />
         <Canvas Name="MyCanvas" Background="Transparent" HorizontalAlignment="Left" Height="768" VerticalAlignment="Top" Width="1366" Grid.RowSpan="2"/>
 
     </Grid>
