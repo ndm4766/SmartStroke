@@ -55,6 +55,7 @@ namespace SmartStroke
         private Queue<int> incorrectNodes = new Queue<int>();
 
         private DispatcherTimer timer;
+        private TimeSpan currentTime;
 
         public TrailsTest()
         {
@@ -83,6 +84,7 @@ namespace SmartStroke
             timer = new DispatcherTimer();
             timer.Interval = new TimeSpan(0, 0, 0, 0, 100);
             timer.Tick += timer_tick;
+            currentTime = new TimeSpan();
             //timer.Start();
 
             //Set the ink to not use bezeir curves
@@ -100,7 +102,18 @@ namespace SmartStroke
             if (kind == "A")
             {
                 nodes.Add(new TrailNode(1, new Point(257, 421), MyCanvas));
-                nodes[0].setFillColor(new SolidColorBrush(Colors.Green));
+                TextBlock begin = new TextBlock() 
+                {
+                    Text = "Begin",
+                    Margin = new Thickness(330, 425, 0, 0),
+                    Foreground = new SolidColorBrush(Colors.Black),
+                    FontSize = 15
+                };
+                RotateTransform r = new RotateTransform();
+                r.Angle = 90;
+                begin.RenderTransform = r;
+                MyCanvas.Children.Add(begin);
+                //nodes[0].setFillColor(new SolidColorBrush(Colors.Green));
                 nodes.Add(new TrailNode(2, new Point(150, 322), MyCanvas));
                 nodes.Add(new TrailNode(3, new Point(150, 491), MyCanvas));
                 nodes.Add(new TrailNode(4, new Point(584, 501), MyCanvas));
@@ -124,11 +137,31 @@ namespace SmartStroke
                 nodes.Add(new TrailNode(22, new Point(798, 618), MyCanvas));
                 nodes.Add(new TrailNode(23, new Point(79, 643), MyCanvas));
                 nodes.Add(new TrailNode(24, new Point(452, 565), MyCanvas));
+                TextBlock end = new TextBlock()
+                {
+                    Text = "End",
+                    Margin = new Thickness(520, 575, 0, 0),
+                    Foreground = new SolidColorBrush(Colors.Black),
+                    FontSize = 15
+                };
+                end.RenderTransform = r;
+                MyCanvas.Children.Add(end);
             }
             else if(kind == "B")
             {
                 nodes.Add(new TrailNode(1, new Point(530, 355), MyCanvas));
-                nodes[0].setFillColor(new SolidColorBrush(Colors.Green));
+                //nodes[0].setFillColor(new SolidColorBrush(Colors.Green));
+                TextBlock begin = new TextBlock()
+                {
+                    Text = "Begin",
+                    Margin = new Thickness(600, 360, 0, 0),
+                    Foreground = new SolidColorBrush(Colors.Black),
+                    FontSize = 15
+                };
+                RotateTransform r = new RotateTransform();
+                r.Angle = 90;
+                begin.RenderTransform = r;
+                MyCanvas.Children.Add(begin);
                 nodes.Add(new TrailNode('A', new Point(240, 488), MyCanvas));
                 nodes.Add(new TrailNode(2, new Point(265, 249), MyCanvas));
                 nodes.Add(new TrailNode('B', new Point(766, 318), MyCanvas));
@@ -151,8 +184,16 @@ namespace SmartStroke
                 nodes.Add(new TrailNode(11, new Point(87, 642), MyCanvas));
                 nodes.Add(new TrailNode('K', new Point(56, 54), MyCanvas));
                 nodes.Add(new TrailNode(12, new Point(478, 45), MyCanvas));
+                TextBlock end = new TextBlock()
+                {
+                    Text = "End",
+                    Margin = new Thickness(550, 55, 0, 0),
+                    Foreground = new SolidColorBrush(Colors.Black),
+                    FontSize = 15
+                };
+                end.RenderTransform = r;
+                MyCanvas.Children.Add(end);
             }
-
         }
 
         private bool eraser_hit_test(InkStroke s, Point testPoint)
@@ -204,8 +245,8 @@ namespace SmartStroke
 
         private void timer_tick(object sender, object e)
         {
-            //called every 100 ms
-            //timer_box.Text = "time should be here";
+            currentTime = currentTime.Add(timer.Interval);
+            timer_box.Text = currentTime.Seconds.ToString() + ":" + currentTime.Milliseconds.ToString()[0];
         }
 
         // Go through and set anything that was yellow previously to Green
@@ -219,8 +260,8 @@ namespace SmartStroke
                 index = incorrectNodes.Dequeue();
                 nodes[index].getEllipse().Fill = new SolidColorBrush(Colors.Green);
 
-                index = incorrectNodes.Dequeue();
-                nodes[index].getEllipse().Fill = null;
+                index = incorrectNodes.Dequeue(); //TODO: somehow it tried to dequeue when count was 0
+                nodes[index].getEllipse().Fill = new SolidColorBrush(Colors.CornflowerBlue);
             }
             /*SolidColorBrush yellow = new SolidColorBrush(Colors.Yellow);
             SolidColorBrush red = new SolidColorBrush(Colors.Red);
@@ -311,14 +352,30 @@ namespace SmartStroke
                         return;
                     }
 
-                    //TODO: need to handle the edge case of when the last node is checked (range err)
                     if (stylus_hit_test(x2, y2, nextIndex))
                     {
+                        if(!timer.IsEnabled)
+                        {
+                            timer.Start();
+                        }
+
                         nodes[nextIndex].setFillColor(new SolidColorBrush(Colors.Green));
                         nodes[nextIndex].setComplete(true);
                         resetIncorrectNodes(nextIndex);
                         currentIndex = nextIndex;
                         nextIndex++;
+
+                        //TODO: if the test is done...what to do?
+                        if(nextIndex >= nodes.Count)
+                        {
+                            timer.Stop();
+                            //this.Frame.Navigate(typeof(MainPage));
+                            MyCanvas.PointerPressed -= MyCanvas_PointerPressed;
+                            MyCanvas.PointerMoved -= MyCanvas_PointerMoved;
+                            MyCanvas.PointerReleased -= MyCanvas_PointerReleased;
+                            MyCanvas.PointerExited -= MyCanvas_PointerReleased;
+                            return;
+                        }
                     }
                     else if (((indexHit = stylus_hit_test(x2, y2)) >= 0) && indexHit != currentIndex)  // User hit a different node
                     {
@@ -327,8 +384,15 @@ namespace SmartStroke
                             nodes[indexHit].setFillColor(new SolidColorBrush(Colors.Red));
                             nodes[currentIndex].setFillColor(new SolidColorBrush(Colors.Yellow));
 
-                            if(!incorrectNodes.Contains(currentIndex)) incorrectNodes.Enqueue(currentIndex);
-                            if(!incorrectNodes.Contains(indexHit)) incorrectNodes.Enqueue(indexHit);
+                            if(!incorrectNodes.Contains(currentIndex)) 
+                                incorrectNodes.Enqueue(currentIndex);
+                            if(!incorrectNodes.Contains(indexHit)) 
+                                incorrectNodes.Enqueue(indexHit);
+
+                            //go back in time...the user should hit the yellow node again to turn it green and clear red
+                            //nodes[nextIndex].setComplete(false);
+                            //nextIndex--;
+                            //currentIndex--;
                         }
                     }
 
@@ -424,6 +488,12 @@ namespace SmartStroke
 
             nodes.Clear();
             populateNodes(testVersion, nodes);      // (Re)Populate the list of trail nodes
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            timer.Stop();
         }
 
     }

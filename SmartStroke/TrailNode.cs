@@ -55,7 +55,8 @@ namespace SmartStroke
             e.Width = size;
             e.Height = size;
             e.Margin = new Thickness(p.X, p.Y, 0,0);
-            e.Stroke = new SolidColorBrush(Colors.White);
+            e.Stroke = new SolidColorBrush(Colors.Black);
+            e.Fill = new SolidColorBrush(Colors.CornflowerBlue);
             e.StrokeThickness = 3.0;
             c.Children.Add(e);
 
