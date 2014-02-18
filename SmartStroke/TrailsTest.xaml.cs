@@ -17,6 +17,8 @@ using Windows.UI.Xaml.Shapes;
 using Windows.UI;
 using Windows.Devices.Input;
 using Windows.UI.ApplicationSettings;
+using System.Diagnostics;
+using Windows.Graphics.Display;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -52,14 +54,16 @@ namespace SmartStroke
         private List<TrailNode> nodes;
         private int nextIndex;
         private int currentIndex;
-        private Queue<int> incorrectNodes = new Queue<int>();
+        private Queue<int> incorrectNodes;
+        private List<Line> currentEdge;
 
-        private DispatcherTimer timer;
+        private Stopwatch timer;
+        private DispatcherTimer disp;
 
         public TrailsTest()
         {
             this.InitializeComponent();
-            Windows.Graphics.Display.DisplayInformation.AutoRotationPreferences = Windows.Graphics.Display.DisplayOrientations.Landscape;
+            //Windows.Graphics.Display.DisplayInformation.AutoRotationPreferences = Windows.Graphics.Display.DisplayOrientations.Landscape;
             
             ink_manager = new Windows.UI.Input.Inking.InkManager();
 
@@ -78,12 +82,14 @@ namespace SmartStroke
             erasing = false;
             nextIndex = 0;
             currentIndex = 0;
+            incorrectNodes = new Queue<int>();
+            currentEdge = new List<Line>();
 
-            //initialize timer
-            timer = new DispatcherTimer();
-            timer.Interval = new TimeSpan(0, 0, 0, 0, 100);
-            timer.Tick += timer_tick;
-            //timer.Start();
+            timer = new Stopwatch();
+            disp = new DispatcherTimer();
+            disp.Interval = new TimeSpan(0, 0, 0, 0, 10);
+            disp.Tick += timer_tick;
+            disp.Start();
 
             //Set the ink to not use bezeir curves
             drawingAttributes = new Windows.UI.Input.Inking.InkDrawingAttributes();
@@ -91,8 +97,9 @@ namespace SmartStroke
             drawingAttributes.FitToCurve = false;
             ink_manager.SetDefaultDrawingAttributes(drawingAttributes);
 
-            var windowHeight = Windows.UI.Xaml.Window.Current.Bounds.Height;
-            var windowWidth = Windows.UI.Xaml.Window.Current.Bounds.Width;
+            var windowWidth = Window.Current.Bounds.Width * (int)DisplayProperties.ResolutionScale / 100;
+            var windowHeight = Window.Current.Bounds.Height * (int)DisplayProperties.ResolutionScale / 100;
+            //var windowWidth = Windows.UI.Xaml.Window.Current.Bounds.Width;
         }
 
         private void populateNodes(string kind, List<TrailNode> nodes)
@@ -100,7 +107,18 @@ namespace SmartStroke
             if (kind == "A")
             {
                 nodes.Add(new TrailNode(1, new Point(257, 421), MyCanvas));
-                nodes[0].setFillColor(new SolidColorBrush(Colors.Green));
+                TextBlock begin = new TextBlock() 
+                {
+                    Text = "Begin",
+                    Margin = new Thickness(330, 425, 0, 0),
+                    Foreground = new SolidColorBrush(Colors.Black),
+                    FontSize = 15
+                };
+                RotateTransform r = new RotateTransform();
+                r.Angle = 90;
+                begin.RenderTransform = r;
+                MyCanvas.Children.Add(begin);
+                //nodes[0].setFillColor(new SolidColorBrush(Colors.Green));
                 nodes.Add(new TrailNode(2, new Point(150, 322), MyCanvas));
                 nodes.Add(new TrailNode(3, new Point(150, 491), MyCanvas));
                 nodes.Add(new TrailNode(4, new Point(584, 501), MyCanvas));
@@ -124,11 +142,31 @@ namespace SmartStroke
                 nodes.Add(new TrailNode(22, new Point(798, 618), MyCanvas));
                 nodes.Add(new TrailNode(23, new Point(79, 643), MyCanvas));
                 nodes.Add(new TrailNode(24, new Point(452, 565), MyCanvas));
+                TextBlock end = new TextBlock()
+                {
+                    Text = "End",
+                    Margin = new Thickness(520, 575, 0, 0),
+                    Foreground = new SolidColorBrush(Colors.Black),
+                    FontSize = 15
+                };
+                end.RenderTransform = r;
+                MyCanvas.Children.Add(end);
             }
             else if(kind == "B")
             {
                 nodes.Add(new TrailNode(1, new Point(530, 355), MyCanvas));
-                nodes[0].setFillColor(new SolidColorBrush(Colors.Green));
+                //nodes[0].setFillColor(new SolidColorBrush(Colors.Green));
+                TextBlock begin = new TextBlock()
+                {
+                    Text = "Begin",
+                    Margin = new Thickness(600, 360, 0, 0),
+                    Foreground = new SolidColorBrush(Colors.Black),
+                    FontSize = 15
+                };
+                RotateTransform r = new RotateTransform();
+                r.Angle = 90;
+                begin.RenderTransform = r;
+                MyCanvas.Children.Add(begin);
                 nodes.Add(new TrailNode('A', new Point(240, 488), MyCanvas));
                 nodes.Add(new TrailNode(2, new Point(265, 249), MyCanvas));
                 nodes.Add(new TrailNode('B', new Point(766, 318), MyCanvas));
@@ -151,8 +189,16 @@ namespace SmartStroke
                 nodes.Add(new TrailNode(11, new Point(87, 642), MyCanvas));
                 nodes.Add(new TrailNode('K', new Point(56, 54), MyCanvas));
                 nodes.Add(new TrailNode(12, new Point(478, 45), MyCanvas));
+                TextBlock end = new TextBlock()
+                {
+                    Text = "End",
+                    Margin = new Thickness(550, 55, 0, 0),
+                    Foreground = new SolidColorBrush(Colors.Black),
+                    FontSize = 15
+                };
+                end.RenderTransform = r;
+                MyCanvas.Children.Add(end);
             }
-
         }
 
         private bool eraser_hit_test(InkStroke s, Point testPoint)
@@ -204,8 +250,10 @@ namespace SmartStroke
 
         private void timer_tick(object sender, object e)
         {
-            //called every 100 ms
-            //timer_box.Text = "time should be here";
+            timer_box.Text = String.Format("{0}:{1}:{2}", 
+                timer.Elapsed.Minutes.ToString(),
+                timer.Elapsed.Seconds.ToString("D2"),
+                (timer.Elapsed.Milliseconds/10).ToString("D2"));
         }
 
         // Go through and set anything that was yellow previously to Green
@@ -219,8 +267,8 @@ namespace SmartStroke
                 index = incorrectNodes.Dequeue();
                 nodes[index].getEllipse().Fill = new SolidColorBrush(Colors.Green);
 
-                index = incorrectNodes.Dequeue();
-                nodes[index].getEllipse().Fill = null;
+                index = incorrectNodes.Dequeue(); //TODO: somehow it tried to dequeue when count was 0
+                nodes[index].getEllipse().Fill = new SolidColorBrush(Colors.CornflowerBlue);
             }
             /*SolidColorBrush yellow = new SolidColorBrush(Colors.Yellow);
             SolidColorBrush red = new SolidColorBrush(Colors.Red);
@@ -311,14 +359,32 @@ namespace SmartStroke
                         return;
                     }
 
-                    //TODO: need to handle the edge case of when the last node is checked (range err)
                     if (stylus_hit_test(x2, y2, nextIndex))
                     {
+                        if(!timer.IsRunning)
+                        {
+                            timer.Start();
+                        }
+
                         nodes[nextIndex].setFillColor(new SolidColorBrush(Colors.Green));
                         nodes[nextIndex].setComplete(true);
                         resetIncorrectNodes(nextIndex);
                         currentIndex = nextIndex;
                         nextIndex++;
+
+                        currentEdge.Clear();
+
+                        //TODO: if the test is done...what to do?
+                        if(nextIndex >= nodes.Count)
+                        {
+                            timer.Stop();
+                            //this.Frame.Navigate(typeof(MainPage));
+                            MyCanvas.PointerPressed -= MyCanvas_PointerPressed;
+                            MyCanvas.PointerMoved -= MyCanvas_PointerMoved;
+                            MyCanvas.PointerReleased -= MyCanvas_PointerReleased;
+                            MyCanvas.PointerExited -= MyCanvas_PointerReleased;
+                            return;
+                        }
                     }
                     else if (((indexHit = stylus_hit_test(x2, y2)) >= 0) && indexHit != currentIndex)  // User hit a different node
                     {
@@ -327,8 +393,19 @@ namespace SmartStroke
                             nodes[indexHit].setFillColor(new SolidColorBrush(Colors.Red));
                             nodes[currentIndex].setFillColor(new SolidColorBrush(Colors.Yellow));
 
-                            if(!incorrectNodes.Contains(currentIndex)) incorrectNodes.Enqueue(currentIndex);
-                            if(!incorrectNodes.Contains(indexHit)) incorrectNodes.Enqueue(indexHit);
+                            if(!incorrectNodes.Contains(currentIndex)) 
+                                incorrectNodes.Enqueue(currentIndex);
+                            if(!incorrectNodes.Contains(indexHit)) 
+                                incorrectNodes.Enqueue(indexHit);
+
+                            foreach(Line l in currentEdge)
+                            {
+                                MyCanvas.Children.Remove(l);
+                            }
+                            //go back in time...the user should hit the yellow node again to turn it green and clear red
+                            //nodes[nextIndex].setComplete(false);
+                            //nextIndex--;
+                            //currentIndex--;
                         }
                     }
 
@@ -359,6 +436,7 @@ namespace SmartStroke
                             Stroke = new SolidColorBrush(DRAW_COLOR)
                         };
                         currentLine.Add(line);
+                        currentEdge.Add(line);
                         MyCanvas.Children.Add(line);
                     }
 
@@ -424,6 +502,12 @@ namespace SmartStroke
 
             nodes.Clear();
             populateNodes(testVersion, nodes);      // (Re)Populate the list of trail nodes
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            timer.Stop();
         }
 
     }
