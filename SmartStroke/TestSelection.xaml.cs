@@ -113,7 +113,7 @@ namespace SmartStroke
 
         private void norm_button_click(object sender, RoutedEventArgs e)
         {
-
+            this.Frame.Navigate(typeof(NormComparison));
         }
     }
 }
