@@ -41,19 +41,9 @@ namespace SmartStroke
         {
             this.Frame.Navigate(typeof(UserInfoPage));
         }
-
-        private void selection_click(object sender, RoutedEventArgs e)
+        private void test_selection_click(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(TrailsMenu));
-        }
-
-        private void ButtonClick(object sender, RoutedEventArgs e)
-        {
-            if (this.Frame != null)
-            {
-                this.Frame.Navigate(typeof(TestSelection));
-
-            }
+            this.Frame.Navigate(typeof(TestSelection));
         }
     }
 }

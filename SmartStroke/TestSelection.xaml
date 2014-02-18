@@ -57,7 +57,7 @@
             <Button Content="Clock Test" HorizontalAlignment="Center" Margin="0,0,0,0" Grid.Row="1" VerticalAlignment="Top"/>
             <Button Content="View Old" HorizontalAlignment="Center" Margin="0,0,0,0" Grid.Row="1" VerticalAlignment="Top"/>
         </StackPanel>
-        <Button Content="Compare to Norm" HorizontalAlignment="Left" Margin="1137,533,0,0" Grid.Row="1" VerticalAlignment="Top" Click="Button_Click"/>
+        <Button Content="Compare to Norm" HorizontalAlignment="Left" Margin="1137,533,0,0" Grid.Row="1" VerticalAlignment="Top" Click="norm_button_click"/>
 
     </Grid>
 </Page>
