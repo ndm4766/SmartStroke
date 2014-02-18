@@ -108,6 +108,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TestReplay.cs" />
     <Compile Include="TrailsMenu.xaml.cs">
       <DependentUpon>TrailsMenu.xaml</DependentUpon>
     </Compile>
