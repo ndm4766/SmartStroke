@@ -28,5 +28,14 @@ namespace SmartStroke
             //Laramie's test commit
             this.InitializeComponent();
         }
+
+        private void ButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (this.Frame != null)
+            {
+                this.Frame.Navigate(typeof(TestSelection));
+
+            }
+        }
     }
 }
