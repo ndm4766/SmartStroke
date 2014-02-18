@@ -49,7 +49,7 @@
         <!--<TextBlock Text = "{Binding Source = {x:Static SystemParameters.FullPrimaryScreenHeight}}" />-->
 
         <StackPanel Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" Name="LeftStackPanel" VerticalAlignment="Center" Margin="0,69,0,471" Width="680">
-            <Button Content="Trails Test" HorizontalAlignment="Center" Margin="0,0,0,0" Grid.Row="1" VerticalAlignment="Top"/>
+            <Button Content="Trails Test" HorizontalAlignment="Center" Margin="0,0,0,0" Grid.Row="1" VerticalAlignment="Top" Click="selection_click"/>
             <Button Content="View Old" HorizontalAlignment="Center" Margin="0,0,0,0" Grid.Row="1" VerticalAlignment="Top"/>
         </StackPanel>
         

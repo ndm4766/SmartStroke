@@ -107,5 +107,10 @@ namespace SmartStroke
         {
 
         }
+
+        private void selection_click(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(TrailsMenu));
+        }
     }
 }
