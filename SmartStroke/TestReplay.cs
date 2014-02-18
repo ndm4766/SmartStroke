@@ -8,10 +8,11 @@ using System.Collections;
 
 namespace SmartStroke
 {
-    public class TestAction
+    public abstract class TestAction
     {
-        private DateTime startTime { get; private set; }
-        private DateTime endTime { get; private set; }
+        protected DateTime startTime;
+        protected DateTime endTime;
+        public TestAction() { }
         public TestAction(DateTime StartTime, DateTime EndTime)
         {
             startTime = StartTime;
@@ -32,12 +33,13 @@ namespace SmartStroke
     }
     public sealed class ClearScreen : TestAction
     {
+        public ClearScreen(){}
         public override void executeAction() { }
     }
     public sealed class TestReplay
     {
-        private DateTime startTime { get; private set; }
-        private DateTime endTime { get; private set; }
+        private DateTime startTime;
+        private DateTime endTime;
         private List<TestAction> testActions;
         public TestReplay()
         {
