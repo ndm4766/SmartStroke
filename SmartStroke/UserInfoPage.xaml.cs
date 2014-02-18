@@ -136,7 +136,9 @@ namespace SmartStroke
         {
             //initialize file
             Windows.Storage.StorageFile myFile2 = await Windows.Storage.ApplicationData.Current.LocalFolder.CreateFileAsync(filename, Windows.Storage.CreationCollisionOption.ReplaceExisting);
-        }
+        }
+
+
 
         private void SubmitButtonClicked(object sender, RoutedEventArgs e)
         {
