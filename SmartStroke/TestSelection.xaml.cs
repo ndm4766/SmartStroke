@@ -111,11 +111,6 @@ namespace SmartStroke
             this.Frame.Navigate(typeof(TrailsMenu));
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void norm_button_click(object sender, RoutedEventArgs e)
         {
 

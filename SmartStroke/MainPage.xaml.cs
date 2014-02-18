@@ -36,7 +36,6 @@ namespace SmartStroke
         {
             this.Frame.Navigate(typeof(TrailsMenu));
         }
-
         private void info_click(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(UserInfoPage));
