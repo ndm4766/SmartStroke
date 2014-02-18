@@ -23,7 +23,8 @@ namespace SmartStroke
     /// </summary>
     public sealed partial class UserInfoPage : Page
     {
-
+        //Windows.Storage.StorageFile file;
+        const string filename = "userInfo.txt";
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
 
@@ -110,6 +111,33 @@ namespace SmartStroke
 
         #endregion
 
+        async void saveUserData()
+        {
+            try
+            {
+                //get file
+                Windows.Storage.StorageFile myFile = await Windows.Storage.ApplicationData.Current.LocalFolder.GetFileAsync(filename);
+
+                //read
+                String data = await Windows.Storage.FileIO.ReadTextAsync(myFile);
+
+                //save
+                string allUserDataString = name + ", " + birthday + ", " + age + ", " + sex + ", " + educationLevel;
+                await Windows.Storage.FileIO.WriteTextAsync(myFile, allUserDataString);
+
+            }
+            catch (FileNotFoundException)
+            {
+                //file did not exist so create it
+                create_file();
+            }
+        }
+        async void create_file()
+        {
+            //initialize file
+            Windows.Storage.StorageFile myFile2 = await Windows.Storage.ApplicationData.Current.LocalFolder.CreateFileAsync(filename, Windows.Storage.CreationCollisionOption.ReplaceExisting);
+        }
+
         private void SubmitButtonClicked(object sender, RoutedEventArgs e)
         {
             if (sexReady && educationReady)//make sure all info is valid
@@ -121,6 +149,7 @@ namespace SmartStroke
                     age--;
                 }
                 name = patientName.Text;
+                saveUserData();
                 NavigationHelper.GoBack();
             }
         }
