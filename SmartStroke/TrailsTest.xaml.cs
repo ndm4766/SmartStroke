@@ -53,7 +53,8 @@ namespace SmartStroke
         private List<TrailNode> nodes;
         private int nextIndex;
         private int currentIndex;
-        private Queue<int> incorrectNodes = new Queue<int>();
+        private Queue<int> incorrectNodes;
+        private List<Line> currentEdge;
 
         private Stopwatch timer;
         private DispatcherTimer disp;
@@ -80,6 +81,8 @@ namespace SmartStroke
             erasing = false;
             nextIndex = 0;
             currentIndex = 0;
+            incorrectNodes = new Queue<int>();
+            currentEdge = new List<Line>();
 
             timer = new Stopwatch();
             disp = new DispatcherTimer();
@@ -367,6 +370,8 @@ namespace SmartStroke
                         currentIndex = nextIndex;
                         nextIndex++;
 
+                        currentEdge.Clear();
+
                         //TODO: if the test is done...what to do?
                         if(nextIndex >= nodes.Count)
                         {
@@ -391,6 +396,10 @@ namespace SmartStroke
                             if(!incorrectNodes.Contains(indexHit)) 
                                 incorrectNodes.Enqueue(indexHit);
 
+                            foreach(Line l in currentEdge)
+                            {
+                                MyCanvas.Children.Remove(l);
+                            }
                             //go back in time...the user should hit the yellow node again to turn it green and clear red
                             //nodes[nextIndex].setComplete(false);
                             //nextIndex--;
@@ -425,6 +434,7 @@ namespace SmartStroke
                             Stroke = new SolidColorBrush(DRAW_COLOR)
                         };
                         currentLine.Add(line);
+                        currentEdge.Add(line);
                         MyCanvas.Children.Add(line);
                     }
 
