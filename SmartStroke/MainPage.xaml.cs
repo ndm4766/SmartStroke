@@ -26,7 +26,25 @@ namespace SmartStroke
         {
             //2B | !2B
             //Laramie's test commit
+            //the best comment
             this.InitializeComponent();
+            Windows.Graphics.Display.DisplayInformation.AutoRotationPreferences = Windows.Graphics.Display.DisplayOrientations.Portrait;
+
+        }
+
+        private void trails_click(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(TrailsMenu));
+        }
+
+        private void info_click(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(UserInfoPage));
+        }
+
+        private void selection_click(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(TrailsMenu));
         }
 
         private void ButtonClick(object sender, RoutedEventArgs e)

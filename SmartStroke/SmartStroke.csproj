@@ -103,12 +103,25 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TestReplay.cs" />
+    <Compile Include="TrailsMenu.xaml.cs">
+      <DependentUpon>TrailsMenu.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserInfoPage.xaml.cs">
+      <DependentUpon>UserInfoPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ClockTest.xaml.cs">
+      <DependentUpon>ClockTest.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Common\NavigationHelper.cs" />
+    <Compile Include="Common\ObservableDictionary.cs" />
+    <Compile Include="Common\RelayCommand.cs" />
+    <Compile Include="Common\SuspensionManager.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -125,16 +138,31 @@
     <None Include="SmartStroke_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-	<Content Include="Assets\Logo.scale-100.png" />
-	<Content Include="Assets\SmallLogo.scale-100.png" />
-	<Content Include="Assets\SplashScreen.scale-100.png" />
-	<Content Include="Assets\StoreLogo.scale-100.png" />
+    <Content Include="Assets\Logo.scale-100.png" />
+    <Content Include="Assets\SmallLogo.scale-100.png" />
+    <Content Include="Assets\SplashScreen.scale-100.png" />
+    <Content Include="Assets\StoreLogo.scale-100.png" />
+    <Content Include="Common\ReadMe.txt" />
+    <Content Include="Properties\images\trailsA.jpg" />
+    <Content Include="Properties\images\trailsB.jpg" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="TrailsMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserInfoPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ClockTest.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

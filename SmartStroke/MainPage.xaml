@@ -8,7 +8,8 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Button Content="TestSelection" HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Center" Click="ButtonClick"/>
+        <Button Content="Trails" HorizontalAlignment="Left" Margin="445,56,0,0" VerticalAlignment="Top" Height="196" Width="526" Click="trails_click"/>
+        <Button Content="User info page" HorizontalAlignment="Left" Margin="55,310,0,0" VerticalAlignment="Top" Height="238" Width="457" Click="info_click"/>
+        <Button Content="Test selection" HorizontalAlignment="Left" Margin="904,333,0,0" VerticalAlignment="Top" Height="215" Width="441" Click="selection_click"/>
     </Grid>
-
 </Page>
