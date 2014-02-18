@@ -18,6 +18,7 @@ using Windows.UI;
 using Windows.Devices.Input;
 using Windows.UI.ApplicationSettings;
 using System.Diagnostics;
+using Windows.Graphics.Display;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -62,7 +63,7 @@ namespace SmartStroke
         public TrailsTest()
         {
             this.InitializeComponent();
-            Windows.Graphics.Display.DisplayInformation.AutoRotationPreferences = Windows.Graphics.Display.DisplayOrientations.Landscape;
+            //Windows.Graphics.Display.DisplayInformation.AutoRotationPreferences = Windows.Graphics.Display.DisplayOrientations.Landscape;
             
             ink_manager = new Windows.UI.Input.Inking.InkManager();
 
@@ -96,8 +97,9 @@ namespace SmartStroke
             drawingAttributes.FitToCurve = false;
             ink_manager.SetDefaultDrawingAttributes(drawingAttributes);
 
-            var windowHeight = Windows.UI.Xaml.Window.Current.Bounds.Height;
-            var windowWidth = Windows.UI.Xaml.Window.Current.Bounds.Width;
+            var windowWidth = Window.Current.Bounds.Width * (int)DisplayProperties.ResolutionScale / 100;
+            var windowHeight = Window.Current.Bounds.Height * (int)DisplayProperties.ResolutionScale / 100;
+            //var windowWidth = Windows.UI.Xaml.Window.Current.Bounds.Width;
         }
 
         private void populateNodes(string kind, List<TrailNode> nodes)
