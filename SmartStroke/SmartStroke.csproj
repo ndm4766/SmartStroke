@@ -108,6 +108,7 @@
     <Compile Include="NormComparison.xaml.cs">
       <DependentUpon>NormComparison.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Patient.cs" />
     <Compile Include="TestReplay.cs" />
     <Compile Include="TestSelection.xaml.cs">
       <DependentUpon>TestSelection.xaml</DependentUpon>
