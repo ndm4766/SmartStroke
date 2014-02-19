@@ -60,6 +60,9 @@ namespace SmartStroke
         private Stopwatch timer;
         private DispatcherTimer disp;
 
+        private DisplayInformation display;
+        private ResolutionScale resScale;
+
         public TrailsTest()
         {
             this.InitializeComponent();
@@ -96,6 +99,13 @@ namespace SmartStroke
             // True is the Default value for fitToCurve.
             drawingAttributes.FitToCurve = false;
             ink_manager.SetDefaultDrawingAttributes(drawingAttributes);
+
+            display = DisplayInformation.GetForCurrentView();
+            resScale = DisplayProperties.ResolutionScale;
+
+            double dpiTotal = display.LogicalDpi;
+            double dpiWidth = display.RawDpiX;
+            double dpiHeight = display.RawDpiY;
 
             var windowWidth = Window.Current.Bounds.Width * (int)DisplayProperties.ResolutionScale / 100;
             var windowHeight = Window.Current.Bounds.Height * (int)DisplayProperties.ResolutionScale / 100;
