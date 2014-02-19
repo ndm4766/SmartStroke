@@ -102,7 +102,7 @@ namespace SmartStroke
             //var windowHeight = Window.Current.Bounds.Height * (int)DisplayProperties.ResolutionScale / 100;
             //var windowWidth = Windows.UI.Xaml.Window.Current.Bounds.Width;
 
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher("\\root\\wmi", "SELECT * FROM WmiMonitorBasicDisplayParams");
+            /*ManagementObjectSearcher searcher = new ManagementObjectSearcher("\\root\\wmi", "SELECT * FROM WmiMonitorBasicDisplayParams");
 
             foreach (ManagementObject mo in searcher.Get())
             {
@@ -110,7 +110,7 @@ namespace SmartStroke
                 double height = (byte)mo["MaxVerticalImageSize"] / 2.54;
                 double diagonal = Math.Sqrt(width * width + height * height);
                 int x = 0;
-            }
+            }*/
         }
 
         private void populateNodes(string kind, List<TrailNode> nodes)
