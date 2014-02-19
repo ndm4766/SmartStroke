@@ -20,6 +20,7 @@ using Windows.UI.ApplicationSettings;
 using System.Diagnostics;
 using Windows.Graphics.Display;
 
+
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace SmartStroke
@@ -60,6 +61,10 @@ namespace SmartStroke
         private Stopwatch timer;
         private DispatcherTimer disp;
 
+        //Size of screen
+        double screenWidth;
+        double screenHeight;
+
         public TrailsTest()
         {
             this.InitializeComponent();
@@ -91,15 +96,28 @@ namespace SmartStroke
             disp.Tick += timer_tick;
             disp.Start();
 
+            screenHeight = Window.Current.Bounds.Height;
+            screenWidth = Window.Current.Bounds.Width;
+
             //Set the ink to not use bezeir curves
             drawingAttributes = new Windows.UI.Input.Inking.InkDrawingAttributes();
             // True is the Default value for fitToCurve.
             drawingAttributes.FitToCurve = false;
             ink_manager.SetDefaultDrawingAttributes(drawingAttributes);
 
-            var windowWidth = Window.Current.Bounds.Width * (int)DisplayProperties.ResolutionScale / 100;
-            var windowHeight = Window.Current.Bounds.Height * (int)DisplayProperties.ResolutionScale / 100;
+            //var windowWidth = Window.Current.Bounds.Width * (int)DisplayProperties.ResolutionScale / 100;
+            //var windowHeight = Window.Current.Bounds.Height * (int)DisplayProperties.ResolutionScale / 100;
             //var windowWidth = Windows.UI.Xaml.Window.Current.Bounds.Width;
+
+            /*ManagementObjectSearcher searcher = new ManagementObjectSearcher("\\root\\wmi", "SELECT * FROM WmiMonitorBasicDisplayParams");
+
+            foreach (ManagementObject mo in searcher.Get())
+            {
+                double width = (byte)mo["MaxHorizontalImageSize"] / 2.54;
+                double height = (byte)mo["MaxVerticalImageSize"] / 2.54;
+                double diagonal = Math.Sqrt(width * width + height * height);
+                int x = 0;
+            }*/
         }
 
         private void populateNodes(string kind, List<TrailNode> nodes)
