@@ -104,9 +104,14 @@ namespace SmartStroke
             // True is the Default value for fitToCurve.
             drawingAttributes.FitToCurve = false;
             ink_manager.SetDefaultDrawingAttributes(drawingAttributes);
-
-            //var windowWidth = Window.Current.Bounds.Width * (int)DisplayProperties.ResolutionScale / 100;
-            //var windowHeight = Window.Current.Bounds.Height * (int)DisplayProperties.ResolutionScale / 100;
+            DisplayInformation display = DisplayInformation.GetForCurrentView();
+            float dpi = display.LogicalDpi;
+            float xdpi = display.RawDpiX;
+            float ydpi = display.RawDpiY;
+            double dots = xdpi * Window.Current.Bounds.Width;
+            ResolutionScale scale = display.ResolutionScale;
+            var windowWidth = Window.Current.Bounds.Width * (int)DisplayProperties.ResolutionScale / 100;
+            var windowHeight = Window.Current.Bounds.Height * (int)DisplayProperties.ResolutionScale / 100;
             //var windowWidth = Windows.UI.Xaml.Window.Current.Bounds.Width;
 
             /*ManagementObjectSearcher searcher = new ManagementObjectSearcher("\\root\\wmi", "SELECT * FROM WmiMonitorBasicDisplayParams");
