@@ -61,6 +61,10 @@ namespace SmartStroke
         private Stopwatch timer;
         private DispatcherTimer disp;
 
+        //Size of screen
+        double screenWidth;
+        double screenHeight;
+
         public TrailsTest()
         {
             this.InitializeComponent();
@@ -91,6 +95,9 @@ namespace SmartStroke
             disp.Interval = new TimeSpan(0, 0, 0, 0, 10);
             disp.Tick += timer_tick;
             disp.Start();
+
+            screenHeight = Window.Current.Bounds.Height;
+            screenWidth = Window.Current.Bounds.Width;
 
             //Set the ink to not use bezeir curves
             drawingAttributes = new Windows.UI.Input.Inking.InkDrawingAttributes();
