@@ -10,7 +10,7 @@ using Windows.UI.Xaml.Shapes;
 
 namespace SmartStroke
 {
-    public enum ACTION_TYPE { STROKE }
+    public enum ACTION_TYPE { STROKE, DEL_PREV_STROKE }
     public abstract class TestAction
     {
         protected DateTime startTime;
@@ -78,6 +78,13 @@ namespace SmartStroke
             return ACTION_TYPE.STROKE; 
         }
     }
+    public sealed class DeletePreviousStroke : TestAction
+    {
+        public override ACTION_TYPE getActionType()
+        {
+            return ACTION_TYPE.DEL_PREV_STROKE;
+        }
+    }
     public sealed class TestReplay
     {
         private DateTime startTime;
@@ -115,12 +122,22 @@ namespace SmartStroke
         {
             if (getCurrentTestAction() != null)
             {
-                Debug.Assert(!getCurrentTestAction().isFinished()
-                    , "Current test action is already finished.");
-                Debug.Assert(checkCurrentTestAction(ACTION_TYPE.STROKE)
-                    , "Current test action is already ended.");
+                Debug.Assert(!getCurrentTestAction().isFinished(), 
+                    "Current test action is already finished.");
+                Debug.Assert(checkCurrentTestAction(ACTION_TYPE.STROKE), 
+                    "Current test action is not a stroke.");
                 currentStroke.addLine(line);
             }
+        }
+        public void deletePreviousStroke()
+        {
+            Debug.Assert(getCurrentTestAction() != null, 
+                "There is no previous stroke to delete.");
+            Debug.Assert(getCurrentTestAction().isFinished(), 
+                "Current test action is not finished.");
+            Debug.Assert(checkCurrentTestAction(ACTION_TYPE.STROKE), 
+                "Current test action is not a stroke.");
+            testActions.Add(new DeletePreviousStroke());
         }
         public bool checkCurrentTestAction(ACTION_TYPE act)
         {
