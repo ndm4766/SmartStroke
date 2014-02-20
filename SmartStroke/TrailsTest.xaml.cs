@@ -21,6 +21,12 @@ using System.Diagnostics;
 using Windows.Graphics.Display;
 
 
+/*
+ * Perceptive Pixel - DPIX/DPIY = 40, DPILog = 96 Res=1920X1080 Scale = 100
+ * Slate            - DPIX/DPIY = 135,DPILog = 96 Res=1920X1080 Scale = 100
+ * Surface          - DPIX/DPIY = 120.DPILog = 207Res=1920X1080 Scale = 140
+ */
+
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace SmartStroke
