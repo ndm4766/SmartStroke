@@ -69,6 +69,10 @@ namespace SmartStroke
         }
         private List<LineData> lines;
         public Stroke() { lines = new List<LineData>(); }
+        public void addLine(Line _Line)
+        {
+            lines.Add(new LineData(DateTime.Now, _Line));
+        }
         public override ACTION_TYPE getActionType() 
         { 
             return ACTION_TYPE.STROKE; 
@@ -92,9 +96,9 @@ namespace SmartStroke
             {
                 Debug.Assert(getCurrentTestAction().isFinished()
                     , "Current test action is unfinished.");
-                currentStroke = new Stroke();
-                testActions.Add(currentStroke);
             }
+            currentStroke = new Stroke();
+            testActions.Add(currentStroke);
         }
         public void endStroke()
         {
@@ -104,13 +108,19 @@ namespace SmartStroke
                     , "Current test action is already finished.");
                 Debug.Assert(checkCurrentTestAction(ACTION_TYPE.STROKE)
                     , "Current test action is already ended."); 
-                currentStroke.endAction();
-                currentStroke = new Stroke();
             }
+            currentStroke.endAction();
         }
         public void addLine(Line line)
         {
-            
+            if (getCurrentTestAction() != null)
+            {
+                Debug.Assert(!getCurrentTestAction().isFinished()
+                    , "Current test action is already finished.");
+                Debug.Assert(checkCurrentTestAction(ACTION_TYPE.STROKE)
+                    , "Current test action is already ended.");
+                currentStroke.addLine(line);
+            }
         }
         public bool checkCurrentTestAction(ACTION_TYPE act)
         {

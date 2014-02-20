@@ -353,7 +353,6 @@ namespace SmartStroke
                     currentLine = new List<Line>();
 
                     testReplay.endStroke();
-                    testReplay.beginStroke();
                 }
             }
 
