@@ -30,6 +30,9 @@ namespace SmartStroke
     /// </summary>
     public sealed partial class TrailsTest : Page
     {
+        //record user actions
+        private TestReplay testReplay;
+
         //general globals
         private string testVersion;
         private const double DRAW_WIDTH = 4.0;
@@ -104,6 +107,9 @@ namespace SmartStroke
             // True is the Default value for fitToCurve.
             drawingAttributes.FitToCurve = false;
             ink_manager.SetDefaultDrawingAttributes(drawingAttributes);
+
+            testReplay = new TestReplay();
+            testReplay.startTest();
 
             //var windowWidth = Window.Current.Bounds.Width * (int)DisplayProperties.ResolutionScale / 100;
             //var windowHeight = Window.Current.Bounds.Height * (int)DisplayProperties.ResolutionScale / 100;
@@ -340,6 +346,9 @@ namespace SmartStroke
                     allLines.Add(ink_manager.GetStrokes()[ink_manager.GetStrokes().Count-1], currentLine);
                     //cant just clear the list cuz its c#, have to point to a new list, not a memory leak
                     currentLine = new List<Line>();
+                    
+                    testReplay.endStroke();
+                    testReplay.beginStroke();
                 }
             }
 
@@ -401,6 +410,8 @@ namespace SmartStroke
                             MyCanvas.PointerMoved -= MyCanvas_PointerMoved;
                             MyCanvas.PointerReleased -= MyCanvas_PointerReleased;
                             MyCanvas.PointerExited -= MyCanvas_PointerReleased;
+                            testReplay.endStroke();
+                            testReplay.endTest();
                             return;
                         }
                     }
@@ -456,6 +467,8 @@ namespace SmartStroke
                         currentLine.Add(line);
                         currentEdge.Add(line);
                         MyCanvas.Children.Add(line);
+
+                        testReplay.addLine(line);
                     }
 
                     ink_manager.ProcessPointerUpdate(pt);
@@ -494,6 +507,7 @@ namespace SmartStroke
                 }
                 else
                 {
+                    testReplay.beginStroke();
                     erasing = false;
                 }
 
