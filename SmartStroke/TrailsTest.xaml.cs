@@ -30,6 +30,9 @@ namespace SmartStroke
     /// </summary>
     public sealed partial class TrailsTest : Page
     {
+        //testreplay
+        private TestReplay testReplay;
+
         //general globals
         private string testVersion;
         private const double DRAW_WIDTH = 4.0;
@@ -71,6 +74,9 @@ namespace SmartStroke
             //Windows.Graphics.Display.DisplayInformation.AutoRotationPreferences = Windows.Graphics.Display.DisplayOrientations.Landscape;
 
             ink_manager = new Windows.UI.Input.Inking.InkManager();
+
+            testReplay = new TestReplay();
+            testReplay.startTest();
 
             // Create the trails test background. The test image is 117X917 px but to fit on a screen (surface) it is 686 X 939
             nodes = new List<TrailNode>();
@@ -345,6 +351,9 @@ namespace SmartStroke
                     allLines.Add(ink_manager.GetStrokes()[ink_manager.GetStrokes().Count - 1], currentLine);
                     //cant just clear the list cuz its c#, have to point to a new list, not a memory leak
                     currentLine = new List<Line>();
+
+                    testReplay.endStroke();
+                    testReplay.beginStroke();
                 }
             }
 
@@ -406,6 +415,8 @@ namespace SmartStroke
                             MyCanvas.PointerMoved -= MyCanvas_PointerMoved;
                             MyCanvas.PointerReleased -= MyCanvas_PointerReleased;
                             MyCanvas.PointerExited -= MyCanvas_PointerReleased;
+                            testReplay.endStroke();
+                            testReplay.endTest();
                             return;
                         }
                     }
@@ -464,6 +475,8 @@ namespace SmartStroke
                         currentLine.Add(line);
                         currentEdge.Add(line);
                         MyCanvas.Children.Add(line);
+
+                        testReplay.addLine(line);
                     }
 
                     ink_manager.ProcessPointerUpdate(pt);
@@ -502,6 +515,7 @@ namespace SmartStroke
                 }
                 else
                 {
+                    testReplay.beginStroke();
                     erasing = false;
                 }
 
