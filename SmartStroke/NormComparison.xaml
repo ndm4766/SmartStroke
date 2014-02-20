@@ -47,7 +47,7 @@
             <TextBlock x:Name="pageTitle" Text="{StaticResource AppName}" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
 				IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,30,40"/>
         </Grid>-->
-        
+        <Grid Grid.Row="1">
         <Charting:Chart x:Name="PieChart" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="100,100,0,0" Width="400" Height="400">
             <Charting:Chart.Series>
                 <Charting:PieSeries Margin="0" IndependentValuePath="Name" DependentValuePath="Amount" IsSelectionEnabled="True"/>
@@ -186,6 +186,7 @@
         <Charting:Chart x:Name="BubbleChart" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="705,505,0,-137" Width="600" Height="400">
             <Charting:BubbleSeries Title="Smartphone Companies" Margin="0" IndependentValuePath="Name" DependentValuePath="Amount" IsSelectionEnabled="True"/>
         </Charting:Chart>
+        </Grid>
 
     </Grid>
 </Page>
