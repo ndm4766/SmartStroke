@@ -102,15 +102,13 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="NormComparison.xaml.cs">
       <DependentUpon>NormComparison.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Patient.cs" />
     <Compile Include="TestReplay.cs" />
     <Compile Include="TestSelection.xaml.cs">
       <DependentUpon>TestSelection.xaml</DependentUpon>
