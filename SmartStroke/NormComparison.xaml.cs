@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using WinRTXamlToolkit.Controls.DataVisualization.Charting;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234237
 
@@ -35,6 +36,14 @@ namespace SmartStroke
             get { return this.defaultViewModel; }
         }
 
+        void getStuck()
+        {
+            while (true)
+            {
+                //nothing
+            }
+        }
+
         /// <summary>
         /// NavigationHelper is used on each page to aid in navigation and 
         /// process lifetime management
@@ -44,14 +53,20 @@ namespace SmartStroke
             get { return this.navigationHelper; }
         }
 
+        public class FinancialStuff
+        {
+            public string Name { get; set; }
+            public int Amount { get; set; }
+        }
 
         public NormComparison()
         {
             this.InitializeComponent();
             this.navigationHelper = new NavigationHelper(this);
-            this.navigationHelper.LoadState += navigationHelper_LoadState;
-            this.navigationHelper.SaveState += navigationHelper_SaveState;
-            //foo();
+            //this.navigationHelper.LoadState += navigationHelper_LoadState;
+            //this.navigationHelper.SaveState += navigationHelper_SaveState;
+            this.Loaded += NormComparisonPage_Loaded;
+            //LoadChartContents();
         }
 
         /// <summary>
@@ -100,6 +115,31 @@ namespace SmartStroke
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             navigationHelper.OnNavigatedFrom(e);
+        }
+
+        private void ButtonRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            LoadChartContents();
+        }
+
+        void NormComparisonPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            LoadChartContents();
+        }
+
+        private void LoadChartContents()
+        {
+                Random rand = new Random();
+                List<FinancialStuff> financialStuffList = new List<FinancialStuff>();
+                financialStuffList.Add(new FinancialStuff() { Name = "MSFT", Amount = rand.Next(0, 200) });
+                financialStuffList.Add(new FinancialStuff() { Name = "AAPL", Amount = rand.Next(0, 200) });
+                financialStuffList.Add(new FinancialStuff() { Name = "GOOG", Amount = rand.Next(0, 200) });
+                financialStuffList.Add(new FinancialStuff() { Name = "BBRY", Amount = rand.Next(0, 200) });
+                (PieChart.Series[0] as PieSeries).ItemsSource = financialStuffList;
+                (ColumnChart.Series[0] as ColumnSeries).ItemsSource = financialStuffList;
+                (LineChart.Series[0] as LineSeries).ItemsSource = financialStuffList;
+                (BarChart.Series[0] as BarSeries).ItemsSource = financialStuffList;
+                (BubbleChart.Series[0] as BubbleSeries).ItemsSource = financialStuffList;
         }
 
         #endregion
