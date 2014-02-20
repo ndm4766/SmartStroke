@@ -118,17 +118,6 @@ namespace SmartStroke
             ResolutionScale scale = display.ResolutionScale;
             var windowWidth = Window.Current.Bounds.Width * (int)DisplayProperties.ResolutionScale / 100;
             var windowHeight = Window.Current.Bounds.Height * (int)DisplayProperties.ResolutionScale / 100;
-            //var windowWidth = Windows.UI.Xaml.Window.Current.Bounds.Width;
-
-            /*ManagementObjectSearcher searcher = new ManagementObjectSearcher("\\root\\wmi", "SELECT * FROM WmiMonitorBasicDisplayParams");
-
-            foreach (ManagementObject mo in searcher.Get())
-            {
-                double width = (byte)mo["MaxHorizontalImageSize"] / 2.54;
-                double height = (byte)mo["MaxVerticalImageSize"] / 2.54;
-                double diagonal = Math.Sqrt(width * width + height * height);
-                int x = 0;
-            }*/
         }
 
         private void populateNodes(string kind, List<TrailNode> nodes)
@@ -235,7 +224,6 @@ namespace SmartStroke
             foreach (var p in s.GetRenderingSegments())
             {
                 if (Math.Abs(testPoint.X - p.Position.X) < 10 && Math.Abs(testPoint.Y - p.Position.Y) < 10)
-                    //if (test.X == p.Position.X && test.Y == p.Position.Y)
                     return true;
             }
             return false;
@@ -317,7 +305,7 @@ namespace SmartStroke
                 if (!erasing)
                 {
                     //create the link from the completed stroke to its list of lines on the canvas
-                    allLines.Add(ink_manager.GetStrokes()[ink_manager.GetStrokes().Count - 1], currentLine);
+                    allLines.Add(ink_manager.GetStrokes()[ink_manager.GetStrokes().Count - 1], currentLine); //TODO: need to have a better way to grab the stroke just drawn
                     //cant just clear the list cuz its c#, have to point to a new list, not a memory leak
                     currentLine = new List<Line>();
 
@@ -352,13 +340,16 @@ namespace SmartStroke
                 x2 = current_contact_pt.X;
                 y2 = current_contact_pt.Y;
 
-                if (Distance(x1, y1, x2, y2) > 2.0) //test whether the pointer has moved far enough to warrant drawing a new line
+                //test whether the pointer has moved far enough to warrant drawing a new line
+                if (Distance(x1, y1, x2, y2) > 2.0) 
                 {
+                    //dont track the cursor, only the pen pressed
                     if (!pressed)
                     {
                         return;
                     }
 
+                    //check if the stylus pointer 
                     if (stylus_hit_test(x2, y2, nextIndex))
                     {
                         if (!timer.IsRunning)
