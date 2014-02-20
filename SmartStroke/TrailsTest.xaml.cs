@@ -296,43 +296,12 @@ namespace SmartStroke
                 index = incorrectNodes.Dequeue();
                 nodes[index].getEllipse().Fill = new SolidColorBrush(Colors.Green);
 
-                index = incorrectNodes.Dequeue(); //TODO: somehow it tried to dequeue when count was 0
-                nodes[index].getEllipse().Fill = new SolidColorBrush(Colors.CornflowerBlue);
-            }
-            /*SolidColorBrush yellow = new SolidColorBrush(Colors.Yellow);
-            SolidColorBrush red = new SolidColorBrush(Colors.Red);
-            if(node == 0)
-            {
-                // The first node was set to an incorrect color (i.e. Yellow)
-                if (nodes[node].getEllipse().Fill.Equals(yellow) || nodes[node].getEllipse().Fill.Equals(red))
-                    nodes[node].getEllipse().Fill = new SolidColorBrush(Colors.Green);
-            }
-            else
-            {
-                // Find all nodes less than the node that are yellow.
-                for(int i = 0; i <= node; i++)
+                while(incorrectNodes.Count > 0)
                 {
-                    if (nodes[i].getEllipse().Fill == null) 
-                        continue;
-                    if (nodes[i].getEllipse().Fill == red)
-                    {
-                        nodes[i].getEllipse().Fill = new SolidColorBrush(Colors.Green);
-                        break;
-                    }
+                    index = incorrectNodes.Dequeue(); //TODO: somehow it tried to dequeue when count was 0
+                    nodes[index].getEllipse().Fill = new SolidColorBrush(Colors.CornflowerBlue);
                 }
-
-                // Find all nodes above the current node that are red
-                for(int i = node; i < nodes.Count; i++)
-                {
-                    if (nodes[i].getEllipse().Fill == null)
-                        continue;
-                    if (nodes[i].getEllipse().Fill == red)
-                    {
-                        nodes[i].getEllipse().Fill = new SolidColorBrush(Colors.Green);
-                        break;
-                    }
-                }
-            }*/
+           }
         }
 
         #region PointerEvents
