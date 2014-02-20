@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,6 +21,12 @@ using System.Diagnostics;
 using Windows.Graphics.Display;
 
 
+/*
+ * Perceptive Pixel - DPIX/DPIY = 40, DPILog = 96 Res=1920X1080 Scale = 100
+ * Slate            - DPIX/DPIY = 135,DPILog = 96 Res=1920X1080 Scale = 100
+ * Surface          - DPIX/DPIY = 120.DPILog = 207Res=1920X1080 Scale = 140
+ */
+
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace SmartStroke
@@ -30,6 +36,9 @@ namespace SmartStroke
     /// </summary>
     public sealed partial class TrailsTest : Page
     {
+        //testreplay
+        private TestReplay testReplay;
+
         //general globals
         private string testVersion;
         private const double DRAW_WIDTH = 4.0;
@@ -50,7 +59,7 @@ namespace SmartStroke
         private Point current_contact_pt;
         private List<Line> currentLine;
         private Dictionary<InkStroke, List<Line>> allLines;
-        
+
         //TrailNode handling members
         private List<TrailNode> nodes;
         private int nextIndex;
@@ -69,8 +78,11 @@ namespace SmartStroke
         {
             this.InitializeComponent();
             //Windows.Graphics.Display.DisplayInformation.AutoRotationPreferences = Windows.Graphics.Display.DisplayOrientations.Landscape;
-            
+
             ink_manager = new Windows.UI.Input.Inking.InkManager();
+
+            testReplay = new TestReplay();
+            testReplay.startTest();
 
             // Create the trails test background. The test image is 117X917 px but to fit on a screen (surface) it is 686 X 939
             nodes = new List<TrailNode>();
@@ -104,9 +116,14 @@ namespace SmartStroke
             // True is the Default value for fitToCurve.
             drawingAttributes.FitToCurve = false;
             ink_manager.SetDefaultDrawingAttributes(drawingAttributes);
-
-            //var windowWidth = Window.Current.Bounds.Width * (int)DisplayProperties.ResolutionScale / 100;
-            //var windowHeight = Window.Current.Bounds.Height * (int)DisplayProperties.ResolutionScale / 100;
+            DisplayInformation display = DisplayInformation.GetForCurrentView();
+            float dpi = display.LogicalDpi;
+            float xdpi = display.RawDpiX;
+            float ydpi = display.RawDpiY;
+            double dots = xdpi * Window.Current.Bounds.Width;
+            ResolutionScale scale = display.ResolutionScale;
+            var windowWidth = Window.Current.Bounds.Width * (int)DisplayProperties.ResolutionScale / 100;
+            var windowHeight = Window.Current.Bounds.Height * (int)DisplayProperties.ResolutionScale / 100;
             //var windowWidth = Windows.UI.Xaml.Window.Current.Bounds.Width;
 
             /*ManagementObjectSearcher searcher = new ManagementObjectSearcher("\\root\\wmi", "SELECT * FROM WmiMonitorBasicDisplayParams");
@@ -125,7 +142,7 @@ namespace SmartStroke
             if (kind == "A")
             {
                 nodes.Add(new TrailNode(1, new Point(257, 421), MyCanvas));
-                TextBlock begin = new TextBlock() 
+                TextBlock begin = new TextBlock()
                 {
                     Text = "Begin",
                     Margin = new Thickness(330, 425, 0, 0),
@@ -170,7 +187,7 @@ namespace SmartStroke
                 end.RenderTransform = r;
                 MyCanvas.Children.Add(end);
             }
-            else if(kind == "B")
+            else if (kind == "B")
             {
                 nodes.Add(new TrailNode(1, new Point(530, 355), MyCanvas));
                 //nodes[0].setFillColor(new SolidColorBrush(Colors.Green));
@@ -221,13 +238,13 @@ namespace SmartStroke
 
         private bool eraser_hit_test(InkStroke s, Point testPoint)
         {
-            foreach(var p in s.GetRenderingSegments())
+            foreach (var p in s.GetRenderingSegments())
             {
                 if (Math.Abs(testPoint.X - p.Position.X) < 10 && Math.Abs(testPoint.Y - p.Position.Y) < 10)
-                //if (test.X == p.Position.X && test.Y == p.Position.Y)
+                    //if (test.X == p.Position.X && test.Y == p.Position.Y)
                     return true;
             }
-                return false;
+            return false;
         }
 
         // Return if the stylus has hit the correct next node
@@ -237,8 +254,8 @@ namespace SmartStroke
             double left = nodes[nextIndex].getEllipse().Margin.Left;
             double top = nodes[nextIndex].getEllipse().Margin.Top;
             double first = Math.Pow(x - (left + radius), 2);
-            double second =Math.Pow(y - (top + radius), 2);
-            return first + second <= radius*radius;
+            double second = Math.Pow(y - (top + radius), 2);
+            return first + second <= radius * radius;
         }
 
         // Return which index of node the user has hit
@@ -250,14 +267,14 @@ namespace SmartStroke
             double first;
             double second;
             int index = -1;
-            
-            for(int i = 0; i < nodes.Count; i++)
+
+            for (int i = 0; i < nodes.Count; i++)
             {
                 left = nodes[i].getEllipse().Margin.Left;
                 top = nodes[i].getEllipse().Margin.Top;
                 first = Math.Pow(x - (left + radius), 2);
                 second = Math.Pow(y - (top + radius), 2);
-                if( (first + second <= radius * radius) == true)
+                if ((first + second <= radius * radius) == true)
                 {
                     return i;
                 }
@@ -268,10 +285,10 @@ namespace SmartStroke
 
         private void timer_tick(object sender, object e)
         {
-            timer_box.Text = String.Format("{0}:{1}:{2}", 
+            timer_box.Text = String.Format("{0}:{1}:{2}",
                 timer.Elapsed.Minutes.ToString(),
                 timer.Elapsed.Seconds.ToString("D2"),
-                (timer.Elapsed.Milliseconds/10).ToString("D2"));
+                (timer.Elapsed.Milliseconds / 10).ToString("D2"));
         }
 
         // Go through and set anything that was yellow previously to Green
@@ -285,43 +302,12 @@ namespace SmartStroke
                 index = incorrectNodes.Dequeue();
                 nodes[index].getEllipse().Fill = new SolidColorBrush(Colors.Green);
 
-                index = incorrectNodes.Dequeue(); //TODO: somehow it tried to dequeue when count was 0
-                nodes[index].getEllipse().Fill = new SolidColorBrush(Colors.CornflowerBlue);
-            }
-            /*SolidColorBrush yellow = new SolidColorBrush(Colors.Yellow);
-            SolidColorBrush red = new SolidColorBrush(Colors.Red);
-            if(node == 0)
-            {
-                // The first node was set to an incorrect color (i.e. Yellow)
-                if (nodes[node].getEllipse().Fill.Equals(yellow) || nodes[node].getEllipse().Fill.Equals(red))
-                    nodes[node].getEllipse().Fill = new SolidColorBrush(Colors.Green);
-            }
-            else
-            {
-                // Find all nodes less than the node that are yellow.
-                for(int i = 0; i <= node; i++)
+                while(incorrectNodes.Count > 0)
                 {
-                    if (nodes[i].getEllipse().Fill == null) 
-                        continue;
-                    if (nodes[i].getEllipse().Fill == red)
-                    {
-                        nodes[i].getEllipse().Fill = new SolidColorBrush(Colors.Green);
-                        break;
-                    }
+                    index = incorrectNodes.Dequeue(); //TODO: somehow it tried to dequeue when count was 0
+                    nodes[index].getEllipse().Fill = new SolidColorBrush(Colors.CornflowerBlue);
                 }
-
-                // Find all nodes above the current node that are red
-                for(int i = node; i < nodes.Count; i++)
-                {
-                    if (nodes[i].getEllipse().Fill == null)
-                        continue;
-                    if (nodes[i].getEllipse().Fill == red)
-                    {
-                        nodes[i].getEllipse().Fill = new SolidColorBrush(Colors.Green);
-                        break;
-                    }
-                }
-            }*/
+           }
         }
 
         #region PointerEvents
@@ -334,12 +320,14 @@ namespace SmartStroke
                 // Pass the pointer information to the InkManager. 
                 ink_manager.ProcessPointerUp(pt);
 
-                if(!erasing)
-                { 
+                if (!erasing)
+                {
                     //create the link from the completed stroke to its list of lines on the canvas
-                    allLines.Add(ink_manager.GetStrokes()[ink_manager.GetStrokes().Count-1], currentLine);
+                    allLines.Add(ink_manager.GetStrokes()[ink_manager.GetStrokes().Count - 1], currentLine);
                     //cant just clear the list cuz its c#, have to point to a new list, not a memory leak
                     currentLine = new List<Line>();
+
+                    testReplay.endStroke();
                 }
             }
 
@@ -366,7 +354,7 @@ namespace SmartStroke
 
                 current_contact_pt = pt.Position;
                 x1 = previous_contact_pt.X;
-                y1 = previous_contact_pt.Y; 
+                y1 = previous_contact_pt.Y;
                 x2 = current_contact_pt.X;
                 y2 = current_contact_pt.Y;
 
@@ -377,23 +365,34 @@ namespace SmartStroke
                         return;
                     }
 
-                    if (stylus_hit_test(x2, y2, nextIndex))
+                    indexHit = stylus_hit_test(x2, y2);
+                    if(indexHit == currentIndex)
                     {
-                        if(!timer.IsRunning)
+                        nodes[currentIndex].setFillColor(new SolidColorBrush(Colors.Green));
+                        resetIncorrectNodes(currentIndex + 1);
+                    }
+
+                    // The stylus has made contact with the correct next node.
+                    if (indexHit == nextIndex)
+                    {
+                        // Start the timer keeping track of total time
+                        if (!timer.IsRunning)
                         {
                             timer.Start();
                         }
 
+                        // Set the node completed value equal to true and change the color to Green
                         nodes[nextIndex].setFillColor(new SolidColorBrush(Colors.Green));
                         nodes[nextIndex].setComplete(true);
-                        resetIncorrectNodes(nextIndex);
+
+                        // Change the index of the next node to look for and the current index
                         currentIndex = nextIndex;
                         nextIndex++;
 
                         currentEdge.Clear();
 
                         //TODO: if the test is done...what to do?
-                        if(nextIndex >= nodes.Count)
+                        if (nextIndex >= nodes.Count)
                         {
                             timer.Stop();
                             //this.Frame.Navigate(typeof(MainPage));
@@ -401,35 +400,41 @@ namespace SmartStroke
                             MyCanvas.PointerMoved -= MyCanvas_PointerMoved;
                             MyCanvas.PointerReleased -= MyCanvas_PointerReleased;
                             MyCanvas.PointerExited -= MyCanvas_PointerReleased;
+                            testReplay.endStroke();
+                            testReplay.endTest();
                             return;
                         }
                     }
-                    else if (((indexHit = stylus_hit_test(x2, y2)) >= 0) && indexHit != currentIndex)  // User hit a different node
+                    // Stylus did not contact the next node in the correct order.
+                    // Need to change the color of the corrected node to Yellow and the
+                        // incorrect node hit to red to notify the user this is not correct.
+                    else if ((indexHit >= 0) && indexHit > currentIndex)
                     {
-                        if (!nodes[indexHit].getCompleted())
-                        {
+                        // If the user ran over a node that was already completed, ignore executing
+                            // this code
+                        //if (!nodes[indexHit].getCompleted() && nodes[indexHit].getEllipse().Fill != null)
+                        //{
                             nodes[indexHit].setFillColor(new SolidColorBrush(Colors.Red));
                             nodes[currentIndex].setFillColor(new SolidColorBrush(Colors.Yellow));
+                            //nodes[currentIndex].setComplete(false);
+                            nextIndex = currentIndex;
 
-                            if(!incorrectNodes.Contains(currentIndex)) 
+                            if (!incorrectNodes.Contains(currentIndex))
                                 incorrectNodes.Enqueue(currentIndex);
-                            if(!incorrectNodes.Contains(indexHit)) 
+                                
+                            if (!incorrectNodes.Contains(indexHit))
                                 incorrectNodes.Enqueue(indexHit);
 
-                            foreach(Line l in currentEdge)
+                            foreach (Line l in currentEdge)
                             {
                                 MyCanvas.Children.Remove(l);
                             }
-                            //go back in time...the user should hit the yellow node again to turn it green and clear red
-                            //nodes[nextIndex].setComplete(false);
-                            //nextIndex--;
-                            //currentIndex--;
-                        }
+                        //}
                     }
 
                     if (erasing)
                     {
-                        foreach(var stroke in ink_manager.GetStrokes())
+                        foreach (var stroke in ink_manager.GetStrokes())
                         {
                             if (eraser_hit_test(stroke, new Point(x2, y2)))
                             {
@@ -449,13 +454,18 @@ namespace SmartStroke
                     {
                         Line line = new Line()
                         {
-                            X1 = x1, X2 = x2, Y1 = y1, Y2 = y2,
+                            X1 = x1,
+                            X2 = x2,
+                            Y1 = y1,
+                            Y2 = y2,
                             StrokeThickness = DRAW_WIDTH,
                             Stroke = new SolidColorBrush(DRAW_COLOR)
                         };
                         currentLine.Add(line);
                         currentEdge.Add(line);
                         MyCanvas.Children.Add(line);
+
+                        testReplay.addLine(line);
                     }
 
                     ink_manager.ProcessPointerUpdate(pt);
@@ -480,7 +490,7 @@ namespace SmartStroke
             // Get information about the pointer location.
             PointerPoint pt = e.GetCurrentPoint(MyCanvas);
             previous_contact_pt = pt.Position;
-            
+
             // Accept input only from a pen or mouse with the left button pressed. 
             PointerDeviceType pointerDevType = e.Pointer.PointerDeviceType;
             if (pointerDevType == PointerDeviceType.Pen || (pointerDevType == PointerDeviceType.Mouse && pt.Properties.IsLeftButtonPressed))
@@ -494,6 +504,7 @@ namespace SmartStroke
                 }
                 else
                 {
+                    testReplay.beginStroke();
                     erasing = false;
                 }
 
