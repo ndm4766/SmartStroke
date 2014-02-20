@@ -118,6 +118,17 @@ namespace SmartStroke
             ResolutionScale scale = display.ResolutionScale;
             var windowWidth = Window.Current.Bounds.Width * (int)DisplayProperties.ResolutionScale / 100;
             var windowHeight = Window.Current.Bounds.Height * (int)DisplayProperties.ResolutionScale / 100;
+            //var windowWidth = Windows.UI.Xaml.Window.Current.Bounds.Width;
+
+            /*ManagementObjectSearcher searcher = new ManagementObjectSearcher("\\root\\wmi", "SELECT * FROM WmiMonitorBasicDisplayParams");
+
+            foreach (ManagementObject mo in searcher.Get())
+            {
+                double width = (byte)mo["MaxHorizontalImageSize"] / 2.54;
+                double height = (byte)mo["MaxVerticalImageSize"] / 2.54;
+                double diagonal = Math.Sqrt(width * width + height * height);
+                int x = 0;
+            }*/
         }
 
         private void populateNodes(string kind, List<TrailNode> nodes)
@@ -224,6 +235,7 @@ namespace SmartStroke
             foreach (var p in s.GetRenderingSegments())
             {
                 if (Math.Abs(testPoint.X - p.Position.X) < 10 && Math.Abs(testPoint.Y - p.Position.Y) < 10)
+                    //if (test.X == p.Position.X && test.Y == p.Position.Y)
                     return true;
             }
             return false;
@@ -305,7 +317,7 @@ namespace SmartStroke
                 if (!erasing)
                 {
                     //create the link from the completed stroke to its list of lines on the canvas
-                    allLines.Add(ink_manager.GetStrokes()[ink_manager.GetStrokes().Count - 1], currentLine); //TODO: need to have a better way to grab the stroke just drawn
+                    allLines.Add(ink_manager.GetStrokes()[ink_manager.GetStrokes().Count - 1], currentLine);
                     //cant just clear the list cuz its c#, have to point to a new list, not a memory leak
                     currentLine = new List<Line>();
 
@@ -340,26 +352,34 @@ namespace SmartStroke
                 x2 = current_contact_pt.X;
                 y2 = current_contact_pt.Y;
 
-                //test whether the pointer has moved far enough to warrant drawing a new line
-                if (Distance(x1, y1, x2, y2) > 2.0) 
+                if (Distance(x1, y1, x2, y2) > 2.0) //test whether the pointer has moved far enough to warrant drawing a new line
                 {
-                    //dont track the cursor, only the pen pressed
                     if (!pressed)
                     {
                         return;
                     }
 
-                    //check if the stylus pointer 
-                    if (stylus_hit_test(x2, y2, nextIndex))
+                    indexHit = stylus_hit_test(x2, y2);
+                    if(indexHit == currentIndex)
                     {
+                        nodes[currentIndex].setFillColor(new SolidColorBrush(Colors.Green));
+                        resetIncorrectNodes(currentIndex + 1);
+                    }
+
+                    // The stylus has made contact with the correct next node.
+                    if (indexHit == nextIndex)
+                    {
+                        // Start the timer keeping track of total time
                         if (!timer.IsRunning)
                         {
                             timer.Start();
                         }
 
+                        // Set the node completed value equal to true and change the color to Green
                         nodes[nextIndex].setFillColor(new SolidColorBrush(Colors.Green));
                         nodes[nextIndex].setComplete(true);
-                        resetIncorrectNodes(nextIndex);
+
+                        // Change the index of the next node to look for and the current index
                         currentIndex = nextIndex;
                         nextIndex++;
 
@@ -379,15 +399,23 @@ namespace SmartStroke
                             return;
                         }
                     }
-                    else if (((indexHit = stylus_hit_test(x2, y2)) >= 0) && indexHit != currentIndex)  // User hit a different node
+                    // Stylus did not contact the next node in the correct order.
+                    // Need to change the color of the corrected node to Yellow and the
+                        // incorrect node hit to red to notify the user this is not correct.
+                    else if ((indexHit >= 0) && indexHit > currentIndex)
                     {
-                        if (!nodes[indexHit].getCompleted())
-                        {
+                        // If the user ran over a node that was already completed, ignore executing
+                            // this code
+                        //if (!nodes[indexHit].getCompleted() && nodes[indexHit].getEllipse().Fill != null)
+                        //{
                             nodes[indexHit].setFillColor(new SolidColorBrush(Colors.Red));
                             nodes[currentIndex].setFillColor(new SolidColorBrush(Colors.Yellow));
+                            //nodes[currentIndex].setComplete(false);
+                            nextIndex = currentIndex;
 
                             if (!incorrectNodes.Contains(currentIndex))
                                 incorrectNodes.Enqueue(currentIndex);
+                                
                             if (!incorrectNodes.Contains(indexHit))
                                 incorrectNodes.Enqueue(indexHit);
 
@@ -395,11 +423,7 @@ namespace SmartStroke
                             {
                                 MyCanvas.Children.Remove(l);
                             }
-                            //go back in time...the user should hit the yellow node again to turn it green and clear red
-                            //nodes[nextIndex].setComplete(false);
-                            //nextIndex--;
-                            //currentIndex--;
-                        }
+                        //}
                     }
 
                     if (erasing)
