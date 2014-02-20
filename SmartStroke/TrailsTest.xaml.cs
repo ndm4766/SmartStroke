@@ -104,6 +104,10 @@ namespace SmartStroke
             // True is the Default value for fitToCurve.
             drawingAttributes.FitToCurve = false;
             ink_manager.SetDefaultDrawingAttributes(drawingAttributes);
+            var dpix = DisplayInformation.GetForCurrentView().RawDpiX;
+            var dpiy = DisplayInformation.GetForCurrentView().RawDpiX;
+            var resscale = DisplayInformation.GetForCurrentView().ResolutionScale;
+            var logicaldpi = DisplayInformation.GetForCurrentView().LogicalDpi;
 
             //var windowWidth = Window.Current.Bounds.Width * (int)DisplayProperties.ResolutionScale / 100;
             //var windowHeight = Window.Current.Bounds.Height * (int)DisplayProperties.ResolutionScale / 100;
