@@ -13,7 +13,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using WinRTXamlToolkit.Controls.DataVisualization.Charting; //adding comment so I can re-pull
+using WinRTXamlToolkit.Controls.DataVisualization.Charting;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234237
 
