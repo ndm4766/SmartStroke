@@ -20,6 +20,7 @@ using Windows.UI.ApplicationSettings;
 using System.Diagnostics;
 using Windows.Graphics.Display;
 using SmartStroke.Common;
+using Windows.UI.Xaml.Media.Imaging;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234237
 
@@ -32,8 +33,9 @@ namespace SmartStroke
     {
         private string version;
         private List<TrailNode> nodes;
-        private Stopwatch timer;
         private DispatcherTimer disp;
+        private DispatcherTimer instructionTimer;
+        private int instructionNumber = 0;
 
         //ink drawing members
         private InkManager ink_manager;
@@ -48,7 +50,13 @@ namespace SmartStroke
         private Point previousPoint;
         private int currentNode;
 
+        private Image pen;
+        private const double penWidth = 187;
+        private const double penHeight = 136; 
+
         private double amountToMove;
+
+        private List<string> instructions;
 
         /// <summary>
         /// This can be changed to a strongly typed view model.
@@ -68,6 +76,20 @@ namespace SmartStroke
         }
 
 
+        private void makeInstructions()
+        {
+            instructions.Clear();
+            instructions.Add("Place the pen on the starting circle (1)");
+            if(version == "A")
+                instructions.Add("Determine the next node in increasing order (2)");
+            else if(version == "B")
+                instructions.Add("Determine the next node in increasing order (A)");
+            instructions.Add("Draw a line connecting the nodes");
+            instructions.Add("Stop when you have connected all the nodes");
+            instructions.Add("If you make a mistake, the node will light up red");
+            instructions.Add("If you make a mistake, start back at the previous node and retry");
+        }
+
         public TrailsTestInstruction()
         {
             this.InitializeComponent();
@@ -84,17 +106,24 @@ namespace SmartStroke
             drawingAttributes.FitToCurve = false;
             ink_manager.SetDefaultDrawingAttributes(drawingAttributes);
 
-            timer = new Stopwatch();
             disp = new DispatcherTimer();
             disp.Interval = new TimeSpan(0, 0, 0, 0, 10);
             disp.Tick += timer_tick;
-            disp.Start();
 
-            amountToMove = 1;
+            instructionTimer = new DispatcherTimer();
+            instructionTimer.Interval = new TimeSpan(0, 0, 3);
+            instructionTimer.Tick += instruction_tick;
+            instructionTimer.Start();
+
+            pen = new Image();
+
+            instructions = new List<string>();
+            amountToMove = 2;
         }
 
         private void populateNodes()
         {
+            nodes.Clear();
             if(version == "A")
             {
                 nodes.Add(new TrailNode(1, new Point(377, 244), MyCanvas));
@@ -123,7 +152,36 @@ namespace SmartStroke
             previousPoint = new Point(nodes[0].getLocation().X+15, nodes[0].getLocation().Y+15);
             currentPoint = new Point(nodes[0].getLocation().X + 15, nodes[0].getLocation().Y + 15);
             currentNode = 0;
+
+            pen.Source = new BitmapImage(new Uri(this.BaseUri, "Properties/images/pen.png"));
+            pen.Margin = new Thickness(nodes[0].getLocation().X-penWidth, nodes[0].getLocation().Y-penHeight, 0, 0);
+            MyCanvas.Children.Add(pen);
         }
+
+        private void instruction_tick(object sender, object e)
+        {
+            if(instructionNumber == 1)
+            {
+                disp.Start();
+            }
+            else if(instructionNumber == instructions.Count-1)
+            {
+                instructionTimer.Tick -= instruction_tick;
+                instructionTimer.Stop();
+            }
+            inst.Text += "\n";
+            inst.Text += instructions[instructionNumber];
+            inst.FontSize = 24;
+            instructionNumber += 1;
+        }
+
+        // restart tick. When the timer starts ticking, restart the animation
+        private void restart_tick(object sender, object e)
+        {
+            disp.Tick -= restart_tick;
+            this.Frame.Navigate(typeof(TrailsTestInstruction), version);
+        }
+
 
         // Timer tick. When the timer starts ticking, begin 
         // 'animating' the ink strokes
@@ -134,9 +192,14 @@ namespace SmartStroke
                nodes[currentNode].getEllipse().Fill = new SolidColorBrush(Colors.Green);
 
                // Reached the end of the animation
+               // Restart
                if(currentNode == nodes.Count-1)
                {
                    disp.Tick -= timer_tick;
+                   disp.Stop();
+                   disp.Interval = new TimeSpan(0, 0, 5);
+                   disp.Tick += restart_tick;
+                   disp.Start();
                    return;
                }
                currentNode++;
@@ -199,6 +262,7 @@ namespace SmartStroke
                    StrokeThickness = DRAW_WIDTH,
                    Stroke = new SolidColorBrush(DRAW_COLOR)
                };
+               pen.Margin = new Thickness(newX - penWidth - 15, newY - penHeight-15, 0, 0);
                MyCanvas.Children.Add(line);
                previousPoint = new Point(newX, newY);
            }
@@ -247,8 +311,9 @@ namespace SmartStroke
             navigationHelper.OnNavigatedTo(e);
             string vers = e.Parameter as string;    // This is the type of the trails test.
             version = vers;
-            pageTitle.Text = "Instructions: Trails Test " + vers;
+            pageTitle.Text = "Instructions: Trails Test " + version;
             populateNodes();
+            makeInstructions();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)

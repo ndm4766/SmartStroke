@@ -46,7 +46,9 @@
             <TextBlock x:Name="pageTitle" Text="Instructions" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
                         IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,30,40"/>
         </Grid>
-        <Canvas Name="MyCanvas" Background="Transparent" HorizontalAlignment="Left" Height="768" VerticalAlignment="Top" Width="1366" Grid.RowSpan="2" Grid.Row="2"/>
+        <Canvas Name="MyCanvas" Background="Transparent" HorizontalAlignment="Left" Height="768" VerticalAlignment="Top" Width="1366" Grid.RowSpan="2" Grid.Row="2">
+            <TextBlock Name="inst" Canvas.Left="794" TextWrapping="Wrap" Canvas.Top="30" Height="272" Width="543"/>
+        </Canvas>
         <Button Content="Start Test" HorizontalAlignment="Left" Margin="1145,300,0,0" Grid.Row="2" VerticalAlignment="Top" Height="70" Width="156" Click="Button_Click"/>
     </Grid>
 </Page>
