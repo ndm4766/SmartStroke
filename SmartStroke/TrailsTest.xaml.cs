@@ -21,7 +21,6 @@ using System.Diagnostics;
 using Windows.Graphics.Display;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
-
 namespace SmartStroke
 {
     /// <summary>
@@ -29,7 +28,7 @@ namespace SmartStroke
     /// </summary>
     public sealed partial class TrailsTest : Page
     {
-        //testreplay
+        //test replay container
         private TestReplay testReplay;
 
         //general globals
@@ -74,9 +73,6 @@ namespace SmartStroke
 
             ink_manager = new Windows.UI.Input.Inking.InkManager();
 
-            testReplay = new TestReplay();
-            testReplay.startTest();
-
             // Create the trails test background. The test image is 117X917 px but to fit on a screen (surface) it is 686 X 939
             nodes = new List<TrailNode>();
             populateNodes(testVersion, nodes);
@@ -100,6 +96,9 @@ namespace SmartStroke
             disp.Interval = new TimeSpan(0, 0, 0, 0, 10);
             disp.Tick += timer_tick;
             disp.Start();
+
+            testReplay = new TestReplay();
+            testReplay.startTest();
 
             screenHeight = Window.Current.Bounds.Height;
             screenWidth = Window.Current.Bounds.Width;
@@ -404,24 +403,26 @@ namespace SmartStroke
                             // this code
                         //if (!nodes[indexHit].getCompleted() && nodes[indexHit].getEllipse().Fill != null)
                         //{
-                            //set error colors
-                            nodes[indexHit].setFillColor(new SolidColorBrush(Colors.Red));
-                            nodes[currentIndex].setFillColor(new SolidColorBrush(Colors.Yellow));
+                        //set error colors
+                        nodes[indexHit].setFillColor(new SolidColorBrush(Colors.Red));
+                        nodes[currentIndex].setFillColor(new SolidColorBrush(Colors.Yellow));
 
-                            //reset the index back 1
-                            nextIndex = currentIndex;
+                        //reset the index back 1
+                        nextIndex = currentIndex;
 
-                            if (!incorrectNodes.Contains(currentIndex))
-                                incorrectNodes.Enqueue(currentIndex);
+                        if (!incorrectNodes.Contains(currentIndex))
+                            incorrectNodes.Enqueue(currentIndex);
                                 
-                            if (!incorrectNodes.Contains(indexHit))
-                                incorrectNodes.Enqueue(indexHit);
+                        if (!incorrectNodes.Contains(indexHit))
+                            incorrectNodes.Enqueue(indexHit);
 
-                            //erase the line just drawn from previous node to the incorrect node
-                            foreach (Line l in currentEdge)
-                            {
-                                MyCanvas.Children.Remove(l);
-                            }
+                        //erase the line just drawn from previous node to the incorrect node
+                        foreach (Line l in currentEdge)
+                        {
+                            MyCanvas.Children.Remove(l);
+                        }
+                        testReplay.endStroke();
+                        testReplay.deletePreviousStroke();
                         //}
                     }
 
