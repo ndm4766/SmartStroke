@@ -10,7 +10,7 @@ using Windows.UI.Xaml.Shapes;
 
 namespace SmartStroke
 {
-    public enum ACTION_TYPE { STROKE = 0, DEL_PREV_STROKE = 1}
+    public enum ACTION_TYPE { STROKE = 0, DEL_PREV_STROKE = 1 }
     public abstract class TestAction
     {
         protected DateTime startTime;
@@ -130,7 +130,7 @@ namespace SmartStroke
         {
             if(getCurrentTestAction() == null) return;
             if (!getCurrentTestAction().isFinished()) return;
-            ACTION_TYPE act = getCurrentTestAction().getActionType();
+            if (!checkCurrentTestAction(ACTION_TYPE.STROKE)) return;
             testActions.Add(new DeletePreviousStroke());
         }
         public bool checkCurrentTestAction(ACTION_TYPE act)
