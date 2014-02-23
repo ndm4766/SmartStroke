@@ -86,7 +86,7 @@ namespace SmartStroke
 
             timer = new Stopwatch();
             disp = new DispatcherTimer();
-            disp.Interval = new TimeSpan(0, 0, 0, 0, 1000);
+            disp.Interval = new TimeSpan(0, 0, 0, 0, 10);
             disp.Tick += timer_tick;
             disp.Start();
 
@@ -117,8 +117,11 @@ namespace SmartStroke
                 nodes.Add(new TrailNode(4, new Point(83, 81), MyCanvas));
                 nodes.Add(new TrailNode('D', new Point(311, 109), MyCanvas));
             }
-            previousPoint = nodes[0].getLocation();
-            currentPoint = nodes[0].getLocation();
+
+            //previousPoint = nodes[0].getLocation();
+            //currentPoint = nodes[0].getLocation();
+            previousPoint = new Point(nodes[0].getLocation().X+15, nodes[0].getLocation().Y+15);
+            currentPoint = new Point(nodes[0].getLocation().X + 15, nodes[0].getLocation().Y + 15);
             currentNode = 0;
         }
 
@@ -126,7 +129,7 @@ namespace SmartStroke
         // 'animating' the ink strokes
         private void timer_tick(object sender, object e)
         {
-           if(Math.Abs(previousPoint.X - nodes[currentNode].getLocation().X) < 1 && Math.Abs(previousPoint.Y - nodes[currentNode].getLocation().Y) < 1)
+           if(Math.Abs(previousPoint.X - (nodes[currentNode].getLocation().X+15)) < 1 && Math.Abs(previousPoint.Y - (nodes[currentNode].getLocation().Y+15)) < 1)
            {
                nodes[currentNode].getEllipse().Fill = new SolidColorBrush(Colors.Green);
 
@@ -137,15 +140,20 @@ namespace SmartStroke
                    return;
                }
                currentNode++;
-               currentPoint = nodes[currentNode].getLocation();
+               currentPoint = new Point(nodes[currentNode].getLocation().X+15, nodes[currentNode].getLocation().Y+15);
            }
            else
            {
                // Move toward the next node slowly
                // Find the slope and then create a line from 
                // previous point to the next point.
-               double deltaY = (currentPoint.Y - previousPoint.Y);
-               deltaY = -1 * deltaY;    // Correct for reverse y axis cordinates
+
+               // Imagine we are in the 2nd quadrant in math..
+
+               double prevY = -1 * previousPoint.Y;
+               double currY = -1 * currentPoint.Y;
+
+               double deltaY = (currY - prevY);
                double deltaX = (currentPoint.X - previousPoint.X);
                double slope = deltaY / deltaX;
 
@@ -175,8 +183,12 @@ namespace SmartStroke
                // y = mx+b
                // y-b = mx
                // y-b/m = x
-               double newY = (slope * (currentPoint.X - previousPoint.X)) / currentPoint.Y;
-               double newX = (currentPoint.Y - previousPoint.Y + slope * previousPoint.X) / slope;
+
+               //     X1           Y1               X           Y
+               // (previous.X, previou.Y), (previous.X+deltaX, Y), slope
+               double newX = previousPoint.X + deltaX;
+               double newY = (slope * (newX - previousPoint.X)) + prevY;
+               newY *= -1;
 
                Line line = new Line()
                {
