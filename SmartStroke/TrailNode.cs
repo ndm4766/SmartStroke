@@ -43,6 +43,7 @@ namespace SmartStroke
         public bool getCompleted() { return completed; }
         public int getNumber() { return number; }
         public char getLetter() { return letter; }
+        public Point getLocation() { return position; }
         public Ellipse getEllipse()
         {
             return e;
