@@ -86,7 +86,7 @@ namespace SmartStroke
 
             timer = new Stopwatch();
             disp = new DispatcherTimer();
-            disp.Interval = new TimeSpan(0, 0, 0, 0, 100);
+            disp.Interval = new TimeSpan(0, 0, 0, 0, 1000);
             disp.Tick += timer_tick;
             disp.Start();
 
@@ -118,6 +118,7 @@ namespace SmartStroke
                 nodes.Add(new TrailNode('D', new Point(311, 109), MyCanvas));
             }
             previousPoint = nodes[0].getLocation();
+            currentPoint = nodes[0].getLocation();
             currentNode = 0;
         }
 
@@ -125,7 +126,7 @@ namespace SmartStroke
         // 'animating' the ink strokes
         private void timer_tick(object sender, object e)
         {
-           if(Math.Abs(currentPoint.X - nodes[currentNode].getLocation().X) < 1 && Math.Abs(currentPoint.Y - nodes[currentNode].getLocation().Y) < 1)
+           if(Math.Abs(previousPoint.X - nodes[currentNode].getLocation().X) < 1 && Math.Abs(previousPoint.Y - nodes[currentNode].getLocation().Y) < 1)
            {
                nodes[currentNode].getEllipse().Fill = new SolidColorBrush(Colors.Green);
 
@@ -144,18 +145,38 @@ namespace SmartStroke
                // Find the slope and then create a line from 
                // previous point to the next point.
                double deltaY = (currentPoint.Y - previousPoint.Y);
+               deltaY = -1 * deltaY;    // Correct for reverse y axis cordinates
                double deltaX = (currentPoint.X - previousPoint.X);
                double slope = deltaY / deltaX;
 
                if(Math.Abs(deltaX) > amountToMove)
                {
-                   if (deltaX < 1)
+                   if (deltaX < 0)
                        deltaX = -1 * amountToMove;
-                   else deltaX = amountToMove;
+                   else 
+                        deltaX = amountToMove;
+               }
+               if (Math.Abs(deltaY) > amountToMove)
+               {
+                   if (deltaY < 0)
+                       deltaY = -1 * amountToMove;
+                   else
+                       deltaY = amountToMove;
                }
 
-               double newX = previousPoint.X + deltaX;
-               double newY = slope * newX + currentPoint.Y;
+               // (0,b)
+               // y-y1 = m(x-x1)
+               // y-y1 = mx - mx1
+               // y-y1+mx1 = mx
+
+               // (x1,y1) = (previousPoint.X,previousPoint.Y)
+               // (x, y) = (currentPoint.X, currentPoint.Y)
+
+               // y = mx+b
+               // y-b = mx
+               // y-b/m = x
+               double newY = (slope * (currentPoint.X - previousPoint.X)) / currentPoint.Y;
+               double newX = (currentPoint.Y - previousPoint.Y + slope * previousPoint.X) / slope;
 
                Line line = new Line()
                {
