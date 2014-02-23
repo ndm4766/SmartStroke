@@ -116,6 +116,9 @@
     <Compile Include="TrailsMenu.xaml.cs">
       <DependentUpon>TrailsMenu.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TrailsTestInstruction.xaml.cs">
+      <DependentUpon>TrailsTestInstruction.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserInfoPage.xaml.cs">
       <DependentUpon>UserInfoPage.xaml</DependentUpon>
     </Compile>
@@ -165,6 +168,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="TrailsMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TrailsTestInstruction.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
