@@ -93,6 +93,7 @@ namespace SmartStroke
         public TrailsTestInstruction()
         {
             this.InitializeComponent();
+            DisplayInformation.AutoRotationPreferences = Windows.Graphics.Display.DisplayOrientations.Landscape; //Landscape mode
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += navigationHelper_LoadState;
             this.navigationHelper.SaveState += navigationHelper_SaveState;
