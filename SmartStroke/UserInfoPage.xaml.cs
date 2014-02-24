@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -144,15 +145,45 @@ namespace SmartStroke
                 //save
                 //string allUserDataString = name + ", " + birthday + ", " + age + ", " + sex + ", " + educationLevel;
                 Windows.Data.Json.JsonObject newPatient = new Windows.Data.Json.JsonObject();
-                //check if user is already saved
                 newPatient["Name"] = Windows.Data.Json.JsonValue.CreateStringValue(name);
                 newPatient["Birthday"] = Windows.Data.Json.JsonValue.CreateStringValue(birthday.ToString());
                 newPatient["Age"] = Windows.Data.Json.JsonValue.CreateNumberValue(age);
                 newPatient["Sex"] = Windows.Data.Json.JsonValue.CreateStringValue(sex.ToString());
                 newPatient["Education"] = Windows.Data.Json.JsonValue.CreateStringValue(educationLevel);
-                patients.Add(newPatient);
+                //check if user is already saved
+                bool addNew = true;
+                for (uint i=0; i < patients.Count; i++){
+                    if (patients.GetObjectAt(i).GetNamedValue("Name").GetString() == newPatient["Name"].GetString() && patients.GetObjectAt(i).GetNamedValue("Birthday").GetString() == newPatient["Birthday"].GetString())
+                    {
+                        //patient info already saved
+                        // Create the message dialog and set its content
+                        var messageDialog = new MessageDialog("We already have a patient with that name and birthday. Do you want to replace the existing patient?");
+
+                        // Add commands and set their callbacks; both buttons use the same callback function instead of inline event handlers
+                        string jsonPatient = newPatient.Stringify();
+                        messageDialog.Commands.Add(new UICommand("Replace Old Patient", new UICommandInvokedHandler(this.replacePatient), jsonPatient));
+                        messageDialog.Commands.Add(new UICommand("Keep Original Patient", new UICommandInvokedHandler(this.replacePatient)));
+
+                        // Set the command that will be invoked by default
+                        messageDialog.DefaultCommandIndex = 0;
+
+                        // Set the command to be invoked when escape is pressed
+                        messageDialog.CancelCommandIndex = 1;
+
+                        // Show the message dialog
+                        await messageDialog.ShowAsync();
+                        addNew = false;
+                    }
+                }
+
+   
+                if(addNew)
+                {
+                    patients.Add(newPatient);
+                }
                 string jsonAllPatientsString = patients.Stringify();
                 await Windows.Storage.FileIO.WriteTextAsync(myFile, jsonAllPatientsString);
+                //await Windows.Storage.FileIO.WriteTextAsync(myFile, ""); //uncomment this to erase database
 
             }
             catch (FileNotFoundException)
@@ -166,6 +197,22 @@ namespace SmartStroke
             //initialize file
             Windows.Storage.StorageFile myFile2 = await Windows.Storage.ApplicationData.Current.LocalFolder.CreateFileAsync(filename, Windows.Storage.CreationCollisionOption.ReplaceExisting);
         }
+
+        private void replacePatient(IUICommand command)
+        {
+            Windows.Data.Json.JsonObject updatedPatient = new Windows.Data.Json.JsonObject();
+            string patString = command.Id.ToString();
+            updatedPatient = Windows.Data.Json.JsonObject.Parse(patString);
+            for (uint i = 0; i < patients.Count; i++)
+            {
+                if (updatedPatient["Name"].GetString() == patients.GetObjectAt(i).GetNamedValue("Name").GetString() && updatedPatient["Birthday"].GetString() == patients.GetObjectAt(i).GetNamedValue("Birthday").GetString())
+                {
+                    patients.GetObjectAt(i).SetNamedValue("Education", updatedPatient["Education"]);
+                    patients.GetObjectAt(i).SetNamedValue("Sex", updatedPatient["Sex"]);
+                }
+            }
+        }
+
 
 
 
