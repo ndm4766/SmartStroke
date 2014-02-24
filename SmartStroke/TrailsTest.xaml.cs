@@ -28,6 +28,8 @@ namespace SmartStroke
     /// </summary>
     public sealed partial class TrailsTest : Page
     {
+       
+
         //test replay container
         private TestReplay testReplay;
 
@@ -391,6 +393,7 @@ namespace SmartStroke
                             MyCanvas.PointerExited -= MyCanvas_PointerReleased;
                             testReplay.endStroke();
                             testReplay.endTest();
+                            submitButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
                             return;
                         }
                     }
@@ -474,6 +477,11 @@ namespace SmartStroke
                 // Process touch input (finger input)
             }
             e.Handled = true;
+        }
+
+        private void SubmitButtonClicked(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(MainPage));
         }
 
         private void MyCanvas_PointerPressed(object sender, PointerRoutedEventArgs e)
