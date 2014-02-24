@@ -53,20 +53,19 @@ namespace SmartStroke
             get { return this.navigationHelper; }
         }
 
-        public class FinancialStuff
+        public class Performance
         {
-            public string Name { get; set; }
-            public int Amount { get; set; }
+            public int Age { get; set; }
+            public double Time { get; set; }
         }
 
         public NormComparison()
         {
             this.InitializeComponent();
             this.navigationHelper = new NavigationHelper(this);
-            //this.navigationHelper.LoadState += navigationHelper_LoadState;
-            //this.navigationHelper.SaveState += navigationHelper_SaveState;
+            this.navigationHelper.LoadState += navigationHelper_LoadState;
+            this.navigationHelper.SaveState += navigationHelper_SaveState;
             this.Loaded += NormComparisonPage_Loaded;
-            //LoadChartContents();
         }
 
         /// <summary>
@@ -129,17 +128,17 @@ namespace SmartStroke
 
         private void LoadChartContents()
         {
-                Random rand = new Random();
-                List<FinancialStuff> financialStuffList = new List<FinancialStuff>();
-                financialStuffList.Add(new FinancialStuff() { Name = "MSFT", Amount = rand.Next(0, 200) });
-                financialStuffList.Add(new FinancialStuff() { Name = "AAPL", Amount = rand.Next(0, 200) });
-                financialStuffList.Add(new FinancialStuff() { Name = "GOOG", Amount = rand.Next(0, 200) });
-                financialStuffList.Add(new FinancialStuff() { Name = "BBRY", Amount = rand.Next(0, 200) });
-                (PieChart.Series[0] as PieSeries).ItemsSource = financialStuffList;
-                (ColumnChart.Series[0] as ColumnSeries).ItemsSource = financialStuffList;
-                (LineChart.Series[0] as LineSeries).ItemsSource = financialStuffList;
-                (BarChart.Series[0] as BarSeries).ItemsSource = financialStuffList;
-                (BubbleChart.Series[0] as BubbleSeries).ItemsSource = financialStuffList;
+            Random rand = new Random();
+            List<Performance> testResults = new List<Performance>();
+
+            for (int i = 0; i < 100; i++)
+            {
+                testResults.Add(new Performance() { Age = rand.Next(12, 90), Time = rand.Next(20, 400) });
+            }
+            (LineChart.Series[0] as LineSeries).ItemsSource = testResults;
+
+            //LineChart.View.AxisX.Title = new TextBlock();
+            //LineChart.View.AxisY.Title = new TextBlock();
         }
 
         #endregion
