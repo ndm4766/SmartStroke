@@ -52,6 +52,8 @@ namespace SmartStroke
         public DateTime birthday;
         public string educationLevel;
         public string name;
+        public Windows.Data.Json.JsonArray patients = new Windows.Data.Json.JsonArray();
+
 
         public UserInfoPage()
         {
@@ -59,6 +61,7 @@ namespace SmartStroke
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += navigationHelper_LoadState;
             this.navigationHelper.SaveState += navigationHelper_SaveState;
+            loadJson();
         }
 
         /// <summary>
@@ -111,6 +114,23 @@ namespace SmartStroke
 
         #endregion
 
+        async void loadJson()
+        {
+            try
+            {
+                //get file
+                Windows.Storage.StorageFile myFile = await Windows.Storage.ApplicationData.Current.LocalFolder.GetFileAsync(filename);
+                //read
+                String data = await Windows.Storage.FileIO.ReadTextAsync(myFile);
+
+                patients = Windows.Data.Json.JsonArray.Parse(data);
+            }
+            catch
+            {
+                //json load failed
+            }
+        }
+
         async void saveUserData()
         {
             try
@@ -119,11 +139,20 @@ namespace SmartStroke
                 Windows.Storage.StorageFile myFile = await Windows.Storage.ApplicationData.Current.LocalFolder.GetFileAsync(filename);
 
                 //read
-                String data = await Windows.Storage.FileIO.ReadTextAsync(myFile);
+                //String data = await Windows.Storage.FileIO.ReadTextAsync(myFile);
 
                 //save
-                string allUserDataString = name + ", " + birthday + ", " + age + ", " + sex + ", " + educationLevel;
-                await Windows.Storage.FileIO.WriteTextAsync(myFile, allUserDataString);
+                //string allUserDataString = name + ", " + birthday + ", " + age + ", " + sex + ", " + educationLevel;
+                Windows.Data.Json.JsonObject newPatient = new Windows.Data.Json.JsonObject();
+                //check if user is already saved
+                newPatient["Name"] = Windows.Data.Json.JsonValue.CreateStringValue(name);
+                newPatient["Birthday"] = Windows.Data.Json.JsonValue.CreateStringValue(birthday.ToString());
+                newPatient["Age"] = Windows.Data.Json.JsonValue.CreateNumberValue(age);
+                newPatient["Sex"] = Windows.Data.Json.JsonValue.CreateStringValue(sex.ToString());
+                newPatient["Education"] = Windows.Data.Json.JsonValue.CreateStringValue(educationLevel);
+                patients.Add(newPatient);
+                string jsonAllPatientsString = patients.Stringify();
+                await Windows.Storage.FileIO.WriteTextAsync(myFile, jsonAllPatientsString);
 
             }
             catch (FileNotFoundException)
