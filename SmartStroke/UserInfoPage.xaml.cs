@@ -159,10 +159,10 @@ namespace SmartStroke
                         // Create the message dialog and set its content
                         var messageDialog = new MessageDialog("We already have a patient with that name and birthday. Do you want to replace the existing patient?");
 
-                        // Add commands and set their callbacks; both buttons use the same callback function instead of inline event handlers
+                        // Add commands and set their callbacks
                         string jsonPatient = newPatient.Stringify();
                         messageDialog.Commands.Add(new UICommand("Replace Old Patient", new UICommandInvokedHandler(this.replacePatient), jsonPatient));
-                        messageDialog.Commands.Add(new UICommand("Keep Original Patient", new UICommandInvokedHandler(this.replacePatient)));
+                        messageDialog.Commands.Add(new UICommand("Keep Original Patient", new UICommandInvokedHandler(this.doNothing)));
 
                         // Set the command that will be invoked by default
                         messageDialog.DefaultCommandIndex = 0;
@@ -214,7 +214,9 @@ namespace SmartStroke
         }
 
 
-
+        private void doNothing(IUICommand command)
+        {
+        }
 
         private void SubmitButtonClicked(object sender, RoutedEventArgs e)
         {
