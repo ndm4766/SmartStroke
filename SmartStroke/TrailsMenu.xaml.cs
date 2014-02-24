@@ -105,12 +105,12 @@ namespace SmartStroke
 
         private void AClick(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(TrailsTest), "A");
+            this.Frame.Navigate(typeof(TrailsTestInstruction), "A");
         }
 
         private void BClick(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(TrailsTest), "B");
+            this.Frame.Navigate(typeof(TrailsTestInstruction), "B");
         }
     }
 }

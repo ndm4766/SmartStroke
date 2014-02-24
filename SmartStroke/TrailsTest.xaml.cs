@@ -20,15 +20,7 @@ using Windows.UI.ApplicationSettings;
 using System.Diagnostics;
 using Windows.Graphics.Display;
 
-
-/*
- * Perceptive Pixel - DPIX/DPIY = 40, DPILog = 96 Res=1920X1080 Scale = 100
- * Slate            - DPIX/DPIY = 135,DPILog = 96 Res=1920X1080 Scale = 100
- * Surface          - DPIX/DPIY = 120.DPILog = 207Res=1920X1080 Scale = 140
- */
-
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
-
 namespace SmartStroke
 {
     /// <summary>
@@ -36,7 +28,7 @@ namespace SmartStroke
     /// </summary>
     public sealed partial class TrailsTest : Page
     {
-        //testreplay
+        //test replay container
         private TestReplay testReplay;
 
         //general globals
@@ -81,9 +73,6 @@ namespace SmartStroke
 
             ink_manager = new Windows.UI.Input.Inking.InkManager();
 
-            testReplay = new TestReplay();
-            testReplay.startTest();
-
             // Create the trails test background. The test image is 117X917 px but to fit on a screen (surface) it is 686 X 939
             nodes = new List<TrailNode>();
             populateNodes(testVersion, nodes);
@@ -108,6 +97,9 @@ namespace SmartStroke
             disp.Tick += timer_tick;
             disp.Start();
 
+            testReplay = new TestReplay();
+            testReplay.startTest();
+
             screenHeight = Window.Current.Bounds.Height;
             screenWidth = Window.Current.Bounds.Width;
 
@@ -116,25 +108,8 @@ namespace SmartStroke
             // True is the Default value for fitToCurve.
             drawingAttributes.FitToCurve = false;
             ink_manager.SetDefaultDrawingAttributes(drawingAttributes);
-            DisplayInformation display = DisplayInformation.GetForCurrentView();
-            float dpi = display.LogicalDpi;
-            float xdpi = display.RawDpiX;
-            float ydpi = display.RawDpiY;
-            double dots = xdpi * Window.Current.Bounds.Width;
-            ResolutionScale scale = display.ResolutionScale;
-            var windowWidth = Window.Current.Bounds.Width * (int)DisplayProperties.ResolutionScale / 100;
-            var windowHeight = Window.Current.Bounds.Height * (int)DisplayProperties.ResolutionScale / 100;
-            //var windowWidth = Windows.UI.Xaml.Window.Current.Bounds.Width;
 
-            /*ManagementObjectSearcher searcher = new ManagementObjectSearcher("\\root\\wmi", "SELECT * FROM WmiMonitorBasicDisplayParams");
-
-            foreach (ManagementObject mo in searcher.Get())
-            {
-                double width = (byte)mo["MaxHorizontalImageSize"] / 2.54;
-                double height = (byte)mo["MaxVerticalImageSize"] / 2.54;
-                double diagonal = Math.Sqrt(width * width + height * height);
-                int x = 0;
-            }*/
+            determineScreenSize();
         }
 
         private void populateNodes(string kind, List<TrailNode> nodes)
@@ -236,38 +211,41 @@ namespace SmartStroke
             }
         }
 
-        private bool eraser_hit_test(InkStroke s, Point testPoint)
+        /*
+         * Perceptive Pixel - DPIX/DPIY = 40, DPILog = 96 Res=1920X1080 Scale = 100
+         * Slate            - DPIX/DPIY = 135,DPILog = 96 Res=1920X1080 Scale = 100
+         * Surface          - DPIX/DPIY = 120.DPILog = 207Res=1920X1080 Scale = 140
+         */
+        private void determineScreenSize()
+        {
+            DisplayInformation display = DisplayInformation.GetForCurrentView();
+            float dpi = display.LogicalDpi;
+            float xdpi = display.RawDpiX;
+            float ydpi = display.RawDpiY;
+            double dots = xdpi * Window.Current.Bounds.Width;
+            ResolutionScale scale = display.ResolutionScale;
+        }
+
+        private bool eraserHitTest(InkStroke s, Point testPoint)
         {
             foreach (var p in s.GetRenderingSegments())
             {
                 if (Math.Abs(testPoint.X - p.Position.X) < 10 && Math.Abs(testPoint.Y - p.Position.Y) < 10)
-                    //if (test.X == p.Position.X && test.Y == p.Position.Y)
                     return true;
             }
             return false;
         }
 
-        // Return if the stylus has hit the correct next node
-        private bool stylus_hit_test(double x, double y, int correctIndex)
-        {
-            int radius = 25;
-            double left = nodes[nextIndex].getEllipse().Margin.Left;
-            double top = nodes[nextIndex].getEllipse().Margin.Top;
-            double first = Math.Pow(x - (left + radius), 2);
-            double second = Math.Pow(y - (top + radius), 2);
-            return first + second <= radius * radius;
-        }
-
         // Return which index of node the user has hit
-        private int stylus_hit_test(double x, double y)
+        private int stylusHitTest(double x, double y)
         {
             int radius = 25;
             double left;
             double top;
             double first;
             double second;
-            int index = -1;
 
+            //calculate whether the stylus x and y are within the circle defined by the node[i] using definition of circle
             for (int i = 0; i < nodes.Count; i++)
             {
                 left = nodes[i].getEllipse().Margin.Left;
@@ -280,15 +258,23 @@ namespace SmartStroke
                 }
             }
 
-            return index;
+            //if no node was intersected with, return -1
+            return -1;
         }
 
         private void timer_tick(object sender, object e)
         {
+            //update the textbox with the current time in the stopwatch
             timer_box.Text = String.Format("{0}:{1}:{2}",
                 timer.Elapsed.Minutes.ToString(),
                 timer.Elapsed.Seconds.ToString("D2"),
                 (timer.Elapsed.Milliseconds / 10).ToString("D2"));
+        }
+
+        //distance between two points: used to determine if a line drawn is long enough to draw
+        private double Distance(double x1, double y1, double x2, double y2)
+        {
+            return Math.Sqrt(Math.Pow((x2 - x1), 2) + Math.Pow((y2 - y1), 2));
         }
 
         // Go through and set anything that was yellow previously to Green
@@ -304,13 +290,14 @@ namespace SmartStroke
 
                 while(incorrectNodes.Count > 0)
                 {
-                    index = incorrectNodes.Dequeue(); //TODO: somehow it tried to dequeue when count was 0
+                    index = incorrectNodes.Dequeue(); //remove from 0 size queue should be fixed now, contact nick if errors here
                     nodes[index].getEllipse().Fill = new SolidColorBrush(Colors.CornflowerBlue);
                 }
            }
         }
 
         #region PointerEvents
+
         private void MyCanvas_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
             if (e.Pointer.PointerId == pen_id)
@@ -323,7 +310,7 @@ namespace SmartStroke
                 if (!erasing)
                 {
                     //create the link from the completed stroke to its list of lines on the canvas
-                    allLines.Add(ink_manager.GetStrokes()[ink_manager.GetStrokes().Count - 1], currentLine);
+                    allLines.Add(ink_manager.GetStrokes()[ink_manager.GetStrokes().Count - 1], currentLine);//TODO: erasing causing outofrange err
                     //cant just clear the list cuz its c#, have to point to a new list, not a memory leak
                     currentLine = new List<Line>();
 
@@ -358,14 +345,16 @@ namespace SmartStroke
                 x2 = current_contact_pt.X;
                 y2 = current_contact_pt.Y;
 
-                if (Distance(x1, y1, x2, y2) > 2.0) //test whether the pointer has moved far enough to warrant drawing a new line
+                //test whether the pointer has moved far enough to warrant drawing a new line
+                if (Distance(x1, y1, x2, y2) > 2.0) 
                 {
                     if (!pressed)
                     {
                         return;
                     }
 
-                    indexHit = stylus_hit_test(x2, y2);
+                    //check if the stylus has collided with the "current" node to reset any error colors
+                    indexHit = stylusHitTest(x2, y2);
                     if(indexHit == currentIndex)
                     {
                         nodes[currentIndex].setFillColor(new SolidColorBrush(Colors.Green));
@@ -389,13 +378,13 @@ namespace SmartStroke
                         currentIndex = nextIndex;
                         nextIndex++;
 
+                        //reset the list of lines so that if an error is made, the lines just drawn do not get erased
                         currentEdge.Clear();
 
                         //TODO: if the test is done...what to do?
                         if (nextIndex >= nodes.Count)
                         {
                             timer.Stop();
-                            //this.Frame.Navigate(typeof(MainPage));
                             MyCanvas.PointerPressed -= MyCanvas_PointerPressed;
                             MyCanvas.PointerMoved -= MyCanvas_PointerMoved;
                             MyCanvas.PointerReleased -= MyCanvas_PointerReleased;
@@ -414,31 +403,38 @@ namespace SmartStroke
                             // this code
                         //if (!nodes[indexHit].getCompleted() && nodes[indexHit].getEllipse().Fill != null)
                         //{
-                            nodes[indexHit].setFillColor(new SolidColorBrush(Colors.Red));
-                            nodes[currentIndex].setFillColor(new SolidColorBrush(Colors.Yellow));
-                            //nodes[currentIndex].setComplete(false);
-                            nextIndex = currentIndex;
+                        //set error colors
+                        nodes[indexHit].setFillColor(new SolidColorBrush(Colors.Red));
+                        nodes[currentIndex].setFillColor(new SolidColorBrush(Colors.Yellow));
 
-                            if (!incorrectNodes.Contains(currentIndex))
-                                incorrectNodes.Enqueue(currentIndex);
+                        //reset the index back 1
+                        nextIndex = currentIndex;
+
+                        if (!incorrectNodes.Contains(currentIndex))
+                            incorrectNodes.Enqueue(currentIndex);
                                 
-                            if (!incorrectNodes.Contains(indexHit))
-                                incorrectNodes.Enqueue(indexHit);
+                        if (!incorrectNodes.Contains(indexHit))
+                            incorrectNodes.Enqueue(indexHit);
 
-                            foreach (Line l in currentEdge)
-                            {
-                                MyCanvas.Children.Remove(l);
-                            }
+                        //erase the line just drawn from previous node to the incorrect node
+                        foreach (Line l in currentEdge)
+                        {
+                            MyCanvas.Children.Remove(l);
+                        }
+                        testReplay.endStroke();
+                        testReplay.deletePreviousStroke();
                         //}
                     }
 
                     if (erasing)
                     {
+                        //check if the pressed cursor has collided with any strokes
                         foreach (var stroke in ink_manager.GetStrokes())
                         {
-                            if (eraser_hit_test(stroke, new Point(x2, y2)))
+                            if (eraserHitTest(stroke, new Point(x2, y2)))
                             {
                                 stroke.Selected = true;
+
                                 //remove each of the lines associated with this single stroke from canvas
                                 foreach (Line line in allLines[stroke])
                                 {
@@ -480,11 +476,6 @@ namespace SmartStroke
             e.Handled = true;
         }
 
-        private double Distance(double x1, double y1, double x2, double y2)
-        {
-            return Math.Sqrt(Math.Pow((x2 - x1), 2) + Math.Pow((y2 - y1), 2));
-        }
-
         private void MyCanvas_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
             // Get information about the pointer location.
@@ -524,6 +515,8 @@ namespace SmartStroke
 
         #endregion
 
+        #region navigationToAndFromPage
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             string vers = e.Parameter as string;    // This is the type of the trails test.
@@ -538,6 +531,8 @@ namespace SmartStroke
             base.OnNavigatedFrom(e);
             timer.Stop();
         }
+
+        #endregion
 
     }
 }

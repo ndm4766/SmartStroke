@@ -116,6 +116,9 @@
     <Compile Include="TrailsMenu.xaml.cs">
       <DependentUpon>TrailsMenu.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TrailsTestInstruction.xaml.cs">
+      <DependentUpon>TrailsTestInstruction.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserInfoPage.xaml.cs">
       <DependentUpon>UserInfoPage.xaml</DependentUpon>
     </Compile>
@@ -148,6 +151,7 @@
     <Content Include="Assets\SplashScreen.scale-100.png" />
     <Content Include="Assets\StoreLogo.scale-100.png" />
     <Content Include="Common\ReadMe.txt" />
+    <Content Include="Properties\images\pen.png" />
     <Content Include="Properties\images\trailsA.jpg" />
     <Content Include="Properties\images\trailsB.jpg" />
   </ItemGroup>
@@ -165,6 +169,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="TrailsMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TrailsTestInstruction.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

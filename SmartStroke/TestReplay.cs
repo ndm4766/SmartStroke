@@ -10,7 +10,7 @@ using Windows.UI.Xaml.Shapes;
 
 namespace SmartStroke
 {
-    public enum ACTION_TYPE { STROKE, DEL_PREV_STROKE }
+    public enum ACTION_TYPE { STROKE = 0, DEL_PREV_STROKE = 1 }
     public abstract class TestAction
     {
         protected DateTime startTime;
@@ -80,6 +80,7 @@ namespace SmartStroke
     }
     public sealed class DeletePreviousStroke : TestAction
     {
+        public DeletePreviousStroke() { finished = true; }
         public override ACTION_TYPE getActionType()
         {
             return ACTION_TYPE.DEL_PREV_STROKE;
@@ -101,8 +102,8 @@ namespace SmartStroke
         {
             if (getCurrentTestAction() != null)
             {
-                Debug.Assert(getCurrentTestAction().isFinished()
-                    , "Current test action is unfinished.");
+                if (!getCurrentTestAction().isFinished())
+                    return;
             }
             currentStroke = new Stroke();
             testActions.Add(currentStroke);
@@ -111,10 +112,8 @@ namespace SmartStroke
         {
             if (getCurrentTestAction() != null)
             {
-                Debug.Assert(!getCurrentTestAction().isFinished()
-                    , "Current test action is already finished.");
-                Debug.Assert(checkCurrentTestAction(ACTION_TYPE.STROKE)
-                    , "Current test action is already ended."); 
+                if (getCurrentTestAction().isFinished()) return;
+                if (!checkCurrentTestAction(ACTION_TYPE.STROKE)) return;
             }
             currentStroke.endAction();
         }
@@ -122,27 +121,22 @@ namespace SmartStroke
         {
             if (getCurrentTestAction() != null)
             {
-                Debug.Assert(!getCurrentTestAction().isFinished(), 
-                    "Current test action is already finished.");
-                Debug.Assert(checkCurrentTestAction(ACTION_TYPE.STROKE), 
-                    "Current test action is not a stroke.");
+                if(getCurrentTestAction().isFinished()) return;
+                if(!checkCurrentTestAction(ACTION_TYPE.STROKE)) return;
                 currentStroke.addLine(line);
             }
         }
         public void deletePreviousStroke()
         {
-            Debug.Assert(getCurrentTestAction() != null, 
-                "There is no previous stroke to delete.");
-            Debug.Assert(getCurrentTestAction().isFinished(), 
-                "Current test action is not finished.");
-            Debug.Assert(checkCurrentTestAction(ACTION_TYPE.STROKE), 
-                "Current test action is not a stroke.");
+            if(getCurrentTestAction() == null) return;
+            if (!getCurrentTestAction().isFinished()) return;
+            if (!checkCurrentTestAction(ACTION_TYPE.STROKE)) return;
             testActions.Add(new DeletePreviousStroke());
         }
         public bool checkCurrentTestAction(ACTION_TYPE act)
         {
             if (getCurrentTestAction() == null) return false;
-            else return getCurrentTestAction().getActionType() == act;
+            return getCurrentTestAction().getActionType() == act;
         }
         public TestAction getCurrentTestAction()
         {
