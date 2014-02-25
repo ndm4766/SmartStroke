@@ -135,14 +135,16 @@ namespace SmartStroke
 
             for (int i = 0; i < 100; i++)
             {
-                double y = i * 0.82 + 200;
-                lowEducationResults.Add(new Performance() { Age = rand.Next(i, i + 5), Time = rand.NextDouble() * 5 + y });
+                int j = rand.Next(15,90);
+                double y = j * 0.98 + 204;
+                lowEducationResults.Add(new Performance() { Age = j, Time = rand.NextDouble() * 14 + y });
             }
 
             for (int i = 0; i < 100; i++)
             {
-                double y = i * 1.2 + 200;
-                highEducationResults.Add(new Performance() { Age = rand.Next(i, i + 5), Time = rand.NextDouble() * 5 + y });
+                int j = rand.Next(15, 90);
+                double y = j * 0.82 + 200;
+                highEducationResults.Add(new Performance() { Age = j, Time = rand.NextDouble() * 11 + y });
             }
 
             (ScatterChart.Series[0] as ScatterSeries).ItemsSource = lowEducationResults;

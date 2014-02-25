@@ -54,7 +54,8 @@
                 <Charting:ScatterSeries Title="College Education" Margin="0" IndependentValuePath="Age" DependentValuePath="Time" IsSelectionEnabled="True"/>
             </Charting:Chart>
             <Charting:AxisLabel DataContext="Age" HorizontalAlignment="Center" Height="100" Margin="0,0,0,0" VerticalAlignment="Bottom" Width="100"/>
-            <Charting:AxisLabel DataContext="Time (seconds)" HorizontalAlignment="Left" Height="100" Margin="20,0,0,0" VerticalAlignment="Center" Width="100"/>
+            <Charting:AxisLabel DataContext="Time (seconds)" HorizontalAlignment="Left" Height="100" Margin="20,-70,0,0" VerticalAlignment="Center" Width="100"/>
+            
         </Grid>
     </Grid>
 </Page>
