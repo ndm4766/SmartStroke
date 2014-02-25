@@ -129,15 +129,26 @@ namespace SmartStroke
         private void LoadChartContents()
         {
             Random rand = new Random();
-            List<Performance> testResults = new List<Performance>();
+            //List<Performance> testResults = new List<Performance>();
+            List<Performance> lowEducationResults = new List<Performance>();
+            List<Performance> highEducationResults = new List<Performance>();
 
             for (int i = 0; i < 100; i++)
             {
                 double y = i * 0.82 + 200;
-                testResults.Add(new Performance() { Age = rand.Next(i, i+5), Time = rand.NextDouble()*5 + y});
-            
+                lowEducationResults.Add(new Performance() { Age = rand.Next(i, i + 5), Time = rand.NextDouble() * 5 + y });
             }
-            (ScatterChart.Series[0] as ScatterSeries).ItemsSource = testResults;
+
+            for (int i = 0; i < 100; i++)
+            {
+                double y = i * 1.2 + 200;
+                highEducationResults.Add(new Performance() { Age = rand.Next(i, i + 5), Time = rand.NextDouble() * 5 + y });
+            }
+
+            (ScatterChart.Series[0] as ScatterSeries).ItemsSource = lowEducationResults;
+            (ScatterChart.Series[1] as ScatterSeries).ItemsSource = highEducationResults;
+
+            //Performance uniquePoint = new Performance() { Age = rand.Next(15, 85), Time = rand.NextDouble() * 5 + y };
 
         }
 
