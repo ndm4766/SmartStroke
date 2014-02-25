@@ -22,21 +22,24 @@ namespace SmartStroke
         int size = 50;
         bool completed = false;
         SolidColorBrush fill = new SolidColorBrush(Colors.White);
+        private bool rotate;
 
-        public TrailNode() { }                             // Default constructor. Should not use
-        public TrailNode(int n, Point p, Canvas c)         // Create a node for trails test A
+        public TrailNode() { }                                      // Default constructor. Should not use
+        public TrailNode(int n, Point p, Canvas c, bool r = true)   // Create a node for trails test A
         {
             number = n;
             letter = '0';
             position = p;
+            rotate = r;
             createShapes(number.ToString(), position, c);
         }
 
-        public TrailNode(char l, Point p, Canvas c) // Create a node for trails test B
+        public TrailNode(char l, Point p, Canvas c, bool r = true) // Create a node for trails test B
         {
             number = 0;
             letter = l;
             position = p;
+            rotate = r;
             createShapes(letter.ToString(), position, c);
         }
 
@@ -64,20 +67,33 @@ namespace SmartStroke
             // Create a TextBox inside the Ellipse
             text = new TextBlock();
             text.Text = display;
-            if(text.Text.Length > 1)
-                text.Margin = new Thickness(p.X + size / 3 + size/2, p.Y + size/4 - 5, 0, 0);      // Correction factor - must add another size/2 to account for rotation
+            if (text.Text.Length > 1)
+            {
+                if (rotate)
+                    text.Margin = new Thickness(p.X + size / 3 + size / 2, p.Y + size / 4 - 5, 0, 0);      // Correction factor - must add another size/2 to account for rotation
+                else
+                    text.Margin = new Thickness(p.X + size / 3, p.Y + size / 4 - 5, 0, 0);
+            }
             else
-                text.Margin = new Thickness(p.X + size / 3 + size/2, p.Y + size / 4, 0, 0);      // Correction factor - must add another size/2 to account for rotation
+            {
+                if (rotate)
+                    text.Margin = new Thickness(p.X + size / 3 + size / 2, p.Y + size / 4, 0, 0);      // Correction factor - must add another size/2 to account for rotation
+                else
+                    text.Margin = new Thickness(p.X + size / 3, p.Y + size / 4, 0, 0);
+            }
             text.FontSize = 25;
             text.Width = size;
             text.Height = size;
 
             text.HorizontalAlignment = HorizontalAlignment.Right;
-            // Rotate the text 90 degree
-            RotateTransform r = new RotateTransform();
-            r.Angle = 90.0;
-            text.RenderTransform = r;
 
+            if (rotate)
+            {
+                // Rotate the text 90 degree
+                RotateTransform r = new RotateTransform();
+                r.Angle = 90.0;
+                text.RenderTransform = r;
+            }
             text.IsHitTestVisible = false;
             
             c.Children.Add(text);
