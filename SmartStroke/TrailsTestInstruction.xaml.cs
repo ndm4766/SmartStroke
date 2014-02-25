@@ -180,6 +180,7 @@ namespace SmartStroke
         private void restart_tick(object sender, object e)
         {
             disp.Tick -= restart_tick;
+            disp.Stop();
             this.Frame.Navigate(typeof(TrailsTestInstruction), version);
         }
 
@@ -320,12 +321,16 @@ namespace SmartStroke
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             navigationHelper.OnNavigatedFrom(e);
+            disp.Stop();
+            instructionTimer.Stop();
         }
 
         #endregion
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            disp.Stop();
+            instructionTimer.Stop();
             this.Frame.Navigate(typeof(TrailsTest), version);
         }
     }

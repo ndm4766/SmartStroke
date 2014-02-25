@@ -50,12 +50,13 @@
         <Grid Grid.Row="1">
             <Button x:Name="ButtonRefresh" Content="Refresh" HorizontalAlignment="Left" Margin="1200,50,0,0" VerticalAlignment="Top" Click="ButtonRefresh_Click"/>
             <Charting:Chart x:Name="ScatterChart" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="100,0,0,0" Width="1200" Height="500">
-                <!--<Charting:LineSeries Title="Performance vs Age" Margin="0" IndependentValuePath="Age" DependentValuePath="Time" IsSelectionEnabled="True"/>-->
-                <Charting:ScatterSeries Title="Trails Test Results" Margin="0" IndependentValuePath="Age" DependentValuePath="Time" IsSelectionEnabled="True"/>
+                <Charting:ScatterSeries Title="High School Education" Margin="0" IndependentValuePath="Age" DependentValuePath="Time" IsSelectionEnabled="True"/>
+                <Charting:ScatterSeries Title="College Education" Margin="0" IndependentValuePath="Age" DependentValuePath="Time" IsSelectionEnabled="True"/>
+                <Charting:ScatterSeries Title="Patient" Margin="0" IndependentValuePath="Age" DependentValuePath="Time" IsSelectionEnabled="True"/>
             </Charting:Chart>
             <Charting:AxisLabel DataContext="Age" HorizontalAlignment="Center" Height="100" Margin="0,0,0,0" VerticalAlignment="Bottom" Width="100"/>
-            <Charting:AxisLabel DataContext="Time (seconds)" HorizontalAlignment="Left" Height="100" Margin="20,0,0,0" VerticalAlignment="Center" Width="100"/>
-
+            <Charting:AxisLabel DataContext="Time (seconds)" HorizontalAlignment="Left" Height="100" Margin="20,-70,0,0" VerticalAlignment="Center" Width="100"/>
+            
         </Grid>
     </Grid>
 </Page>
