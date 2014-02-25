@@ -135,7 +135,7 @@ namespace SmartStroke
             {
                 testResults.Add(new Performance() { Age = rand.Next(12, 90), Time = rand.Next(20, 400) });
             }
-            (LineChart.Series[0] as LineSeries).ItemsSource = testResults;
+            (ScatterChart.Series[0] as ScatterSeries).ItemsSource = testResults;
 
             //LineChart.View.AxisX.Title = new TextBlock();
             //LineChart.View.AxisY.Title = new TextBlock();
