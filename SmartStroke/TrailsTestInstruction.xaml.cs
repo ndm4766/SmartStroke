@@ -93,6 +93,7 @@ namespace SmartStroke
         public TrailsTestInstruction()
         {
             this.InitializeComponent();
+            DisplayInformation.AutoRotationPreferences = Windows.Graphics.Display.DisplayOrientations.Landscape; //Landscape mode
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += navigationHelper_LoadState;
             this.navigationHelper.SaveState += navigationHelper_SaveState;
@@ -126,25 +127,25 @@ namespace SmartStroke
             nodes.Clear();
             if(version == "A")
             {
-                nodes.Add(new TrailNode(1, new Point(377, 244), MyCanvas));
-                nodes.Add(new TrailNode(2, new Point(554, 68), MyCanvas));
-                nodes.Add(new TrailNode(3, new Point(763, 463), MyCanvas));
-                nodes.Add(new TrailNode(4, new Point(541, 225), MyCanvas));
-                nodes.Add(new TrailNode(5, new Point(585, 400), MyCanvas));
-                nodes.Add(new TrailNode(6, new Point(126, 408), MyCanvas));
-                nodes.Add(new TrailNode(7, new Point(109, 155), MyCanvas));
-                nodes.Add(new TrailNode(8, new Point(336, 137), MyCanvas));
+                nodes.Add(new TrailNode(1, new Point(377, 244), MyCanvas, false));
+                nodes.Add(new TrailNode(2, new Point(554, 68), MyCanvas, false));
+                nodes.Add(new TrailNode(3, new Point(763, 463), MyCanvas, false));
+                nodes.Add(new TrailNode(4, new Point(541, 225), MyCanvas, false));
+                nodes.Add(new TrailNode(5, new Point(585, 400), MyCanvas, false));
+                nodes.Add(new TrailNode(6, new Point(126, 408), MyCanvas, false));
+                nodes.Add(new TrailNode(7, new Point(109, 155), MyCanvas, false));
+                nodes.Add(new TrailNode(8, new Point(336, 137), MyCanvas, false));
             }
             else if(version == "B")
             {
-                nodes.Add(new TrailNode(1, new Point(337, 260), MyCanvas));
-                nodes.Add(new TrailNode('A', new Point(523, 76), MyCanvas));
-                nodes.Add(new TrailNode(2, new Point(673, 288), MyCanvas));
-                nodes.Add(new TrailNode('B', new Point(512, 218), MyCanvas));
-                nodes.Add(new TrailNode(3, new Point(560, 419), MyCanvas));
-                nodes.Add(new TrailNode('C', new Point(137, 397), MyCanvas));
-                nodes.Add(new TrailNode(4, new Point(83, 81), MyCanvas));
-                nodes.Add(new TrailNode('D', new Point(311, 109), MyCanvas));
+                nodes.Add(new TrailNode(1, new Point(337, 260), MyCanvas, false));
+                nodes.Add(new TrailNode('A', new Point(523, 76), MyCanvas,false));
+                nodes.Add(new TrailNode(2, new Point(673, 288), MyCanvas, false));
+                nodes.Add(new TrailNode('B', new Point(512, 218), MyCanvas, false));
+                nodes.Add(new TrailNode(3, new Point(560, 419), MyCanvas, false));
+                nodes.Add(new TrailNode('C', new Point(137, 397), MyCanvas, false));
+                nodes.Add(new TrailNode(4, new Point(83, 81), MyCanvas, false));
+                nodes.Add(new TrailNode('D', new Point(311, 109), MyCanvas, false));
             }
 
             //previousPoint = nodes[0].getLocation();

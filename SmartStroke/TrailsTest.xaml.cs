@@ -43,12 +43,12 @@ namespace SmartStroke
         private bool pressed = false;
 
         //ink drawing members
-        private InkManager ink_manager;
+        private InkManager inkManager;
         private InkDrawingAttributes drawingAttributes;
-        private uint pen_id;
-        private uint touch_id;
-        private Point previous_contact_pt;
-        private Point current_contact_pt;
+        private uint penId;
+        private uint touchId;
+        private Point previousContactPt;
+        private Point currentContactPt;
         private List<Line> currentLine;
         private Dictionary<InkStroke, List<Line>> allLines;
 
@@ -71,7 +71,7 @@ namespace SmartStroke
             this.InitializeComponent();
             //Windows.Graphics.Display.DisplayInformation.AutoRotationPreferences = Windows.Graphics.Display.DisplayOrientations.Landscape;
 
-            ink_manager = new Windows.UI.Input.Inking.InkManager();
+            inkManager = new Windows.UI.Input.Inking.InkManager();
 
             // Create the trails test background. The test image is 117X917 px but to fit on a screen (surface) it is 686 X 939
             nodes = new List<TrailNode>();
@@ -93,7 +93,7 @@ namespace SmartStroke
 
             timer = new Stopwatch();
             disp = new DispatcherTimer();
-            disp.Interval = new TimeSpan(0, 0, 0, 0, 10);
+            disp.Interval = new TimeSpan(0, 0, 0, 0, 100);
             disp.Tick += timer_tick;
             disp.Start();
 
@@ -107,7 +107,7 @@ namespace SmartStroke
             drawingAttributes = new Windows.UI.Input.Inking.InkDrawingAttributes();
             // True is the Default value for fitToCurve.
             drawingAttributes.FitToCurve = false;
-            ink_manager.SetDefaultDrawingAttributes(drawingAttributes);
+            inkManager.SetDefaultDrawingAttributes(drawingAttributes);
 
             determineScreenSize();
         }
@@ -224,6 +224,18 @@ namespace SmartStroke
             float ydpi = display.RawDpiY;
             double dots = xdpi * Window.Current.Bounds.Width;
             ResolutionScale scale = display.ResolutionScale;
+
+            //if large screen
+            if(xdpi < 50)
+            {
+                MyCanvas.Height = 768;
+                MyCanvas.Width = 1366;
+            }
+            else
+            {
+                MyCanvas.Height = 768;
+                MyCanvas.Width = 1366;
+            }
         }
 
         private bool eraserHitTest(InkStroke s, Point testPoint)
@@ -300,17 +312,17 @@ namespace SmartStroke
 
         private void MyCanvas_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
-            if (e.Pointer.PointerId == pen_id)
+            if (e.Pointer.PointerId == penId)
             {
                 Windows.UI.Input.PointerPoint pt = e.GetCurrentPoint(MyCanvas);
 
                 // Pass the pointer information to the InkManager. 
-                ink_manager.ProcessPointerUp(pt);
+                inkManager.ProcessPointerUp(pt);
 
                 if (!erasing)
                 {
                     //create the link from the completed stroke to its list of lines on the canvas
-                    allLines.Add(ink_manager.GetStrokes()[ink_manager.GetStrokes().Count - 1], currentLine);//TODO: erasing causing outofrange err
+                    allLines.Add(inkManager.GetStrokes()[inkManager.GetStrokes().Count - 1], currentLine);//TODO: erasing causing outofrange err
                     //cant just clear the list cuz its c#, have to point to a new list, not a memory leak
                     currentLine = new List<Line>();
 
@@ -318,13 +330,13 @@ namespace SmartStroke
                 }
             }
 
-            else if (e.Pointer.PointerId == touch_id)
+            else if (e.Pointer.PointerId == touchId)
             {
                 // Process touch input (finger input)
             }
 
-            touch_id = 0;
-            pen_id = 0;
+            touchId = 0;
+            penId = 0;
 
             e.Handled = true;
             pressed = false;
@@ -335,15 +347,15 @@ namespace SmartStroke
             double x1, y1, x2, y2;
             int indexHit = -1;
 
-            if (e.Pointer.PointerId == pen_id)
+            if (e.Pointer.PointerId == penId)
             {
                 PointerPoint pt = e.GetCurrentPoint(MyCanvas);
 
-                current_contact_pt = pt.Position;
-                x1 = previous_contact_pt.X;
-                y1 = previous_contact_pt.Y;
-                x2 = current_contact_pt.X;
-                y2 = current_contact_pt.Y;
+                currentContactPt = pt.Position;
+                x1 = previousContactPt.X;
+                y1 = previousContactPt.Y;
+                x2 = currentContactPt.X;
+                y2 = currentContactPt.Y;
 
                 //test whether the pointer has moved far enough to warrant drawing a new line
                 if (Distance(x1, y1, x2, y2) > 2.0) 
@@ -391,6 +403,7 @@ namespace SmartStroke
                             MyCanvas.PointerExited -= MyCanvas_PointerReleased;
                             testReplay.endStroke();
                             testReplay.endTest();
+                            submitButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
                             return;
                         }
                     }
@@ -429,7 +442,7 @@ namespace SmartStroke
                     if (erasing)
                     {
                         //check if the pressed cursor has collided with any strokes
-                        foreach (var stroke in ink_manager.GetStrokes())
+                        foreach (var stroke in inkManager.GetStrokes())
                         {
                             if (eraserHitTest(stroke, new Point(x2, y2)))
                             {
@@ -444,7 +457,7 @@ namespace SmartStroke
                             }
                         }
                         //tell the ink manager to stop tracking the strokes that were erased
-                        ink_manager.DeleteSelected();
+                        inkManager.DeleteSelected();
                     }
                     else //if drawing
                     {
@@ -464,23 +477,28 @@ namespace SmartStroke
                         testReplay.addLine(line);
                     }
 
-                    ink_manager.ProcessPointerUpdate(pt);
-                    previous_contact_pt = current_contact_pt;
+                    inkManager.ProcessPointerUpdate(pt);
+                    previousContactPt = currentContactPt;
                 }
             }
 
-            else if (e.Pointer.PointerId == touch_id)
+            else if (e.Pointer.PointerId == touchId)
             {
                 // Process touch input (finger input)
             }
             e.Handled = true;
         }
 
+        private void SubmitButtonClicked(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(MainPage));
+        }
+
         private void MyCanvas_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
             // Get information about the pointer location.
             PointerPoint pt = e.GetCurrentPoint(MyCanvas);
-            previous_contact_pt = pt.Position;
+            previousContactPt = pt.Position;
 
             // Accept input only from a pen or mouse with the left button pressed. 
             PointerDeviceType pointerDevType = e.Pointer.PointerDeviceType;
@@ -489,7 +507,7 @@ namespace SmartStroke
                 //first check if the stylus' eraser is being used
                 if (pt.Properties.IsEraser)
                 {
-                    ink_manager.Mode = Windows.UI.Input.Inking.InkManipulationMode.Erasing;
+                    inkManager.Mode = Windows.UI.Input.Inking.InkManipulationMode.Erasing;
                     erasing = true;
                     //selCanvas.style.cursor = "url(images/erase.cur), auto"; 
                 }
@@ -500,8 +518,8 @@ namespace SmartStroke
                 }
 
                 // Pass the pointer information to the InkManager.
-                ink_manager.ProcessPointerDown(pt);
-                pen_id = pt.PointerId;
+                inkManager.ProcessPointerDown(pt);
+                penId = pt.PointerId;
 
                 e.Handled = true;
             }
