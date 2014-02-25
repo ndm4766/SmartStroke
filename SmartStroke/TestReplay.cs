@@ -10,7 +10,7 @@ using Windows.UI.Xaml.Shapes;
 
 namespace SmartStroke
 {
-    public enum ACTION_TYPE { STROKE = 0, DEL_PREV_STROKE = 1 }
+    public enum ACTION_TYPE { STROKE, DEL_PREV_STROKE }
     public abstract class TestAction
     {
         protected DateTime startTime;
@@ -86,17 +86,24 @@ namespace SmartStroke
             return ACTION_TYPE.DEL_PREV_STROKE;
         }
     }
+
+    public enum TEST_TYPE { TRAILS_A, TRAILS_B, REY_OSTERRIETH, CLOCK }
     public sealed class TestReplay
     {
+        private TEST_TYPE testType;
+        private Patient patient;
         private DateTime startTime;
         private DateTime endTime;
         private List<TestAction> testActions;
         private Stroke currentStroke;
-        public TestReplay()
+        public TestReplay(Patient _patient)
         {
+            patient = _patient;
             testActions = new List<TestAction>();
         }
-        public void startTest() { startTime = DateTime.Now; }
+        public void startTest() {
+            startTime = DateTime.Now; 
+        }
         public void endTest() { endTime = DateTime.Now; }
         public void beginStroke()
         {
@@ -142,6 +149,33 @@ namespace SmartStroke
         {
             if (testActions.Count == 0) return null;
             else return testActions[testActions.Count - 1];
+        }
+        private string getFileSuffix()
+        {
+            switch (testType) {
+                case TEST_TYPE.TRAILS_A: {
+                    return "_trailsA";
+                } case TEST_TYPE.TRAILS_B: {
+                    return "_trailsB";
+                } case TEST_TYPE.REY_OSTERRIETH: {
+                    return "_reyOsterrieth";
+                }case TEST_TYPE.CLOCK: {
+                    return "clock";
+                } default: {
+                    return "NOT_SUPPORTED";
+                }
+            }
+        }
+        private string getFileName()
+        {
+            //TODO - finish, this is not done properly
+            return patient.getName() + getFileSuffix();
+        }
+        public void loadTestReplay() { 
+
+        }
+        public void saveTestReplay() { 
+            
         }
     }
 }

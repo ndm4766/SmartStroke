@@ -8,7 +8,7 @@ namespace SmartStroke
 {
     public enum GENDER { MALE, FEMALE }
     public enum EDU_LEVEL { HIGHSCHOOL, ASSOCIATES, BACHELORS, MASTERS, PHD }
-    class PatientNote
+    public class PatientNote
     {
         private string note;
         private DateTime time;
@@ -24,7 +24,7 @@ namespace SmartStroke
         public string getNote() { return note; }
         public DateTime getTime() { return time; }
     }
-    class Patient
+    public class Patient
     {
         private string name;
         private DateTime birthDate;

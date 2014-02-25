@@ -97,7 +97,8 @@ namespace SmartStroke
             disp.Tick += timer_tick;
             disp.Start();
 
-            testReplay = new TestReplay();
+            testReplay = new TestReplay(new Patient(
+                "Leeroy Jenkins", DateTime.Now,GENDER.MALE,EDU_LEVEL.PHD));
             testReplay.startTest();
 
             screenHeight = Window.Current.Bounds.Height;
