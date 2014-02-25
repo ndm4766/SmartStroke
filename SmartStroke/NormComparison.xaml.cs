@@ -133,12 +133,12 @@ namespace SmartStroke
 
             for (int i = 0; i < 100; i++)
             {
-                testResults.Add(new Performance() { Age = rand.Next(12, 90), Time = rand.Next(20, 400) });
+                double y = i * 0.82 + 200;
+                testResults.Add(new Performance() { Age = rand.Next(i, i+5), Time = rand.NextDouble()*5 + y});
+            
             }
             (ScatterChart.Series[0] as ScatterSeries).ItemsSource = testResults;
 
-            //LineChart.View.AxisX.Title = new TextBlock();
-            //LineChart.View.AxisY.Title = new TextBlock();
         }
 
         #endregion
