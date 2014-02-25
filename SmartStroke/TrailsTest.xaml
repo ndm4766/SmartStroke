@@ -15,9 +15,8 @@
 
         <!--Image Name="trails_image" Source="images/trailsA.jpg" Margin="54,50,46,32" Grid.RowSpan="2" / -->
         <TextBlock Name="timer_box" Foreground="Black" Text="0:00:00" FontSize="50" Margin="1172,33,0,31" />
-        <Canvas Name="MyCanvas" Background="Transparent" HorizontalAlignment="Left" Height="768" VerticalAlignment="Top" Width="1366" Grid.RowSpan="2">
-            <Button Name="submitButton" Content="Submit" Canvas.Left="1070" Canvas.Top="336" Visibility="Collapsed" Click="SubmitButtonClicked"/>
-        </Canvas>
+        <Canvas Name="MyCanvas" Background="Transparent" HorizontalAlignment="Left" Height="768" VerticalAlignment="Top" Width="1366" Grid.RowSpan="2"/>
+        <Button Name="submitButton" Content="Submit" Margin="1004,255,0,353" Width="100" Height="50" Visibility="Collapsed" Click="SubmitButtonClicked" Grid.Row="1"/>
 
     </Grid>
 </Page>

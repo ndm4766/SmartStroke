@@ -28,8 +28,6 @@ namespace SmartStroke
     /// </summary>
     public sealed partial class TrailsTest : Page
     {
-       
-
         //test replay container
         private TestReplay testReplay;
 
