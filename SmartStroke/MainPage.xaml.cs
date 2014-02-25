@@ -42,5 +42,10 @@ namespace SmartStroke
         {
             this.Frame.Navigate(typeof(TestSelection));
         }
+
+        private void clock_click(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(ClockTest));
+        }
     }
 }

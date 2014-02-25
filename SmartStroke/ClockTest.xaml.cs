@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -13,6 +14,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Xaml.Shapes;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234237
 
@@ -51,6 +53,15 @@ namespace SmartStroke
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += navigationHelper_LoadState;
             this.navigationHelper.SaveState += navigationHelper_SaveState;
+
+            Ellipse e = new Ellipse();
+            e.Width = 100;
+            e.Height = 100;
+            e.Margin = new Thickness(200, 200, 0, 0);
+            e.Stroke = new SolidColorBrush(Colors.Black);
+            e.Fill = new SolidColorBrush(Colors.Black);
+            e.StrokeThickness = 3.0;
+            MyCanvas.Children.Add(e);
         }
 
         /// <summary>
