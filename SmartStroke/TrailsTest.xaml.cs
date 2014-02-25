@@ -230,6 +230,7 @@ namespace SmartStroke
             {
                 MyCanvas.Height = 768;
                 MyCanvas.Width = 1366;
+                timer_box.Text = "PIXEL";
             }
             else
             {
