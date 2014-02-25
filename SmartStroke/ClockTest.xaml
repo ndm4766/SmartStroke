@@ -31,6 +31,15 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
+
+        <!--my code here-->
+        <Viewbox HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="1">
+            <Canvas Name="MyCanvas" Background="Transparent" >
+                
+            </Canvas>
+        </Viewbox>
+
+
         <!-- Back button and page title -->
         <Grid>
             <Grid.ColumnDefinitions>
@@ -43,8 +52,7 @@
                         AutomationProperties.Name="Back"
                         AutomationProperties.AutomationId="BackButton"
                         AutomationProperties.ItemType="Navigation Button"/>
-            <TextBlock x:Name="pageTitle" Text="{StaticResource AppName}" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
-                        IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,30,40"/>
         </Grid>
+        
     </Grid>
 </Page>
