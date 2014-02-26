@@ -33,9 +33,10 @@
 
 
         <!--my code here-->
-        <Viewbox HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="1">
+        <Viewbox HorizontalAlignment="Left" Stretch="Fill" StretchDirection="Both" VerticalAlignment="Top" Grid.Row="2">
             <Canvas Name="MyCanvas" Background="Transparent" >
-                
+                <Ellipse Fill="Black" Height="100" Stroke="Black" Width="100" Opacity="100" Margin="100,100,0,0"/>
+
             </Canvas>
         </Viewbox>
 
