@@ -59,6 +59,7 @@ namespace SmartStroke
         private Queue<int> incorrectNodes;
         private List<Line> currentEdge;
 
+        //Members to handle total test time
         private Stopwatch timer;
         private DispatcherTimer disp;
 
