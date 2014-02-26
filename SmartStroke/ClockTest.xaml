@@ -31,7 +31,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-
+        <Ellipse Stroke="Black" StrokeThickness="10" Grid.RowSpan="2" Width="600" Height="600"/>
         <!--my code here-->
         <Viewbox HorizontalAlignment="Left" Stretch="Fill" StretchDirection="Both" VerticalAlignment="Top" Grid.Row="2">
             <Canvas Name="MyCanvas" Background="Transparent" >
