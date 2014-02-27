@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml;
 using System.Threading.Tasks;
 using System.Collections;
 using System.Diagnostics;
 using Windows.Data;
+using Windows.Storage;
 using Windows.UI.Input.Inking;
 using Windows.UI.Xaml.Shapes;
 
@@ -97,10 +99,11 @@ namespace SmartStroke
         private DateTime endTime;
         private List<TestAction> testActions;
         private Stroke currentStroke;
-        public TestReplay(Patient _patient)
+        public TestReplay(Patient _patient, TEST_TYPE TestType)
         {
             patient = _patient;
             testActions = new List<TestAction>();
+            testType = TestType;
         }
         public void startTest() {
             startTime = DateTime.Now; 
@@ -113,8 +116,7 @@ namespace SmartStroke
         {
             if (getCurrentTestAction() != null)
             {
-                if (!getCurrentTestAction().isFinished())
-                    return;
+                if (!getCurrentTestAction().isFinished()) return;
             }
             currentStroke = new Stroke();
             testActions.Add(currentStroke);
@@ -156,15 +158,16 @@ namespace SmartStroke
         }
         private string getFileSuffix()
         {
+            string fileExtension = ".xml";
             switch (testType) {
                 case TEST_TYPE.TRAILS_A: {
-                    return "_trailsA";
+                    return "_trailsA" + fileExtension;
                 } case TEST_TYPE.TRAILS_B: {
-                    return "_trailsB";
+                    return "_trailsB" + fileExtension;
                 } case TEST_TYPE.REY_OSTERRIETH: {
-                    return "_reyOsterrieth";
+                    return "_reyOsterrieth" + fileExtension;
                 } case TEST_TYPE.CLOCK: {
-                    return "clock";
+                    return "clock" + fileExtension;
                 } default: {
                     return "NOT_SUPPORTED";
                 }
@@ -172,22 +175,38 @@ namespace SmartStroke
         }
         private string getFileName()
         {
+            string fileSuffix = getFileSuffix();
+            if (fileSuffix=="NOT_SUPPORTED") return "TEST_TYPE_NOT_SUPPORTED";
             string filename = patient.getName() 
-                + patient.getBirthDate().ToString() + getFileSuffix();
+                + patient.getBirthDate().ToString() + fileSuffix;
+            filename = filename.Replace(":","");
+            filename = filename.Replace("/", "");
             return filename.Replace(" ","");
         }
-        public void loadTestReplay() {
-            string fileName = getFileName();
-            Windows.Data.Json.JsonObject testData
-                = new Windows.Data.Json.JsonObject();
-
+        public async void loadTestReplay() {
+            string testFilename = getFileName();
+            if (testFilename == "TEST_TYPE_NOT_SUPPORTED") return;
+            Windows.Storage.StorageFile testStorageFile;
+            string testData;
+            try
+            {
+                testStorageFile = await Windows.Storage.ApplicationData
+                        .Current.LocalFolder.GetFileAsync(testFilename);
+                testData = await 
+                    Windows.Storage.FileIO.ReadTextAsync(testStorageFile);
+            } 
+            catch { return; }
         }
-        public void saveTestReplay() {
-            string fileName = getFileName();
-            Windows.Data.Json.JsonObject testData 
-                = new Windows.Data.Json.JsonObject();
-
+        public async void saveTestReplay() {
+            string testFilename = getFileName();
+            if (testFilename == "TEST_TYPE_NOT_SUPPORTED") return;
+            try
+            {
+                await Windows.Storage.ApplicationData.Current.LocalFolder.
+                    CreateFileAsync(testFilename, 
+                    Windows.Storage.CreationCollisionOption.ReplaceExisting);
+            }
+            catch { return; }
         }
-
     }
 }

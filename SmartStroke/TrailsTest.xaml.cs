@@ -107,8 +107,11 @@ namespace SmartStroke
             disp.Start();
 
             testReplay = new TestReplay(new Patient(
-                "Leeroy Jenkins", DateTime.Now,GENDER.MALE,EDU_LEVEL.PHD));
+                "Leeroy Jenkins", DateTime.Now,GENDER.MALE,EDU_LEVEL.PHD),
+                TEST_TYPE.TRAILS_A);
             testReplay.startTest();
+            testReplay.saveTestReplay();
+            testReplay.loadTestReplay();
 
             screenHeight = Window.Current.Bounds.Height;
             screenWidth = Window.Current.Bounds.Width;
