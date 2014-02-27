@@ -10,18 +10,28 @@ namespace SmartStroke
     public enum EDU_LEVEL { HIGHSCHOOL, ASSOCIATES, BACHELORS, MASTERS, PHD }
     public class PatientNote
     {
+        private string title;
         private string note;
         private DateTime time;
-        public PatientNote(string Note) { note = Note; }
-        public PatientNote(string Note, DateTime Time)  // There is only content and a time?! No subject, context? 
+        public PatientNote(string Title, string Note) {
+            title = Title;
+            time = DateTime.Now;
+            note = Note;
+        }
+        public PatientNote(string Title, string Note, DateTime Time)
         {
+            title = Title;
             note = Note;
             time = Time;
         }
-        public void changeNote(string Note) {       //REALLY?!! The doctor is going to change a note by inputting the entire text of the note and then the new one? I doubt it
+        public void changeTitle(string Title) { title = Title; }
+        public string getTitle() { return title;  }
+       
+        public void changeNote(string Note) {
             note = Note;
         }
         public string getNote() { return note; }
+        public void changeTime(DateTime Time) { time = Time; }
         public DateTime getTime() { return time; }
     }
     public class Patient
@@ -45,5 +55,12 @@ namespace SmartStroke
         public GENDER getGender() { return gender; }
         public EDU_LEVEL getEduLevel() { return eduLevel; }
         public List<PatientNote> getNotes() { return notes; }
+        public string convertToString() {
+            char genderChar = (gender == GENDER.MALE ? 'M' : 'F');
+            return name + " - "
+                + birthDate.ToString() + " - "
+                + genderChar + " - "
+                + eduLevel.ToString();
+        }
     }
 }
