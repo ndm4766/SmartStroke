@@ -58,6 +58,8 @@ namespace SmartStroke
         private List<Line> currentLine;
         private Dictionary<InkStroke, List<Line>> allLines;
 
+        private List<int> quadWeights;
+
         //TrailNode handling members
         private List<Line> currentEdge;
 
@@ -95,6 +97,12 @@ namespace SmartStroke
             // Create the trails test background. The test image is 117X917 px but to fit on a screen (surface) it is 686 X 939
             currentLine = new List<Line>();
             allLines = new Dictionary<InkStroke, List<Line>>();
+
+            quadWeights = new List<int>();
+            quadWeights.Add(0);
+            quadWeights.Add(0);
+            quadWeights.Add(0);
+            quadWeights.Add(0);
 
             //add all the event handlers for touch/pen/mouse input (pointer handles all 3)
             MyCanvas.PointerPressed += new PointerEventHandler(MyCanvas_PointerPressed);
@@ -137,6 +145,68 @@ namespace SmartStroke
             {
                 MyCanvas.Height = 768;
                 MyCanvas.Width = 1366;
+            }
+        }
+
+        private Rectangle getQuadrantCollision(Line line)
+        {
+            List<Rectangle> quadrants = new List<Rectangle>();
+            quadrants.Add(box1);
+            quadrants.Add(box2);
+            quadrants.Add(box3);
+            quadrants.Add(box4);
+            foreach (Rectangle quadrant in quadrants)
+            {
+                if (line.X1 < Canvas.GetLeft(quadrant) + quadrant.Width &&
+                    line.Y1 < Canvas.GetTop(quadrant) &&
+                    line.X1 > Canvas.GetLeft(quadrant) &&
+                    line.X1 > Canvas.GetTop(quadrant) + quadrant.Height)
+                {
+                    line.Fill = new SolidColorBrush(Colors.Red);
+                    return quadrant;
+                }
+            }
+
+            return null;
+        }
+
+        private void analyzeClicked(object sender, RoutedEventArgs e)
+        {
+            //reset the data collection
+            quadWeights.Clear();
+            quadWeights.Add(0);
+            quadWeights.Add(0);
+            quadWeights.Add(0);
+            quadWeights.Add(0);
+            
+            foreach (var stroke in inkManager.GetStrokes())
+            {
+                foreach (Line line in allLines[stroke])
+                {
+                    Rectangle quad = getQuadrantCollision(line);
+
+                    //increment the counter of the rect with the collision if there was one
+                    if (quad != null)
+                    {
+                        if (quad == box1)
+                        {
+                            quadWeights[0]++;
+                        }
+                        else if (quad == box2)
+                        {
+                            quadWeights[1]++;
+                        }
+                        else if (quad == box3)
+                        {
+                            quadWeights[2]++;
+                        }
+                        else if (quad == box4)
+                        {
+                            quadWeights[3]++;
+                        }
+                        dataTextblock.Text = quadWeights[0].ToString() + "\n" + quadWeights[1].ToString() + "\n" + quadWeights[2].ToString() + "\n" + quadWeights[3].ToString();
+                    }
+                }
             }
         }
 
@@ -309,10 +379,6 @@ namespace SmartStroke
 
 
 
-
-
-
-
         /// <summary>
         /// Populates the page with content passed during navigation. Any saved state is also
         /// provided when recreating a page from a prior session.
@@ -362,5 +428,6 @@ namespace SmartStroke
         }
 
         #endregion
+
     }
 }

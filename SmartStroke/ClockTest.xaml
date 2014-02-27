@@ -31,15 +31,20 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Ellipse Stroke="Black" StrokeThickness="10" Grid.RowSpan="2" Width="600" Height="600"/>
         <!--my code here-->
-        <Viewbox HorizontalAlignment="Left" Stretch="Fill" StretchDirection="Both" VerticalAlignment="Top" Grid.Row="2">
-            <Canvas Name="MyCanvas" Background="Transparent" >
-                <Ellipse Fill="Black" Height="100" Stroke="Black" Width="100" Opacity="100" Margin="100,100,0,0"/>
 
-            </Canvas>
-        </Viewbox>
+        <Canvas Name="MyCanvas" Background="Green" Grid.RowSpan="2">
+            <Rectangle Name="box1" Stroke="Red" Height="300" Width="300" Grid.RowSpan="2" Canvas.Left="683" Canvas.Top="84" />
+            <Rectangle Name="box2" Stroke="Red" Height="300" Width="300" Grid.RowSpan="2" Canvas.Left="383" Canvas.Top="84" />
+            <Rectangle Name="box3" Stroke="Red" Height="300" Width="300" Grid.Row="1" Canvas.Left="383" Canvas.Top="384" />
+            <Rectangle Name="box4" Stroke="Red" Height="300" Width="300" Grid.Row="1" Canvas.Left="683" Canvas.Top="384" />
 
+            <Ellipse Stroke="Black" StrokeThickness="10" Grid.RowSpan="2" Width="600" Height="600" Canvas.Left="383" Canvas.Top="84"/>
+
+            <TextBlock Name="dataTextblock" Text="NoDataYet" Grid.Row="1" FontSize="20" Height="230" Canvas.Left="25" Canvas.Top="168" Width="300"/>
+        </Canvas>
+
+        <Button Content="Analyze" Margin="141,43,0,27" Height="70" Width="150" Click="analyzeClicked" />
 
         <!-- Back button and page title -->
         <Grid>
@@ -54,6 +59,7 @@
                         AutomationProperties.AutomationId="BackButton"
                         AutomationProperties.ItemType="Navigation Button"/>
         </Grid>
-        
+
+
     </Grid>
 </Page>
