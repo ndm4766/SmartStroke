@@ -19,6 +19,14 @@ using Windows.Devices.Input;
 using Windows.UI.ApplicationSettings;
 using System.Diagnostics;
 using Windows.Graphics.Display;
+using Windows.UI.Xaml.Media.Imaging;
+using System.Threading.Tasks;
+using Windows.Storage;
+using Windows.Storage.Pickers;
+using Windows.Graphics.Imaging;
+using Windows.Storage.Streams;
+using Windows.UI.Popups;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 namespace SmartStroke
@@ -59,6 +67,7 @@ namespace SmartStroke
         private Queue<int> incorrectNodes;
         private List<Line> currentEdge;
 
+        //Members to handle total test time
         private Stopwatch timer;
         private DispatcherTimer disp;
 
@@ -405,7 +414,12 @@ namespace SmartStroke
                             MyCanvas.PointerExited -= MyCanvas_PointerReleased;
                             testReplay.endStroke();
                             testReplay.endTest();
+
                             submitButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                            submitButton.IsHitTestVisible = true;
+
+                            saveButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                            saveButton.IsHitTestVisible = true;
                             return;
                         }
                     }
@@ -491,6 +505,7 @@ namespace SmartStroke
             e.Handled = true;
         }
 
+        // Test is finished.. take a picture of the screen.
         private void SubmitButtonClicked(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(MainPage));
@@ -554,5 +569,13 @@ namespace SmartStroke
 
         #endregion
 
+        #region SaveTest
+
+        // Create a new screenshot of the test. Can save as a jpg, png, etc.
+        async void btnScreenshot_Click(object sender, RoutedEventArgs e)
+        {
+            var bitmap = await new ScreenExporter().StartAsync(MyCanvas);
+        }
+        #endregion
     }
 }

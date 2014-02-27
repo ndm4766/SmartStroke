@@ -13,12 +13,12 @@ namespace SmartStroke
         private string note;
         private DateTime time;
         public PatientNote(string Note) { note = Note; }
-        public PatientNote(string Note, DateTime Time)
+        public PatientNote(string Note, DateTime Time)  // There is only content and a time?! No subject, context? 
         {
             note = Note;
             time = Time;
         }
-        public void changeNote(string Note) {
+        public void changeNote(string Note) {       //REALLY?!! The doctor is going to change a note by inputting the entire text of the note and then the new one? I doubt it
             note = Note;
         }
         public string getNote() { return note; }
