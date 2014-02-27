@@ -17,7 +17,7 @@
         <Viewbox HorizontalAlignment="Left" VerticalAlignment="Top" Grid.RowSpan="2">
             <Canvas Name="MyCanvas" Background="Transparent" />
         </Viewbox>
-        <Button Name="saveButton" Content="Submit" Margin="1004,255,0,353" Width="100" Height="50" Visibility="Collapsed" Click="btnScreenshot_Click" Grid.Row="1" IsHitTestVisible="False"/>
+        <Button Name="saveButton" Content="Save" Margin="1004,255,0,353" Width="100" Height="50" Visibility="Collapsed" Click="btnScreenshot_Click" Grid.Row="1" IsHitTestVisible="False"/>
         <Button Name="submitButton" Content="Submit" Margin="1100,255,0,353" Width="100" Height="50" Visibility="Collapsed" Click="SubmitButtonClicked" Grid.Row="1" IsHitTestVisible="False"/>
     </Grid>
 </Page>

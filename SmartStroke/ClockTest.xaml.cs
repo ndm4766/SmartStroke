@@ -94,7 +94,7 @@ namespace SmartStroke
 
             inkManager = new Windows.UI.Input.Inking.InkManager();
 
-            // Create the trails test background. The test image is 117X917 px but to fit on a screen (surface) it is 686 X 939
+            // Create the clock test background. The test image is 117X917 px but to fit on a screen (surface) it is 686 X 939
             currentLine = new List<Line>();
             allLines = new Dictionary<InkStroke, List<Line>>();
 
@@ -160,7 +160,7 @@ namespace SmartStroke
                 if (line.X1 < Canvas.GetLeft(quadrant) + quadrant.Width &&
                     line.Y1 < Canvas.GetTop(quadrant) &&
                     line.X1 > Canvas.GetLeft(quadrant) &&
-                    line.X1 > Canvas.GetTop(quadrant) + quadrant.Height)
+                    line.Y1 > Canvas.GetTop(quadrant) + quadrant.Height)
                 {
                     line.Fill = new SolidColorBrush(Colors.Red);
                     return quadrant;
