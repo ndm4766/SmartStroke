@@ -157,10 +157,10 @@ namespace SmartStroke
             quadrants.Add(box4);
             foreach (Rectangle quadrant in quadrants)
             {
-                if (line.X1 < Canvas.GetLeft(quadrant) + quadrant.Width &&
-                    line.Y1 < Canvas.GetTop(quadrant) &&
-                    line.X1 > Canvas.GetLeft(quadrant) &&
-                    line.X1 > Canvas.GetTop(quadrant) + quadrant.Height)
+                if (line.X1 > Canvas.GetLeft(quadrant) &&
+                    line.X1 < Canvas.GetLeft(quadrant) + quadrant.Width &&
+                    line.Y1 > Canvas.GetTop(quadrant) &&
+                    line.Y1 < Canvas.GetTop(quadrant) + quadrant.Height)
                 {
                     line.Fill = new SolidColorBrush(Colors.Red);
                     return quadrant;
@@ -204,7 +204,10 @@ namespace SmartStroke
                         {
                             quadWeights[3]++;
                         }
-                        dataTextblock.Text = quadWeights[0].ToString() + "\n" + quadWeights[1].ToString() + "\n" + quadWeights[2].ToString() + "\n" + quadWeights[3].ToString();
+                        dataTextblock.Text = "Top Right: " + quadWeights[0].ToString() + "\n" +
+                            "Top Left: " + quadWeights[1].ToString() + "\n" +
+                            "Bot Left: " + quadWeights[2].ToString() + "\n" +
+                            "Bot Right: " + quadWeights[3].ToString();
                     }
                 }
             }
