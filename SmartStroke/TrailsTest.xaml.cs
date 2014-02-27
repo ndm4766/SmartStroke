@@ -43,11 +43,10 @@ namespace SmartStroke
         private string testVersion;
         private const double DRAW_WIDTH = 4.0;
         private const double ERASE_WIDTH = 30.0;
-        private Color DRAW_COLOR = Colors.Blue;
+        private Color DRAW_COLOR = Color.FromArgb(255, 50, 50, 50);
         private Color ERASE_COLOR = Colors.White;
 
         //boolean program state flags
-        private bool erasing;
         private bool pressed = false;
 
         //ink drawing members
@@ -78,7 +77,6 @@ namespace SmartStroke
         public TrailsTest()
         {
             this.InitializeComponent();
-            //Windows.Graphics.Display.DisplayInformation.AutoRotationPreferences = Windows.Graphics.Display.DisplayOrientations.Landscape;
 
             inkManager = new Windows.UI.Input.Inking.InkManager();
 
@@ -94,7 +92,6 @@ namespace SmartStroke
             MyCanvas.PointerReleased += new PointerEventHandler(MyCanvas_PointerReleased);
             MyCanvas.PointerExited += new PointerEventHandler(MyCanvas_PointerReleased);
 
-            erasing = false;
             nextIndex = 0;
             currentIndex = 0;
             incorrectNodes = new Queue<int>();
@@ -250,16 +247,6 @@ namespace SmartStroke
             }
         }
 
-        private bool eraserHitTest(InkStroke s, Point testPoint)
-        {
-            foreach (var p in s.GetRenderingSegments())
-            {
-                if (Math.Abs(testPoint.X - p.Position.X) < 10 && Math.Abs(testPoint.Y - p.Position.Y) < 10)
-                    return true;
-            }
-            return false;
-        }
-
         // Return which index of node the user has hit
         private int stylusHitTest(double x, double y)
         {
@@ -330,16 +317,7 @@ namespace SmartStroke
 
                 // Pass the pointer information to the InkManager. 
                 inkManager.ProcessPointerUp(pt);
-
-                if (!erasing)
-                {
-                    //create the link from the completed stroke to its list of lines on the canvas
-                    allLines.Add(inkManager.GetStrokes()[inkManager.GetStrokes().Count - 1], currentLine);//TODO: erasing causing outofrange err
-                    //cant just clear the list cuz its c#, have to point to a new list, not a memory leak
-                    currentLine = new List<Line>();
-
-                    testReplay.endStroke();
-                }
+                testReplay.endStroke();
             }
 
             else if (e.Pointer.PointerId == touchId)
@@ -457,29 +435,7 @@ namespace SmartStroke
                         testReplay.deletePreviousStroke();
                         //}
                     }
-
-                    if (erasing)
-                    {
-                        //check if the pressed cursor has collided with any strokes
-                        foreach (var stroke in inkManager.GetStrokes())
-                        {
-                            if (eraserHitTest(stroke, new Point(x2, y2)))
-                            {
-                                stroke.Selected = true;
-
-                                //remove each of the lines associated with this single stroke from canvas
-                                foreach (Line line in allLines[stroke])
-                                {
-                                    MyCanvas.Children.Remove(line);
-                                    allLines.Remove(stroke);
-                                }
-                            }
-                        }
-                        //tell the ink manager to stop tracking the strokes that were erased
-                        inkManager.DeleteSelected();
-                    }
-                    else //if drawing
-                    {
+                    
                         Line line = new Line()
                         {
                             X1 = x1,
@@ -494,7 +450,7 @@ namespace SmartStroke
                         MyCanvas.Children.Add(line);
 
                         testReplay.addLine(line);
-                    }
+                    
 
                     inkManager.ProcessPointerUpdate(pt);
                     previousContactPt = currentContactPt;
@@ -524,19 +480,7 @@ namespace SmartStroke
             PointerDeviceType pointerDevType = e.Pointer.PointerDeviceType;
             if (pointerDevType == PointerDeviceType.Pen || (pointerDevType == PointerDeviceType.Mouse && pt.Properties.IsLeftButtonPressed))
             {
-                //first check if the stylus' eraser is being used
-                if (pt.Properties.IsEraser)
-                {
-                    inkManager.Mode = Windows.UI.Input.Inking.InkManipulationMode.Erasing;
-                    erasing = true;
-                    //selCanvas.style.cursor = "url(images/erase.cur), auto"; 
-                }
-                else
-                {
-                    testReplay.beginStroke();
-                    erasing = false;
-                }
-
+                testReplay.beginStroke();
                 // Pass the pointer information to the InkManager.
                 inkManager.ProcessPointerDown(pt);
                 penId = pt.PointerId;

@@ -27,6 +27,8 @@ namespace SmartStroke
 
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
+        
+        const string filename = "userInfo.txt";
 
         /// <summary>
         /// This can be changed to a strongly typed view model.
@@ -36,13 +38,7 @@ namespace SmartStroke
             get { return this.defaultViewModel; }
         }
 
-        void getStuck()
-        {
-            while (true)
-            {
-                //nothing
-            }
-        }
+        public Windows.Data.Json.JsonArray patients = new Windows.Data.Json.JsonArray();
 
         /// <summary>
         /// NavigationHelper is used on each page to aid in navigation and 
@@ -154,7 +150,23 @@ namespace SmartStroke
             (ScatterChart.Series[1] as ScatterSeries).ItemsSource = highEducationResults;
             (ScatterChart.Series[2] as ScatterSeries).ItemsSource = uniquePoints;
 
+        }
 
+        async void loadJson()
+        {
+            try
+            {
+                //get file
+                Windows.Storage.StorageFile myFile = await Windows.Storage.ApplicationData.Current.LocalFolder.GetFileAsync(filename);
+                //read
+                String data = await Windows.Storage.FileIO.ReadTextAsync(myFile);
+
+                patients = Windows.Data.Json.JsonArray.Parse(data);
+            }
+            catch
+            {
+                //json load failed
+            }
         }
 
         #endregion

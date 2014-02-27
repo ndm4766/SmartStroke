@@ -178,12 +178,11 @@ namespace SmartStroke
         private void analyzeClicked(object sender, RoutedEventArgs e)
         {
             //reset the data collection
-            quadWeights.Clear();
-            quadWeights.Add(0);
-            quadWeights.Add(0);
-            quadWeights.Add(0);
-            quadWeights.Add(0);
-            
+            quadWeights[0] = 0;
+            quadWeights[1] = 0;
+            quadWeights[2] = 0;
+            quadWeights[3] = 0;
+
             foreach (var stroke in inkManager.GetStrokes())
             {
                 foreach (Line line in allLines[stroke])
