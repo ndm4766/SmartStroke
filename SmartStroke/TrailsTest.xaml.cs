@@ -410,6 +410,7 @@ namespace SmartStroke
                         //TODO: if the test is done...what to do?
                         if (nextIndex >= nodes.Count)
                         {
+                            
                             timer.Stop();
                             MyCanvas.PointerPressed -= MyCanvas_PointerPressed;
                             MyCanvas.PointerMoved -= MyCanvas_PointerMoved;
@@ -512,6 +513,16 @@ namespace SmartStroke
         private void SubmitButtonClicked(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(MainPage));
+           // changeColor();
+            var foo = inkManager.GetStrokes();
+            foreach (InkStroke stroke in inkManager.GetStrokes())
+            {
+                foreach (Line line in allLines[stroke])
+                {
+                    line.Fill = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
+                    MyCanvas.Children.Add(line);
+                }
+            }
         }
 
         private void MyCanvas_PointerPressed(object sender, PointerRoutedEventArgs e)
@@ -550,6 +561,22 @@ namespace SmartStroke
 
             pressed = true;
         }
+
+        private void changeColor()
+        {
+            foreach (InkStroke stroke in inkManager.GetStrokes())
+            {
+                foreach (Line line in allLines[stroke])
+                {
+                    line.Fill = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
+                    MyCanvas.Children.Add(line);
+                }
+            }
+            //RefreshCanvas();
+            //MyCanvas.UpdateLayout();
+
+        }
+        
 
         #endregion
 
