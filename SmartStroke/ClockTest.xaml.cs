@@ -23,6 +23,11 @@ using Windows.UI.Xaml.Shapes;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234237
 
+/*
+ *  TODO: measure other metrics such as if the "hands" are drawn to the correct time, if all 12 numbers are present,
+ *      if more than 12 numbers are present or more than 2 "hands" are drawn, ...
+ */
+
 namespace SmartStroke
 {
     /// <summary>
