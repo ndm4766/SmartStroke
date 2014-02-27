@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -57,6 +58,7 @@ namespace SmartStroke
         }
         public bool isFinished() { return finished; }
         public abstract ACTION_TYPE getActionType();
+        public abstract string getActionTypeString();
     }
     public sealed class Stroke : TestAction
     {
@@ -80,6 +82,10 @@ namespace SmartStroke
         { 
             return ACTION_TYPE.STROKE; 
         }
+        public override string getActionTypeString()
+        {
+            return "Stroke";
+        }
     }
     public sealed class DeletePreviousStroke : TestAction
     {
@@ -87,6 +93,10 @@ namespace SmartStroke
         public override ACTION_TYPE getActionType()
         {
             return ACTION_TYPE.DEL_PREV_STROKE;
+        }
+        public override string getActionTypeString()
+        {
+            return "DeletePreviousStroke";
         }
     }
 
@@ -156,25 +166,26 @@ namespace SmartStroke
             if (testActions.Count == 0) return null;
             else return testActions[testActions.Count - 1];
         }
+        private string getTestType()
+        {
+            switch (testType){
+                case TEST_TYPE.TRAILS_A: { return "trailsA"; }
+                case TEST_TYPE.TRAILS_B: { return "trailsB"; }
+                case TEST_TYPE.REY_OSTERRIETH: { return "reyOsterrieth"; }
+                case TEST_TYPE.CLOCK: { return "clock"; }
+                default: { return "NOT_SUPPORTED"; }
+            }
+        }
         private string getFileSuffix()
         {
             string fileExtension = ".xml";
-            switch (testType) {
-                case TEST_TYPE.TRAILS_A: {
-                    return "_trailsA" + fileExtension;
-                } case TEST_TYPE.TRAILS_B: {
-                    return "_trailsB" + fileExtension;
-                } case TEST_TYPE.REY_OSTERRIETH: {
-                    return "_reyOsterrieth" + fileExtension;
-                } case TEST_TYPE.CLOCK: {
-                    return "clock" + fileExtension;
-                } default: {
-                    return "NOT_SUPPORTED";
-                }
-            }
+            string testType = getTestType();
+            if (testType == "NOT_SUPPORTED") return testType;
+            else return testType + fileExtension;
         }
         private string getFileName()
         {
+            return "test.txt";
             string fileSuffix = getFileSuffix();
             if (fileSuffix=="NOT_SUPPORTED") return "TEST_TYPE_NOT_SUPPORTED";
             string filename = patient.getName() 
@@ -200,13 +211,35 @@ namespace SmartStroke
         public async void saveTestReplay() {
             string testFilename = getFileName();
             if (testFilename == "TEST_TYPE_NOT_SUPPORTED") return;
+            string testString = "";
+            Windows.Storage.StorageFile testStorageFile;
             try
             {
-                await Windows.Storage.ApplicationData.Current.LocalFolder.
-                    CreateFileAsync(testFilename, 
+                testStorageFile = await Windows.Storage.ApplicationData
+                    .Current.LocalFolder.CreateFileAsync(testFilename, 
                     Windows.Storage.CreationCollisionOption.ReplaceExisting);
+                await Windows.Storage.FileIO.WriteTextAsync(testStorageFile
+                    , testString);
+                int i = 0; i++;
             }
             catch { return; }
+        }
+        public string toXmlString()
+        {
+            using (var sw = new StringWriter()) { 
+            using (var xw = XmlWriter.Create(sw)){
+                xw.WriteStartDocument();
+                for(int i = 0; i < testActions.Count; i++) {
+                    xw.WriteStartElement(testActions[i].getActionTypeString());
+                    switch (testActions[i].getActionType()) {
+                        case ACTION_TYPE.STROKE: { break; }
+                        case ACTION_TYPE.DEL_PREV_STROKE: { break; }
+                        default: { break; }
+                    }
+                }
+            }
+            return sw.ToString();
+            }
         }
     }
 }

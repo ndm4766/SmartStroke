@@ -106,7 +106,7 @@ namespace SmartStroke
 
         //private void Button_Click(object sender, RoutedEventArgs e){}
 
-        private void selection_click(object sender, RoutedEventArgs e)
+        private void select_trails_test(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(TrailsMenu));
         }
@@ -114,6 +114,11 @@ namespace SmartStroke
         private void norm_button_click(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(NormComparison));
+        }
+
+        private void select_clock_test(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(ClockTest));
         }
     }
 }
