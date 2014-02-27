@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections;
 using System.Diagnostics;
+using Windows.Data;
 using Windows.UI.Input.Inking;
 using Windows.UI.Xaml.Shapes;
 
@@ -104,7 +105,10 @@ namespace SmartStroke
         public void startTest() {
             startTime = DateTime.Now; 
         }
-        public void endTest() { endTime = DateTime.Now; }
+        public void endTest() { 
+            endTime = DateTime.Now;
+            saveTestReplay();
+        }
         public void beginStroke()
         {
             if (getCurrentTestAction() != null)
@@ -159,7 +163,7 @@ namespace SmartStroke
                     return "_trailsB";
                 } case TEST_TYPE.REY_OSTERRIETH: {
                     return "_reyOsterrieth";
-                }case TEST_TYPE.CLOCK: {
+                } case TEST_TYPE.CLOCK: {
                     return "clock";
                 } default: {
                     return "NOT_SUPPORTED";
@@ -168,14 +172,22 @@ namespace SmartStroke
         }
         private string getFileName()
         {
-            //TODO - finish, this is not done properly
-            return patient.getName() + getFileSuffix();
+            string filename = patient.getName() 
+                + patient.getBirthDate().ToString() + getFileSuffix();
+            return filename.Replace(" ","");
         }
-        public void loadTestReplay() { 
+        public void loadTestReplay() {
+            string fileName = getFileName();
+            Windows.Data.Json.JsonObject testData
+                = new Windows.Data.Json.JsonObject();
 
         }
-        public void saveTestReplay() { 
-            
+        public void saveTestReplay() {
+            string fileName = getFileName();
+            Windows.Data.Json.JsonObject testData 
+                = new Windows.Data.Json.JsonObject();
+
         }
+
     }
 }
