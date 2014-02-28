@@ -107,9 +107,7 @@ namespace SmartStroke
                 "Leeroy Jenkins", DateTime.Now,GENDER.MALE,EDU_LEVEL.PHD),
                 TEST_TYPE.TRAILS_A);
             testReplay.startTest();
-            testReplay.saveTestReplay();
-            testReplay.loadTestReplay();
-
+            
             screenHeight = Window.Current.Bounds.Height;
             screenWidth = Window.Current.Bounds.Width;
 
@@ -388,6 +386,7 @@ namespace SmartStroke
                         //TODO: if the test is done...what to do?
                         if (nextIndex >= nodes.Count)
                         {
+                            
                             timer.Stop();
                             MyCanvas.PointerPressed -= MyCanvas_PointerPressed;
                             MyCanvas.PointerMoved -= MyCanvas_PointerMoved;
@@ -395,6 +394,8 @@ namespace SmartStroke
                             MyCanvas.PointerExited -= MyCanvas_PointerReleased;
                             testReplay.endStroke();
                             testReplay.endTest();
+                            testReplay.saveTestReplay();
+                            testReplay.loadTestReplay();
 
                             submitButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
                             submitButton.IsHitTestVisible = true;
@@ -468,6 +469,16 @@ namespace SmartStroke
         private void SubmitButtonClicked(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(MainPage));
+           // changeColor();
+            var foo = inkManager.GetStrokes();
+            foreach (InkStroke stroke in inkManager.GetStrokes())
+            {
+                foreach (Line line in allLines[stroke])
+                {
+                    line.Fill = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
+                    MyCanvas.Children.Add(line);
+                }
+            }
         }
 
         private void MyCanvas_PointerPressed(object sender, PointerRoutedEventArgs e)
@@ -494,6 +505,22 @@ namespace SmartStroke
 
             pressed = true;
         }
+
+        private void changeColor()
+        {
+            foreach (InkStroke stroke in inkManager.GetStrokes())
+            {
+                foreach (Line line in allLines[stroke])
+                {
+                    line.Fill = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
+                    MyCanvas.Children.Add(line);
+                }
+            }
+            //RefreshCanvas();
+            //MyCanvas.UpdateLayout();
+
+        }
+        
 
         #endregion
 

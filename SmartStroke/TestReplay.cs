@@ -20,10 +20,10 @@ namespace SmartStroke
         protected DateTime startTime;
         protected DateTime endTime;
         protected bool finished;
-        public TestAction() 
+        public TestAction()
         {
             startTime = DateTime.Now;
-            finished = false; 
+            finished = false;
         }
         public TestAction(DateTime StartTime)
         {
@@ -36,7 +36,7 @@ namespace SmartStroke
             endTime = EndTime;
             finished = true;
         }
-        public void startAction(DateTime StartTime) 
+        public void startAction(DateTime StartTime)
         {
             startTime = StartTime;
             finished = false;
@@ -57,30 +57,35 @@ namespace SmartStroke
             finished = true;
         }
         public bool isFinished() { return finished; }
+        public DateTime getStartTime() { return startTime; }
+        public DateTime getEndTime() { return endTime; }
         public abstract ACTION_TYPE getActionType();
         public abstract string getActionTypeString();
     }
+    public sealed class LineData
+    {
+        private DateTime startTime;
+        private Line line;
+        public LineData(DateTime StartTime, Line _Line)
+        {
+            startTime = StartTime;
+            line = _Line;
+        }
+        public Line getLine() { return line; }
+        public DateTime getDateTime() { return startTime; }
+    }
     public sealed class Stroke : TestAction
     {
-        private class LineData
-        {
-            private DateTime startTime;
-            private Line line;
-            public LineData(DateTime StartTime, Line _Line) 
-            {
-                startTime = StartTime;
-                line = _Line;
-            }
-        }
         private List<LineData> lines;
         public Stroke() { lines = new List<LineData>(); }
         public void addLine(Line _Line)
         {
             lines.Add(new LineData(DateTime.Now, _Line));
         }
-        public override ACTION_TYPE getActionType() 
-        { 
-            return ACTION_TYPE.STROKE; 
+        public List<LineData> getLines() { return lines; }
+        public override ACTION_TYPE getActionType()
+        {
+            return ACTION_TYPE.STROKE;
         }
         public override string getActionTypeString()
         {
@@ -115,10 +120,12 @@ namespace SmartStroke
             testActions = new List<TestAction>();
             testType = TestType;
         }
-        public void startTest() {
-            startTime = DateTime.Now; 
+        public void startTest()
+        {
+            startTime = DateTime.Now;
         }
-        public void endTest() { 
+        public void endTest()
+        {
             endTime = DateTime.Now;
             saveTestReplay();
         }
@@ -144,14 +151,14 @@ namespace SmartStroke
         {
             if (getCurrentTestAction() != null)
             {
-                if(getCurrentTestAction().isFinished()) return;
-                if(!checkCurrentTestAction(ACTION_TYPE.STROKE)) return;
+                if (getCurrentTestAction().isFinished()) return;
+                if (!checkCurrentTestAction(ACTION_TYPE.STROKE)) return;
                 currentStroke.addLine(line);
             }
         }
         public void deletePreviousStroke()
         {
-            if(getCurrentTestAction() == null) return;
+            if (getCurrentTestAction() == null) return;
             if (!getCurrentTestAction().isFinished()) return;
             if (!checkCurrentTestAction(ACTION_TYPE.STROKE)) return;
             testActions.Add(new DeletePreviousStroke());
@@ -168,7 +175,8 @@ namespace SmartStroke
         }
         private string getTestType()
         {
-            switch (testType){
+            switch (testType)
+            {
                 case TEST_TYPE.TRAILS_A: { return "trailsA"; }
                 case TEST_TYPE.TRAILS_B: { return "trailsB"; }
                 case TEST_TYPE.REY_OSTERRIETH: { return "reyOsterrieth"; }
@@ -187,14 +195,15 @@ namespace SmartStroke
         {
             return "test.txt";
             string fileSuffix = getFileSuffix();
-            if (fileSuffix=="NOT_SUPPORTED") return "TEST_TYPE_NOT_SUPPORTED";
-            string filename = patient.getName() 
+            if (fileSuffix == "NOT_SUPPORTED") return "TEST_TYPE_NOT_SUPPORTED";
+            string filename = patient.getName()
                 + patient.getBirthDate().ToString() + fileSuffix;
-            filename = filename.Replace(":","");
+            filename = filename.Replace(":", "");
             filename = filename.Replace("/", "");
-            return filename.Replace(" ","");
+            return filename.Replace(" ", "");
         }
-        public async void loadTestReplay() {
+        public async void loadTestReplay()
+        {
             string testFilename = getFileName();
             if (testFilename == "TEST_TYPE_NOT_SUPPORTED") return;
             Windows.Storage.StorageFile testStorageFile;
@@ -203,43 +212,66 @@ namespace SmartStroke
             {
                 testStorageFile = await Windows.Storage.ApplicationData
                         .Current.LocalFolder.GetFileAsync(testFilename);
-                testData = await 
+                testData = await
                     Windows.Storage.FileIO.ReadTextAsync(testStorageFile);
-            } 
+            }
             catch { return; }
         }
-        public async void saveTestReplay() {
+        public async void saveTestReplay()
+        {
             string testFilename = getFileName();
             if (testFilename == "TEST_TYPE_NOT_SUPPORTED") return;
-            string testString = "";
             Windows.Storage.StorageFile testStorageFile;
+            string stringToSave = convertToString();
             try
             {
                 testStorageFile = await Windows.Storage.ApplicationData
-                    .Current.LocalFolder.CreateFileAsync(testFilename, 
+                    .Current.LocalFolder.CreateFileAsync(testFilename,
                     Windows.Storage.CreationCollisionOption.ReplaceExisting);
                 await Windows.Storage.FileIO.WriteTextAsync(testStorageFile
-                    , testString);
-                int i = 0; i++;
+                    , stringToSave);
             }
-            catch { return; }
+            catch{ return; }
         }
-        public string toXmlString()
+        public string formatLineString(LineData lineData)
         {
-            using (var sw = new StringWriter()) { 
-            using (var xw = XmlWriter.Create(sw)){
-                xw.WriteStartDocument();
-                for(int i = 0; i < testActions.Count; i++) {
-                    xw.WriteStartElement(testActions[i].getActionTypeString());
-                    switch (testActions[i].getActionType()) {
-                        case ACTION_TYPE.STROKE: { break; }
-                        case ACTION_TYPE.DEL_PREV_STROKE: { break; }
-                        default: { break; }
-                    }
+            string lineString = "";
+            Line line = lineData.getLine();
+            lineString += line.X1.ToString();
+            lineString += ("," + line.X1.ToString());
+            lineString += ("," + line.Y1.ToString());
+            lineString += ("," + line.X2.ToString());
+            lineString += ("," + line.Y2.ToString());
+            lineString += ("->" + lineData.getDateTime().ToString());
+            return lineString;
+        }
+        public string convertToString()
+        {
+            string testReplayString = "";
+            testReplayString += (patient.convertToString() + '\n');
+            for (int i = 0; i < testActions.Count; i++)
+            {
+                testReplayString += testActions[i].getActionTypeString() + " ";
+                testReplayString
+                    += testActions[i].getStartTime().ToString() + " ";
+                testReplayString
+                    += testActions[i].getEndTime().ToString() + '\n';
+                switch (testActions[i].getActionType())
+                {
+                    case ACTION_TYPE.STROKE:
+                        {
+                            Stroke stroke = (Stroke)testActions[i];
+                            List<LineData> lineData = stroke.getLines();
+                            for (int j = 0; j < lineData.Count; j++)
+                                testReplayString +=
+                                    ("line " + formatLineString(lineData[j]));
+                            break;
+                        }
+                    case ACTION_TYPE.DEL_PREV_STROKE: { break; }
+                    default: { break; }
                 }
             }
-            return sw.ToString();
-            }
+            return testReplayString;
         }
     }
 }
