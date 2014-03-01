@@ -12,6 +12,13 @@ using Windows.Storage;
 using Windows.UI.Input.Inking;
 using Windows.UI.Xaml.Shapes;
 
+/*
+ *   Current issue, having trouble with asynchronous saving events not always working.
+ *   In C#, asnychronous function errors can sometimes not be caught by catch blocks.
+ *   It is 4AM right now, and I will fix this, add file searching, and add documentation
+ *   after some sleep - JR
+ */
+
 namespace SmartStroke
 {
     public enum ACTION_TYPE { STROKE, DEL_PREV_STROKE, NONE }
