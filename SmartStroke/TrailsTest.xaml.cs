@@ -39,6 +39,8 @@ namespace SmartStroke
         //test replay container
         private TestReplay testReplay;
 
+        private bool finished = false;
+
         //general globals
         private string testVersion;
         private const double DRAW_WIDTH = 4.0;
@@ -318,6 +320,9 @@ namespace SmartStroke
                 // Pass the pointer information to the InkManager. 
                 inkManager.ProcessPointerUp(pt);
                 testReplay.endStroke();
+
+                allLines.Add(inkManager.GetStrokes()[inkManager.GetStrokes().Count - 1], currentLine);
+                currentLine = new List<Line>();
             }
 
             else if (e.Pointer.PointerId == touchId)
@@ -386,6 +391,7 @@ namespace SmartStroke
                         //TODO: if the test is done...what to do?
                         if (nextIndex >= nodes.Count)
                         {
+                            
                             timer.Stop();
                             MyCanvas.PointerPressed -= MyCanvas_PointerPressed;
                             MyCanvas.PointerMoved -= MyCanvas_PointerMoved;
@@ -405,6 +411,11 @@ namespace SmartStroke
 
                             saveButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
                             saveButton.IsHitTestVisible = true;
+
+                            inkManager.ProcessPointerUp(pt);
+                            allLines.Add(inkManager.GetStrokes()[inkManager.GetStrokes().Count - 1], currentLine);
+                            currentLine = new List<Line>();
+                            finished = true;
                             return;
                         }
                     }
@@ -455,8 +466,8 @@ namespace SmartStroke
 
                         testReplay.addLine(line);
                     
-
-                    inkManager.ProcessPointerUpdate(pt);
+                    if(!finished)
+                        inkManager.ProcessPointerUpdate(pt);
                     previousContactPt = currentContactPt;
                 }
             }
@@ -471,7 +482,19 @@ namespace SmartStroke
         // Test is finished.. take a picture of the screen.
         private void SubmitButtonClicked(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(MainPage));
+            //this.Frame.Navigate(typeof(MainPage));
+            var foo = inkManager.GetStrokes();
+            foreach (InkStroke stroke in foo)
+            {
+                foreach (Line l in allLines[stroke])
+                {
+                    MyCanvas.Children.Remove(l);
+                    l.Fill = new SolidColorBrush(Colors.Red);
+                    MyCanvas.Children.Add(l);
+                }
+            }
+
+            this.Frame.Navigate(typeof(MainPageCopy), testReplay);
         }
 
         private void MyCanvas_PointerPressed(object sender, PointerRoutedEventArgs e)

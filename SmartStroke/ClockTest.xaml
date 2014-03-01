@@ -34,10 +34,10 @@
         <!--my code here-->
 
         <Canvas Name="MyCanvas" Background="Transparent" Grid.RowSpan="2">
-            <Rectangle Name="box1" Stroke="Red" Height="300" Width="300" Grid.RowSpan="2" Canvas.Left="683" Canvas.Top="84" />
-            <Rectangle Name="box2" Stroke="Red" Height="300" Width="300" Grid.RowSpan="2" Canvas.Left="383" Canvas.Top="84" />
-            <Rectangle Name="box3" Stroke="Red" Height="300" Width="300" Grid.Row="1" Canvas.Left="383" Canvas.Top="384" />
-            <Rectangle Name="box4" Stroke="Red" Height="300" Width="300" Grid.Row="1" Canvas.Left="683" Canvas.Top="384" />
+            <Rectangle Name="box1" Stroke="Transparent" Height="300" Width="300" Grid.RowSpan="2" Canvas.Left="683" Canvas.Top="84" />
+            <Rectangle Name="box2" Stroke="Transparent" Height="300" Width="300" Grid.RowSpan="2" Canvas.Left="383" Canvas.Top="84" />
+            <Rectangle Name="box3" Stroke="Transparent" Height="300" Width="300" Grid.Row="1" Canvas.Left="383" Canvas.Top="384" />
+            <Rectangle Name="box4" Stroke="Transparent" Height="300" Width="300" Grid.Row="1" Canvas.Left="683" Canvas.Top="384" />
 
             <Ellipse Stroke="Black" StrokeThickness="10" Grid.RowSpan="2" Width="600" Height="600" Canvas.Left="383" Canvas.Top="84"/>
 
@@ -45,6 +45,7 @@
         </Canvas>
 
         <Button Content="Analyze" Margin="141,43,0,27" Height="70" Width="150" Click="analyzeClicked" />
+        <Button Content="Recognize" Margin="1175,43,0,27" Height="70" Width="150" Click="recognizedWordClicked" />
 
         <!-- Back button and page title -->
         <Grid>
