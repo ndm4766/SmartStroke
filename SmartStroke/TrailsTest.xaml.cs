@@ -394,7 +394,11 @@ namespace SmartStroke
                             testReplay.endStroke();
                             testReplay.endTest();
                             testReplay.saveTestReplay();
-                            testReplay.loadTestReplay();
+                            TestReplay newTestReplay = new TestReplay(
+                                new Patient("Leeroy Jenkins", 
+                                    DateTime.Now,GENDER.MALE,EDU_LEVEL.PHD),
+                                    TEST_TYPE.TRAILS_A);
+                            newTestReplay.loadTestReplay();
 
                             submitButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
                             submitButton.IsHitTestVisible = true;

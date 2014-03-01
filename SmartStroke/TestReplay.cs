@@ -14,7 +14,7 @@ using Windows.UI.Xaml.Shapes;
 
 namespace SmartStroke
 {
-    public enum ACTION_TYPE { STROKE, DEL_PREV_STROKE }
+    public enum ACTION_TYPE { STROKE, DEL_PREV_STROKE, NONE }
     public abstract class TestAction
     {
         protected DateTime startTime;
@@ -78,9 +78,15 @@ namespace SmartStroke
     {
         private List<LineData> lines;
         public Stroke() { lines = new List<LineData>(); }
+        public Stroke(DateTime startTime, DateTime endTime)
+            : base(startTime, endTime) { lines = new List<LineData>(); }
         public void addLine(Line _Line)
         {
             lines.Add(new LineData(DateTime.Now, _Line));
+        }
+        public void addLineData(LineData lineData)
+        {
+            lines.Add(lineData);
         }
         public List<LineData> getLines() { return lines; }
         public override ACTION_TYPE getActionType()
@@ -95,6 +101,8 @@ namespace SmartStroke
     public sealed class DeletePreviousStroke : TestAction
     {
         public DeletePreviousStroke() { finished = true; }
+        public DeletePreviousStroke(DateTime startTime, DateTime endTime)
+            : base(startTime, endTime) { }
         public override ACTION_TYPE getActionType()
         {
             return ACTION_TYPE.DEL_PREV_STROKE;
@@ -186,7 +194,7 @@ namespace SmartStroke
         }
         private string getFileSuffix()
         {
-            string fileExtension = ".xml";
+            string fileExtension = ".txt";
             string testType = getTestType();
             if (testType == "NOT_SUPPORTED") return testType;
             else return testType + fileExtension;
@@ -207,15 +215,16 @@ namespace SmartStroke
             string testFilename = getFileName();
             if (testFilename == "TEST_TYPE_NOT_SUPPORTED") return;
             Windows.Storage.StorageFile testStorageFile;
-            string testData;
+            string testReplayString = "";
             try
             {
                 testStorageFile = await Windows.Storage.ApplicationData
                         .Current.LocalFolder.GetFileAsync(testFilename);
-                testData = await
+                testReplayString = await
                     Windows.Storage.FileIO.ReadTextAsync(testStorageFile);
             }
             catch { return; }
+            parseTestReplay(testReplayString);
         }
         public async void saveTestReplay()
         {
@@ -231,47 +240,94 @@ namespace SmartStroke
                 await Windows.Storage.FileIO.WriteTextAsync(testStorageFile
                     , stringToSave);
             }
-            catch{ return; }
+            catch { return; }
         }
         public string formatLineString(LineData lineData)
         {
             string lineString = "";
             Line line = lineData.getLine();
             lineString += line.X1.ToString();
-            lineString += ("," + line.X1.ToString());
             lineString += ("," + line.Y1.ToString());
             lineString += ("," + line.X2.ToString());
             lineString += ("," + line.Y2.ToString());
-            lineString += ("->" + lineData.getDateTime().ToString());
+            lineString += (" " + lineData.getDateTime().ToString());
             return lineString;
         }
         public string convertToString()
         {
             string testReplayString = "";
-            testReplayString += (patient.convertToString() + '\n');
+            testReplayString += (patient.convertToString() + "\n");
             for (int i = 0; i < testActions.Count; i++)
             {
                 testReplayString += testActions[i].getActionTypeString() + " ";
                 testReplayString
                     += testActions[i].getStartTime().ToString() + " ";
                 testReplayString
-                    += testActions[i].getEndTime().ToString() + '\n';
+                    += testActions[i].getEndTime().ToString() + "\n";
                 switch (testActions[i].getActionType())
                 {
                     case ACTION_TYPE.STROKE:
-                        {
-                            Stroke stroke = (Stroke)testActions[i];
-                            List<LineData> lineData = stroke.getLines();
-                            for (int j = 0; j < lineData.Count; j++)
-                                testReplayString +=
-                                    ("line " + formatLineString(lineData[j]));
-                            break;
-                        }
+                    {
+                        Stroke stroke = (Stroke)testActions[i];
+                        List<LineData> lineData = stroke.getLines();
+                        for (int j = 0; j < lineData.Count; j++)
+                            testReplayString +=
+                                ("line " + formatLineString(lineData[j]) + "\n");
+                        break;
+                    }
                     case ACTION_TYPE.DEL_PREV_STROKE: { break; }
                     default: { break; }
                 }
             }
             return testReplayString;
+        }
+        public void parseTestReplay(string testReplayString)
+        {
+            List<string> testStrings = 
+                testReplayString.Split('\n').Cast<string>().ToList<string>();
+            for(int i = 1; i < testStrings.Count; i++)
+            {
+                List<string> lineWords =
+                   testStrings[i].Split(' ').Cast<string>().ToList<string>();
+                if(lineWords[0] == "line") {
+                    ((Stroke)testActions[testActions.Count - 1])
+                        .addLineData(parseLineLine(lineWords));
+                } else if (lineWords[0] == "Stroke") {
+                    testActions.Add(parseLineStroke(lineWords));
+                } else if (lineWords[0] == "DeletePreviousStroke") {
+                    testActions.Add(parseLineDelPrevStroke(lineWords));
+                }
+                int jazzman = 0; jazzman++;
+            }
+        }
+        public Stroke parseLineStroke(List<string> line)
+        {
+            DateTime startTime = DateTime.Parse(
+                line[1] + " " + line[2] + " " + line [3]);
+            DateTime endTime = DateTime.Parse(
+                line[4] + " " + line[5] + " " + line[6]);
+            return new Stroke(startTime, endTime);
+        }
+        public DeletePreviousStroke parseLineDelPrevStroke(List<string> line)
+        {
+            DateTime startTime = DateTime.Parse(
+                line[1] + " " + line[2] + " " + line[3]);
+            DateTime endTime = DateTime.Parse(
+                line[4] + " " + line[5] + " " + line[6]);
+            return new DeletePreviousStroke(startTime, endTime);
+        }
+        public LineData parseLineLine(List<string> line)
+        {
+            Line newLine = new Line();
+            List<string> coords = 
+                line[1].Split(',').Cast<string>().ToList<string>();
+            newLine.X1 = Convert.ToDouble(coords[0]);
+            newLine.Y1 = Convert.ToDouble(coords[1]);
+            newLine.X2 = Convert.ToDouble(coords[2]);
+            newLine.Y2 = Convert.ToDouble(coords[3]);
+            DateTime startTime = DateTime.Parse(
+                line[2] + " " + line[3] + " " + line[4]);
+            return new LineData(startTime, newLine);
         }
     }
 }
