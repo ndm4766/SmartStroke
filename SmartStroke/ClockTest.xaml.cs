@@ -477,7 +477,7 @@ namespace SmartStroke
                     {
                         numbers += num + " : ";
                     }
-                    break;
+                    break;  // Why is the break outside the if? It will only try one possible word out of all the candidates then..
                 }
             }
 
