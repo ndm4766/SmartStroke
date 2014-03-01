@@ -94,8 +94,8 @@ namespace SmartStroke
             MyCanvas.PointerReleased += new PointerEventHandler(MyCanvas_PointerReleased);
             MyCanvas.PointerExited += new PointerEventHandler(MyCanvas_PointerReleased);
 
-            nextIndex = 22;
-            currentIndex = 22;
+            nextIndex = 0;
+            currentIndex = 0;
             incorrectNodes = new Queue<int>();
             currentEdge = new List<Line>();
 
@@ -489,6 +489,8 @@ namespace SmartStroke
                     MyCanvas.Children.Add(l);
                 }
             }
+
+            this.Frame.Navigate(typeof(MainPageCopy), testReplay);
         }
 
         private void MyCanvas_PointerPressed(object sender, PointerRoutedEventArgs e)

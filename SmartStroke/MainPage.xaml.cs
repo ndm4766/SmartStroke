@@ -34,10 +34,12 @@ namespace SmartStroke
         // Authenticate the doctor.
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-           this.Frame.Navigate(typeof (MainPageCopy));
+            // Navigate to the patient selection screen - send the doctor
+            // name for patient authentication
+            this.Frame.Navigate(typeof (PatientSelection), userId.Text);
         }
 
-        // ToDo: Create a new account
+        // ToDo: Create a new account for a doctor
         private void createAccount_Click(object sender, RoutedEventArgs e)
         {
 
