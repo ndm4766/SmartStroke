@@ -20,9 +20,9 @@ namespace SmartStroke
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class MainPageCopy : Page
     {
-        public MainPage()
+        public MainPageCopy()
         {
             //2B | !2B
             //Laramie's test commit
@@ -30,19 +30,18 @@ namespace SmartStroke
             this.InitializeComponent();
         }
 
-        // Log in button clicked.
-        // Authenticate the doctor.
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void trails_click(object sender, RoutedEventArgs e)
         {
-            // Navigate to the patient selection screen - send the doctor
-            // name for patient authentication
-            this.Frame.Navigate(typeof (PatientSelection), userId.Text);
+            this.Frame.Navigate(typeof(TrailsMenu));
+        }
+        private void test_selection_click(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(TestSelection));
         }
 
-        // ToDo: Create a new account for a doctor
-        private void createAccount_Click(object sender, RoutedEventArgs e)
+        private void clock_click(object sender, RoutedEventArgs e)
         {
-
+            this.Frame.Navigate(typeof(ClockTest));
         }
     }
 }

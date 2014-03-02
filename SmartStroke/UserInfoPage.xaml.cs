@@ -28,6 +28,7 @@ namespace SmartStroke
         const string filename = "userInfo.txt";
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
+        private string docName;
 
         /// <summary>
         /// This can be changed to a strongly typed view model.
@@ -106,6 +107,8 @@ namespace SmartStroke
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             navigationHelper.OnNavigatedTo(e);
+            var name = e.Parameter as string;
+            docName = name;
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -148,6 +151,7 @@ namespace SmartStroke
                 //save
                 //string allUserDataString = name + ", " + birthday + ", " + age + ", " + sex + ", " + educationLevel;
                 Windows.Data.Json.JsonObject newPatient = new Windows.Data.Json.JsonObject();
+                newPatient["Doctor"] = Windows.Data.Json.JsonValue.CreateStringValue(docName);
                 newPatient["Name"] = Windows.Data.Json.JsonValue.CreateStringValue(name);
                 newPatient["Birthday"] = Windows.Data.Json.JsonValue.CreateStringValue(birthday.ToString());
                 newPatient["Age"] = Windows.Data.Json.JsonValue.CreateNumberValue(age);
@@ -233,7 +237,9 @@ namespace SmartStroke
                 }
                 name = patientName.Text;
                 saveUserData();
-                NavigationHelper.GoBack();
+
+                // Send the patient data (JSON array) moving forward to the test page
+                this.Frame.Navigate(typeof(MainPageCopy), this);
             }
         }
         private void radioButtonClicked(object sender, RoutedEventArgs e)
@@ -270,9 +276,5 @@ namespace SmartStroke
                 SubmitButton.IsEnabled = true;
             }
         }
-
-        
-
-
     }
 }

@@ -108,10 +108,16 @@
     <Compile Include="LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MainPage - Copy.xaml.cs">
+      <DependentUpon>MainPage - Copy.xaml</DependentUpon>
+    </Compile>
     <Compile Include="NormComparison.xaml.cs">
       <DependentUpon>NormComparison.xaml</DependentUpon>
     </Compile>
     <Compile Include="Patient.cs" />
+    <Compile Include="PatientSelection.xaml.cs">
+      <DependentUpon>PatientSelection.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ScreenExporter.cs" />
     <Compile Include="TestReplay.cs" />
     <Compile Include="TestSelection.xaml.cs">
@@ -169,7 +175,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="MainPage - Copy.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="NormComparison.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PatientSelection.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -215,6 +215,8 @@ namespace SmartStroke
                     }
                 }
             }
+
+            
         }
 
         private bool eraserHitTest(InkStroke s, Point testPoint)
@@ -364,6 +366,7 @@ namespace SmartStroke
                 }
                 else
                 {
+                    inkManager.Mode = Windows.UI.Input.Inking.InkManipulationMode.Inking;
                     //testReplay.beginStroke();
                     erasing = false;
                 }
@@ -435,6 +438,52 @@ namespace SmartStroke
         }
 
         #endregion
+
+        private async void recognizedWordClicked(object sender, RoutedEventArgs e)
+        {
+            //get the available strokes from ink manager and select the strokes 
+            string numbers = "";
+            var strokes = inkManager.GetStrokes();
+
+            for (int i = 0; i < strokes.Count; i++)
+            {
+                strokes[i].Selected = true;
+            }
+            //set handwriting recognizer 
+            var recname = "Microsoft English (US) Handwriting Recognizer";
+            var recognizers = inkManager.GetRecognizers();
+            for (int i = 0, len = recognizers.Count; i < len; i++)
+            {
+                if (recname == recognizers[i].Name)
+                {
+                    inkManager.SetDefaultRecognizer(recognizers[i]);
+
+                }
+            }
+            //asynchronously recognize the word 
+            IReadOnlyList<InkRecognitionResult> x = await inkManager.RecognizeAsync(InkRecognitionTarget.Selected);
+            //IReadOnlyList<String> text; 
+            // Doing a recognition does not update the storage of results (the results that are stored inside the ink manager). 
+            // We do that ourselves by calling this below method 
+            inkManager.UpdateRecognitionResults((x));
+
+            foreach (InkRecognitionResult i in x)
+            {
+                var candidates = i.GetTextCandidates();
+                foreach (var possibleWord in candidates)
+                {
+                    int num;
+                    if (int.TryParse(possibleWord, out num))
+                    {
+                        numbers += num + " : ";
+                    }
+                    break;  // Why is the break outside the if? It will only try one possible word out of all the candidates then..
+                }
+            }
+
+            Windows.UI.Popups.MessageDialog mg = new Windows.UI.Popups.MessageDialog(numbers + "");
+            await mg.ShowAsync();
+        }
 
     }
 }

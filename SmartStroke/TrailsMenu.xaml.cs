@@ -25,6 +25,7 @@ namespace SmartStroke
     {
 
         private NavigationHelper navigationHelper;
+        private NavigationEventArgs args;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
 
         /// <summary>
@@ -94,6 +95,7 @@ namespace SmartStroke
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             navigationHelper.OnNavigatedTo(e);
+            args = e;
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)

@@ -39,6 +39,8 @@ namespace SmartStroke
         //test replay container
         private TestReplay testReplay;
 
+        private bool finished = false;
+
         //general globals
         private string testVersion;
         private const double DRAW_WIDTH = 4.0;
@@ -318,6 +320,9 @@ namespace SmartStroke
                 // Pass the pointer information to the InkManager. 
                 inkManager.ProcessPointerUp(pt);
                 testReplay.endStroke();
+
+                allLines.Add(inkManager.GetStrokes()[inkManager.GetStrokes().Count - 1], currentLine);
+                currentLine = new List<Line>();
             }
 
             else if (e.Pointer.PointerId == touchId)
@@ -395,13 +400,22 @@ namespace SmartStroke
                             testReplay.endStroke();
                             testReplay.endTest();
                             testReplay.saveTestReplay();
-                            testReplay.loadTestReplay();
+                            TestReplay newTestReplay = new TestReplay(
+                                new Patient("Leeroy Jenkins", 
+                                    DateTime.Now,GENDER.MALE,EDU_LEVEL.PHD),
+                                    TEST_TYPE.TRAILS_A);
+                            newTestReplay.loadTestReplay();
 
                             submitButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
                             submitButton.IsHitTestVisible = true;
 
                             saveButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
                             saveButton.IsHitTestVisible = true;
+
+                            inkManager.ProcessPointerUp(pt);
+                            allLines.Add(inkManager.GetStrokes()[inkManager.GetStrokes().Count - 1], currentLine);
+                            currentLine = new List<Line>();
+                            finished = true;
                             return;
                         }
                     }
@@ -452,8 +466,8 @@ namespace SmartStroke
 
                         testReplay.addLine(line);
                     
-
-                    inkManager.ProcessPointerUpdate(pt);
+                    if(!finished)
+                        inkManager.ProcessPointerUpdate(pt);
                     previousContactPt = currentContactPt;
                 }
             }
@@ -468,17 +482,19 @@ namespace SmartStroke
         // Test is finished.. take a picture of the screen.
         private void SubmitButtonClicked(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(MainPage));
-           // changeColor();
+            //this.Frame.Navigate(typeof(MainPage));
             var foo = inkManager.GetStrokes();
-            foreach (InkStroke stroke in inkManager.GetStrokes())
+            foreach (InkStroke stroke in foo)
             {
-                foreach (Line line in allLines[stroke])
+                foreach (Line l in allLines[stroke])
                 {
-                    line.Fill = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
-                    MyCanvas.Children.Add(line);
+                    MyCanvas.Children.Remove(l);
+                    l.Fill = new SolidColorBrush(Colors.Red);
+                    MyCanvas.Children.Add(l);
                 }
             }
+
+            this.Frame.Navigate(typeof(MainPageCopy), testReplay);
         }
 
         private void MyCanvas_PointerPressed(object sender, PointerRoutedEventArgs e)
@@ -505,22 +521,6 @@ namespace SmartStroke
 
             pressed = true;
         }
-
-        private void changeColor()
-        {
-            foreach (InkStroke stroke in inkManager.GetStrokes())
-            {
-                foreach (Line line in allLines[stroke])
-                {
-                    line.Fill = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
-                    MyCanvas.Children.Add(line);
-                }
-            }
-            //RefreshCanvas();
-            //MyCanvas.UpdateLayout();
-
-        }
-        
 
         #endregion
 
