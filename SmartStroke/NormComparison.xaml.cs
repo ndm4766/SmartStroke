@@ -25,10 +25,9 @@ namespace SmartStroke
     public sealed partial class NormComparison : Page
     {
 
+        const string filename = "userInfo.txt";
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
-        
-        const string filename = "userInfo.txt";
 
         /// <summary>
         /// This can be changed to a strongly typed view model.
@@ -37,8 +36,6 @@ namespace SmartStroke
         {
             get { return this.defaultViewModel; }
         }
-
-        public Windows.Data.Json.JsonArray patients = new Windows.Data.Json.JsonArray();
 
         /// <summary>
         /// NavigationHelper is used on each page to aid in navigation and 
@@ -55,6 +52,8 @@ namespace SmartStroke
             public double Time { get; set; }
         }
 
+        public Windows.Data.Json.JsonArray patients = new Windows.Data.Json.JsonArray();
+
         public NormComparison()
         {
             this.InitializeComponent();
@@ -62,7 +61,10 @@ namespace SmartStroke
             this.navigationHelper.LoadState += navigationHelper_LoadState;
             this.navigationHelper.SaveState += navigationHelper_SaveState;
             this.Loaded += NormComparisonPage_Loaded;
+            //loadJson();
         }
+
+        
 
         /// <summary>
         /// Populates the page with content passed during navigation. Any saved state is also
@@ -124,6 +126,9 @@ namespace SmartStroke
 
         private void LoadChartContents()
         {
+
+            loadJson();
+
             Random rand = new Random();
             
             List<Performance> lowEducationResults = new List<Performance>();
@@ -152,6 +157,27 @@ namespace SmartStroke
 
         }
 
+        public class PatientPlot {
+
+            public string patientName;
+            public string patientBirthday;
+            public string patientAge;
+            public string patientSex;
+            public string patientEducation;
+
+            public PatientPlot(string name, string birthday, string age, string sex, string education)
+            {
+
+                patientName = name;
+                patientBirthday = birthday;
+                patientAge = age;
+                patientSex = sex;
+                patientEducation = education;
+
+            }
+
+        };
+
         async void loadJson()
         {
             try
@@ -162,6 +188,20 @@ namespace SmartStroke
                 String data = await Windows.Storage.FileIO.ReadTextAsync(myFile);
 
                 patients = Windows.Data.Json.JsonArray.Parse(data);
+
+                for (uint i = 0; i < patients.Count; i++)
+                {
+
+                    string patientName = patients.GetObjectAt(i).GetNamedValue("Name").GetString();
+                    string patientBirthday = patients.GetObjectAt(i).GetNamedValue("Birthday").GetString();
+                    string patientAge = patients.GetObjectAt(i).GetNamedValue("Age").GetString();
+                    string patientSex = patients.GetObjectAt(i).GetNamedValue("Sex").GetString();
+                    string patientEducation = patients.GetObjectAt(i).GetNamedValue("Education").GetString();
+
+                    PatientPlot patient = new PatientPlot(patientName, patientBirthday, patientAge, patientSex, patientEducation);
+                
+                }
+
             }
             catch
             {
