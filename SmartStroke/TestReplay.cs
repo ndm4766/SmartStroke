@@ -206,9 +206,9 @@ namespace SmartStroke
             if (testType == "NOT_SUPPORTED") return testType;
             else return testType + fileExtension;
         }
+        private void setPatient(Patient _patient) { patient = _patient; }
         private string getFileName()
         {
-            return "test.txt";
             string fileSuffix = getFileSuffix();
             if (fileSuffix == "NOT_SUPPORTED") return "TEST_TYPE_NOT_SUPPORTED";
             string filename = patient.getName()
@@ -217,18 +217,18 @@ namespace SmartStroke
             filename = filename.Replace("/", "");
             return filename.Replace(" ", "");
         }
-        public async void loadTestReplay()
+        public async void loadTestReplay(string testFilename)
         {
-            string testFilename = getFileName();
             if (testFilename == "TEST_TYPE_NOT_SUPPORTED") return;
-            Windows.Storage.StorageFile testStorageFile;
+            StorageFile testStorageFile;
             string testReplayString = "";
             try
             {
-                testStorageFile = await Windows.Storage.ApplicationData
-                        .Current.LocalFolder.GetFileAsync(testFilename);
-                testReplayString = await
-                    Windows.Storage.FileIO.ReadTextAsync(testStorageFile);
+                Task<StorageFile> fileTask = ApplicationData
+                        .Current.LocalFolder.GetFileAsync(testFilename).AsTask<StorageFile>();
+                fileTask.Wait();
+                testStorageFile = fileTask.Result;
+                testReplayString = await FileIO.ReadTextAsync(testStorageFile);
             }
             catch { return; }
             parseTestReplay(testReplayString);
@@ -237,15 +237,16 @@ namespace SmartStroke
         {
             string testFilename = getFileName();
             if (testFilename == "TEST_TYPE_NOT_SUPPORTED") return;
-            Windows.Storage.StorageFile testStorageFile;
+            StorageFile testStorageFile;
             string stringToSave = convertToString();
             try
             {
-                testStorageFile = await Windows.Storage.ApplicationData
+                Task<StorageFile> fileTask = ApplicationData
                     .Current.LocalFolder.CreateFileAsync(testFilename,
-                    Windows.Storage.CreationCollisionOption.ReplaceExisting);
-                await Windows.Storage.FileIO.WriteTextAsync(testStorageFile
-                    , stringToSave);
+                    CreationCollisionOption.ReplaceExisting).AsTask<StorageFile>();
+                fileTask.Wait();
+                testStorageFile = fileTask.Result;
+                await FileIO.WriteTextAsync(testStorageFile, stringToSave);
             }
             catch { return; }
         }
