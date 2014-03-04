@@ -94,8 +94,8 @@ namespace SmartStroke
             MyCanvas.PointerReleased += new PointerEventHandler(MyCanvas_PointerReleased);
             MyCanvas.PointerExited += new PointerEventHandler(MyCanvas_PointerReleased);
 
-            nextIndex = 22;
-            currentIndex =22;
+            nextIndex = 0;
+            currentIndex = 0;
             incorrectNodes = new Queue<int>();
             currentEdge = new List<Line>();
 
