@@ -128,6 +128,7 @@ namespace SmartStroke
         private DateTime startTime;
         private DateTime endTime;
         private List<TestAction> testActions;
+        private List<PatientNote> testNotes;
         private Stroke currentStroke;
         public TestReplay(Patient _patient, TEST_TYPE TestType)
         {
@@ -217,8 +218,9 @@ namespace SmartStroke
             filename = filename.Replace("/", "");
             return filename.Replace(" ", "");
         }
-        public async void loadTestReplay(string testFilename)
+        public async void loadTestReplay(string filename)
         {
+            string testFilename = filename;
             if (testFilename == "TEST_TYPE_NOT_SUPPORTED") return;
             StorageFile testStorageFile;
             string testReplayString = "";
