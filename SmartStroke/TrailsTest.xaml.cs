@@ -482,7 +482,6 @@ namespace SmartStroke
         // Test is finished.. take a picture of the screen.
         private void SubmitButtonClicked(object sender, RoutedEventArgs e)
         {
-            //this.Frame.Navigate(typeof(MainPage));
             var foo = inkManager.GetStrokes();
             foreach (InkStroke stroke in foo)
             {
