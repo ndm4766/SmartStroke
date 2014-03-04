@@ -218,16 +218,19 @@ namespace SmartStroke
             filename = filename.Replace("/", "");
             return filename.Replace(" ", "");
         }
-        public async void loadTestReplay(string filename)
+        public async void loadTestReplay()
         {
-            string testFilename = filename;
+            IReadOnlyList<StorageFile> files = 
+                await ApplicationData.Current.LocalFolder.GetFilesAsync();
+            string testFilename = "text.txt";
             if (testFilename == "TEST_TYPE_NOT_SUPPORTED") return;
             StorageFile testStorageFile;
             string testReplayString = "";
             try
             {
                 Task<StorageFile> fileTask = ApplicationData
-                        .Current.LocalFolder.GetFileAsync(testFilename).AsTask<StorageFile>();
+                        .Current.LocalFolder
+                        .GetFileAsync(testFilename).AsTask<StorageFile>();
                 fileTask.Wait();
                 testStorageFile = fileTask.Result;
                 testReplayString = await FileIO.ReadTextAsync(testStorageFile);
@@ -289,7 +292,7 @@ namespace SmartStroke
                     default: { break; }
                 }
             }
-            return testReplayString;
+                return testReplayString;
         }
         public void parseTestReplay(string testReplayString)
         {
@@ -307,7 +310,6 @@ namespace SmartStroke
                 } else if (lineWords[0] == "DeletePreviousStroke") {
                     testActions.Add(parseLineDelPrevStroke(lineWords));
                 }
-                int jazzman = 0; jazzman++;
             }
         }
         public Stroke parseLineStroke(List<string> line)
