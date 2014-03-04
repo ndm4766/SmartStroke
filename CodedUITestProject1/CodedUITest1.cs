@@ -48,23 +48,42 @@ namespace CodedUITestProject1
             Gesture.Tap(this.UIMap.UISmartStrokeWindow.UIPatientNameEdit.UIDeleteButton);
 
             // Insert patient name
+            this.UIMap.UISmartStrokeWindow.UIPatientNameEdit.Text = TestContext.DataRow["name"].ToString();
             //this.UIMap.UISmartStrokeWindow.UIPatientNameEdit = TestContext.DataRow["name"].ToString();
-            //...
 
-            // Select male
-            Gesture.Tap(this.UIMap.UISmartStrokeWindow.UIMaleRadioButton);
+            // Select gender
+            string gender = TestContext.DataRow["gender"].ToString();
+            if (gender == "Male")
+            {
+                Gesture.Tap(this.UIMap.UISmartStrokeWindow.UIMaleRadioButton);
+            }
+            else
+            {
+                Gesture.Tap(this.UIMap.UISmartStrokeWindow.UIFemaleRadioButton);
+            }
+
+            DateTime bday = Convert.ToDateTime(TestContext.DataRow["birthday"].ToString());
 
             // Select Month
-            //...
+            this.UIMap.UISmartStrokeWindow.UIDatepickerGroup.UIMonthComboBox.SelectedItem = bday.Month.ToString();
 
             // Select day
-            //...
+            this.UIMap.UISmartStrokeWindow.UIDatepickerGroup.UIDayComboBox.SelectedItem = bday.Day.ToString();
 
             // Select year
-            //...
+            this.UIMap.UISmartStrokeWindow.UIDatepickerGroup.UIYearComboBox.SelectedItem = bday.Year.ToString();
 
             // Select Education Level
-            //...
+            string education = TestContext.DataRow["education"].ToString();
+
+            if (education == "True")
+            {
+                this.UIMap.UISmartStrokeWindow.UIEducationComboBox.SelectedItem = "College Degree";
+            }
+            else
+            {
+                this.UIMap.UISmartStrokeWindow.UIEducationComboBox.SelectedItem = "Highschool Diploma";
+            }
 
             // Click submit button
             Gesture.Tap(this.UIMap.UISmartStrokeWindow.UISubmitButton);
