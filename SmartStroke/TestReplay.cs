@@ -248,18 +248,17 @@ namespace SmartStroke
             {
                 Task<StorageFile> fileTask = ApplicationData
                     .Current.LocalFolder.CreateFileAsync(testFilename,
-                    CreationCollisionOption.ReplaceExisting).AsTask<StorageFile>();
+                    CreationCollisionOption.ReplaceExisting)
+                    .AsTask<StorageFile>();
                 fileTask.Wait();
                 testStorageFile = fileTask.Result;
                 await FileIO.WriteTextAsync(testStorageFile, stringToSave);
             }
             catch { return; }
+            patient.addFile(testFilename);
         }
-        public async void loadTestReplay()
+        public async void loadTestReplay(string testFilename)
         {
-            IReadOnlyList<StorageFile> files = 
-                await ApplicationData.Current.LocalFolder.GetFilesAsync();
-            string testFilename = "text.txt";
             if (testFilename == "TEST_TYPE_NOT_SUPPORTED") return;
             StorageFile testStorageFile;
             string testReplayString = "";
@@ -301,6 +300,11 @@ namespace SmartStroke
                     default: { break; }
                 }
             }
+            testReplayString += "=====NOTES=====\n";
+            for (int i = 0; i < testNotes.Count; i++ )
+            {
+                testReplayString += (testNotes[i].convertToString());
+            }
             return testReplayString;
         }
         public string formatLineDataAsString(LineData lineData)
@@ -316,19 +320,33 @@ namespace SmartStroke
         }
         public void parseTestReplayFile(string testReplayString)
         {
+            bool inActionSection = true;
             List<string> testStrings = 
                 testReplayString.Split('\n').Cast<string>().ToList<string>();
             for(int i = 1; i < testStrings.Count; i++)
             {
-                List<string> lineWords =
-                   testStrings[i].Split(' ').Cast<string>().ToList<string>();
-                if(lineWords[0] == "line") {
-                    ((Stroke)testActions[testActions.Count - 1])
-                        .addLineData(parseLineLineData(lineWords));
-                } else if (lineWords[0] == "Stroke") {
-                    testActions.Add(parseLineStroke(lineWords));
-                } else if (lineWords[0] == "DeletePreviousStroke") {
-                    testActions.Add(parseLineDelPrevStroke(lineWords));
+                if (inActionSection) {
+                    List<string> lineWords = testStrings[i].Split(' ')
+                        .Cast<string>().ToList<string>();
+                    if (lineWords[0] == "line")
+                        ((Stroke)testActions[testActions.Count - 1])
+                            .addLineData(parseLineLineData(lineWords));
+                    else if (lineWords[0] == "Stroke")
+                        testActions.Add(parseLineStroke(lineWords));
+                    else if (lineWords[0] == "DeletePreviousStroke")
+                        testActions.Add(parseLineDelPrevStroke(lineWords));
+                    else if (lineWords[0] == "=====NOTES=====")
+                        inActionSection = false;
+                } else {
+                    List<string> lineWords = testStrings[i]
+                        .Split('\t').Cast<string>().ToList<string>();
+                    if (lineWords.Count > 0)
+                    {
+                        DateTime date = new DateTime();
+                        date = Convert.ToDateTime(lineWords[0]);
+                        testNotes.Add(
+                            new PatientNote(lineWords[1], lineWords[2], date));
+                    }
                 }
             }
         }
