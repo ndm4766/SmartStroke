@@ -94,8 +94,8 @@ namespace SmartStroke
             MyCanvas.PointerReleased += new PointerEventHandler(MyCanvas_PointerReleased);
             MyCanvas.PointerExited += new PointerEventHandler(MyCanvas_PointerReleased);
 
-            nextIndex = 0;
-            currentIndex = 0;
+            nextIndex = 22;
+            currentIndex =22;
             incorrectNodes = new Queue<int>();
             currentEdge = new List<Line>();
 
@@ -485,7 +485,7 @@ namespace SmartStroke
                 foreach (Line l in allLines[stroke])
                 {
                     MyCanvas.Children.Remove(l);
-                    l.Fill = new SolidColorBrush(Colors.Red);
+                    l.Stroke = new SolidColorBrush(Colors.Red);
                     MyCanvas.Children.Add(l);
                 }
             }
