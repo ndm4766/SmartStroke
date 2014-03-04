@@ -443,12 +443,13 @@ namespace SmartStroke
         {
             //get the available strokes from ink manager and select the strokes 
             string numbers = "";
-            var strokes = inkManager.GetStrokes();
+            var p = inkManager.GetStrokes();
+            /*var strokes = inkManager.GetStrokes();
 
             for (int i = 0; i < strokes.Count; i++)
             {
                 strokes[i].Selected = true;
-            }
+            }*/
             //set handwriting recognizer 
             var recname = "Microsoft English (US) Handwriting Recognizer";
             var recognizers = inkManager.GetRecognizers();
@@ -457,11 +458,11 @@ namespace SmartStroke
                 if (recname == recognizers[i].Name)
                 {
                     inkManager.SetDefaultRecognizer(recognizers[i]);
-
+                    break;
                 }
             }
             //asynchronously recognize the word 
-            IReadOnlyList<InkRecognitionResult> x = await inkManager.RecognizeAsync(InkRecognitionTarget.Selected);
+            IReadOnlyList<InkRecognitionResult> x = await inkManager.RecognizeAsync(InkRecognitionTarget.All);
             //IReadOnlyList<String> text; 
             // Doing a recognition does not update the storage of results (the results that are stored inside the ink manager). 
             // We do that ourselves by calling this below method 
@@ -476,8 +477,8 @@ namespace SmartStroke
                     if (int.TryParse(possibleWord, out num))
                     {
                         numbers += num + " : ";
+                        break;
                     }
-                    break;  // Why is the break outside the if? It will only try one possible word out of all the candidates then..
                 }
             }
 
