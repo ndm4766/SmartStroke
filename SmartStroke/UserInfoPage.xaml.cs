@@ -128,6 +128,9 @@ namespace SmartStroke
                 String data = await Windows.Storage.FileIO.ReadTextAsync(myFile);
 
                 patients = Windows.Data.Json.JsonArray.Parse(data);
+
+
+
             }
             catch
             {
