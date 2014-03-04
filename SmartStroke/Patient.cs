@@ -41,6 +41,7 @@ namespace SmartStroke
         private GENDER gender;
         private EDU_LEVEL eduLevel;
         private List<PatientNote> notes;
+        private List<string> testFiles;
         public Patient(string Name, DateTime BirthDate,
             GENDER Gender, EDU_LEVEL EduLevel)
         {
@@ -49,6 +50,7 @@ namespace SmartStroke
             gender = Gender;
             eduLevel = EduLevel;
             notes = new List<PatientNote>();
+            testFiles = new List<string>();
         }
         public string getName() { return name; }
         public DateTime getBirthDate() { return birthDate; }

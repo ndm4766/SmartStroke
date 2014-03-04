@@ -12,12 +12,45 @@ using Windows.Storage;
 using Windows.UI.Input.Inking;
 using Windows.UI.Xaml.Shapes;
 
-/*
- *   Current issue, having trouble with asynchronous saving events not always working.
- *   In C#, asnychronous function errors can sometimes not be caught by catch blocks.
- *   It is 4AM right now, and I will fix this, add file searching, and add documentation
- *   after some sleep - JR
- */
+/*  
+  /===========================================================================/
+ /                        TestReplay.cs Documentation                        /
+/===========================================================================/
+
+Intro to Classes:
+    TestReplay - Functions as container for a completed test, contains a list
+                 of ordered TestActions.
+    TestAction - Abstract class which represents a patient action during a 
+                 test, such as a stroke drawn or a stroke erased.
+    Stroke     - Inherits from TestAction, represents a stroke drawn.
+                 Contains a list of LineData objects.
+    DeletePreviousStroke - Inherits from TestAction, represents the deletion of
+                           the previous stroke.
+    LineData   - Contains a Line and a DateTime at which the line was drawn.
+
+Intro to Enums:
+    ACTION_TYPE - Represents the kind of TestAction (i.e. Stroke).  Contained by
+                  a TestAction.
+    TEST_TYPE   - Represents the kind of test (i.e. Trails A).  Contained by a 
+                  TestReplay.
+
+How to use TestReplay.  First, you must always:
+    1)  Initialize a TestReplay object.
+        Example: 
+            Patient p = new Patient("Leeroy Jenkins", 
+                                DateTime.Now, GENDER.MALE, EDU_LEVEL.PHD);
+            TestReplay testReplay = new TestReplay(p, TEST_TYPE.TRAILS_A);
+
+Then, would you like to -
+Capture patient actions:
+    2)  Call startTest()
+    3)  Call startStroke(), addLine(line), and endStroke() when applicable.  
+    4)  Call deletePreviousStroke() when applicable, 
+        but be sure to call endStroke() first.
+Save a current TestReplay:
+    2)  Call saveTestReplay()
+Load a previous TestReplay:  WIP
+*/
 
 namespace SmartStroke
 {
@@ -123,6 +156,7 @@ namespace SmartStroke
     public enum TEST_TYPE { TRAILS_A, TRAILS_B, REY_OSTERRIETH, CLOCK }
     public sealed class TestReplay
     {
+        private const string fileExtension = ".txt";
         private TEST_TYPE testType;
         private Patient patient;
         private DateTime startTime;
@@ -134,12 +168,16 @@ namespace SmartStroke
         {
             patient = _patient;
             testActions = new List<TestAction>();
+            testNotes = new List<PatientNote>();
             testType = TestType;
         }
-        public void startTest()
-        {
-            startTime = DateTime.Now;
-        }
+        public TEST_TYPE getTestType() { return testType; }
+        public Patient getPatient() { return patient; }
+        public DateTime getStartTime() { return startTime; }
+        public DateTime getEndTime() { return endTime; }
+        public List<TestAction> getTestActions() { return testActions; }
+        public List<PatientNote> getPatientNotes() { return testNotes; }
+        public void startTest() { startTime = DateTime.Now; }
         public void endTest()
         {
             endTime = DateTime.Now;
@@ -148,20 +186,9 @@ namespace SmartStroke
         public void beginStroke()
         {
             if (getCurrentTestAction() != null)
-            {
                 if (!getCurrentTestAction().isFinished()) return;
-            }
             currentStroke = new Stroke();
             testActions.Add(currentStroke);
-        }
-        public void endStroke()
-        {
-            if (getCurrentTestAction() != null)
-            {
-                if (getCurrentTestAction().isFinished()) return;
-                if (!checkCurrentTestAction(ACTION_TYPE.STROKE)) return;
-            }
-            currentStroke.endAction();
         }
         public void addLine(Line line)
         {
@@ -172,6 +199,15 @@ namespace SmartStroke
                 currentStroke.addLine(line);
             }
         }
+        public void endStroke()
+        {
+            if (getCurrentTestAction() != null)
+            {
+                if (getCurrentTestAction().isFinished()) return;
+                if (!checkCurrentTestAction(ACTION_TYPE.STROKE)) return;
+            }
+            currentStroke.endAction();
+        }
         public void deletePreviousStroke()
         {
             if (getCurrentTestAction() == null) return;
@@ -179,44 +215,45 @@ namespace SmartStroke
             if (!checkCurrentTestAction(ACTION_TYPE.STROKE)) return;
             testActions.Add(new DeletePreviousStroke());
         }
-        public bool checkCurrentTestAction(ACTION_TYPE act)
+        public void addTestNote(PatientNote patientNote) 
+        { 
+            testNotes.Add(patientNote);
+        }
+        private bool checkCurrentTestAction(ACTION_TYPE act)
         {
             if (getCurrentTestAction() == null) return false;
             return getCurrentTestAction().getActionType() == act;
         }
-        public TestAction getCurrentTestAction()
+        private TestAction getCurrentTestAction()
         {
             if (testActions.Count == 0) return null;
             else return testActions[testActions.Count - 1];
         }
-        private string getTestType()
-        {
-            switch (testType)
-            {
-                case TEST_TYPE.TRAILS_A: { return "trailsA"; }
-                case TEST_TYPE.TRAILS_B: { return "trailsB"; }
-                case TEST_TYPE.REY_OSTERRIETH: { return "reyOsterrieth"; }
-                case TEST_TYPE.CLOCK: { return "clock"; }
-                default: { return "NOT_SUPPORTED"; }
-            }
-        }
-        private string getFileSuffix()
-        {
-            string fileExtension = ".txt";
-            string testType = getTestType();
-            if (testType == "NOT_SUPPORTED") return testType;
-            else return testType + fileExtension;
-        }
-        private void setPatient(Patient _patient) { patient = _patient; }
         private string getFileName()
         {
-            string fileSuffix = getFileSuffix();
-            if (fileSuffix == "NOT_SUPPORTED") return "TEST_TYPE_NOT_SUPPORTED";
+            string fileSuffix = testType.ToString() + fileExtension;
             string filename = patient.getName()
                 + patient.getBirthDate().ToString() + fileSuffix;
             filename = filename.Replace(":", "");
             filename = filename.Replace("/", "");
             return filename.Replace(" ", "");
+        }
+        public async void saveTestReplay()
+        {
+            string testFilename = getFileName();
+            if (testFilename == "TEST_TYPE_NOT_SUPPORTED") return;
+            StorageFile testStorageFile;
+            string stringToSave = convertToString();
+            try
+            {
+                Task<StorageFile> fileTask = ApplicationData
+                    .Current.LocalFolder.CreateFileAsync(testFilename,
+                    CreationCollisionOption.ReplaceExisting).AsTask<StorageFile>();
+                fileTask.Wait();
+                testStorageFile = fileTask.Result;
+                await FileIO.WriteTextAsync(testStorageFile, stringToSave);
+            }
+            catch { return; }
         }
         public async void loadTestReplay()
         {
@@ -236,35 +273,7 @@ namespace SmartStroke
                 testReplayString = await FileIO.ReadTextAsync(testStorageFile);
             }
             catch { return; }
-            parseTestReplay(testReplayString);
-        }
-        public async void saveTestReplay()
-        {
-            string testFilename = getFileName();
-            if (testFilename == "TEST_TYPE_NOT_SUPPORTED") return;
-            StorageFile testStorageFile;
-            string stringToSave = convertToString();
-            try
-            {
-                Task<StorageFile> fileTask = ApplicationData
-                    .Current.LocalFolder.CreateFileAsync(testFilename,
-                    CreationCollisionOption.ReplaceExisting).AsTask<StorageFile>();
-                fileTask.Wait();
-                testStorageFile = fileTask.Result;
-                await FileIO.WriteTextAsync(testStorageFile, stringToSave);
-            }
-            catch { return; }
-        }
-        public string formatLineString(LineData lineData)
-        {
-            string lineString = "";
-            Line line = lineData.getLine();
-            lineString += line.X1.ToString();
-            lineString += ("," + line.Y1.ToString());
-            lineString += ("," + line.X2.ToString());
-            lineString += ("," + line.Y2.ToString());
-            lineString += (" " + lineData.getDateTime().ToString());
-            return lineString;
+            parseTestReplayFile(testReplayString);
         }
         public string convertToString()
         {
@@ -280,21 +289,32 @@ namespace SmartStroke
                 switch (testActions[i].getActionType())
                 {
                     case ACTION_TYPE.STROKE:
-                    {
-                        Stroke stroke = (Stroke)testActions[i];
-                        List<LineData> lineData = stroke.getLines();
-                        for (int j = 0; j < lineData.Count; j++)
-                            testReplayString +=
-                                ("line " + formatLineString(lineData[j]) + "\n");
-                        break;
-                    }
+                        {
+                            Stroke stroke = (Stroke)testActions[i];
+                            List<LineData> lineData = stroke.getLines();
+                            for (int j = 0; j < lineData.Count; j++)
+                                testReplayString +=
+                                    ("line " + formatLineDataAsString(lineData[j]) + "\n");
+                            break;
+                        }
                     case ACTION_TYPE.DEL_PREV_STROKE: { break; }
                     default: { break; }
                 }
             }
-                return testReplayString;
+            return testReplayString;
         }
-        public void parseTestReplay(string testReplayString)
+        public string formatLineDataAsString(LineData lineData)
+        {
+            string lineString = "";
+            Line line = lineData.getLine();
+            lineString += line.X1.ToString();
+            lineString += ("," + line.Y1.ToString());
+            lineString += ("," + line.X2.ToString());
+            lineString += ("," + line.Y2.ToString());
+            lineString += (" " + lineData.getDateTime().ToString());
+            return lineString;
+        }
+        public void parseTestReplayFile(string testReplayString)
         {
             List<string> testStrings = 
                 testReplayString.Split('\n').Cast<string>().ToList<string>();
@@ -304,7 +324,7 @@ namespace SmartStroke
                    testStrings[i].Split(' ').Cast<string>().ToList<string>();
                 if(lineWords[0] == "line") {
                     ((Stroke)testActions[testActions.Count - 1])
-                        .addLineData(parseLineLine(lineWords));
+                        .addLineData(parseLineLineData(lineWords));
                 } else if (lineWords[0] == "Stroke") {
                     testActions.Add(parseLineStroke(lineWords));
                 } else if (lineWords[0] == "DeletePreviousStroke") {
@@ -328,7 +348,7 @@ namespace SmartStroke
                 line[4] + " " + line[5] + " " + line[6]);
             return new DeletePreviousStroke(startTime, endTime);
         }
-        public LineData parseLineLine(List<string> line)
+        public LineData parseLineLineData(List<string> line)
         {
             Line newLine = new Line();
             List<string> coords = 

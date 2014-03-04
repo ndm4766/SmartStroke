@@ -404,7 +404,7 @@ namespace SmartStroke
                                 new Patient("Leeroy Jenkins", 
                                     DateTime.Now,GENDER.MALE,EDU_LEVEL.PHD),
                                     TEST_TYPE.TRAILS_A);
-                            //newTestReplay.loadTestReplay();
+                            newTestReplay.loadTestReplay();
 
                             submitButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
                             submitButton.IsHitTestVisible = true;
