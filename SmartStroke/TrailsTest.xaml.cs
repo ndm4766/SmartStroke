@@ -483,18 +483,10 @@ namespace SmartStroke
         private void SubmitButtonClicked(object sender, RoutedEventArgs e)
         {
             //this.Frame.Navigate(typeof(MainPage));
-            var foo = inkManager.GetStrokes();
-            foreach (InkStroke stroke in foo)
-            {
-                foreach (Line l in allLines[stroke])
-                {
-                    MyCanvas.Children.Remove(l);
-                    l.Fill = new SolidColorBrush(Colors.Red);
-                    MyCanvas.Children.Add(l);
-                }
-            }
+            viewColorTimeMode();
+            
 
-            this.Frame.Navigate(typeof(MainPageCopy), testReplay);
+            //this.Frame.Navigate(typeof(MainPageCopy), testReplay);
         }
 
         private void MyCanvas_PointerPressed(object sender, PointerRoutedEventArgs e)
@@ -520,6 +512,21 @@ namespace SmartStroke
             }
 
             pressed = true;
+        }
+
+        private void viewColorTimeMode()
+        {
+            //testReplay.
+            var strokes = inkManager.GetStrokes();
+            foreach (InkStroke stroke in strokes)
+            {
+                foreach (Line l in allLines[stroke])
+                {
+                    MyCanvas.Children.Remove(l);
+                    l.Stroke = new SolidColorBrush(Colors.Red);
+                    MyCanvas.Children.Add(l);
+                }
+            }
         }
 
         #endregion
