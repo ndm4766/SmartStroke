@@ -36,7 +36,7 @@ namespace SmartStroke
         public string convertToString()
         {
             string stringNote = time.ToString() + '\t';
-            stringNote.Replace(" ","-");
+            stringNote = stringNote.Replace(" ","-");
             stringNote += (title + '\t');
             stringNote += (note + '\n');
             return stringNote;

@@ -198,6 +198,8 @@ namespace SmartStroke
                 if (!checkCurrentTestAction(ACTION_TYPE.STROKE)) return;
                 currentStroke.addLine(line);
             }
+            PatientNote p = new PatientNote("TITLE", "NOTE", DateTime.Now);
+            testNotes.Add(p);
         }
         public void endStroke()
         {
@@ -257,23 +259,6 @@ namespace SmartStroke
             catch { return; }
             patient.addFile(testFilename);
         }
-        public async void loadTestReplay(string testFilename)
-        {
-            if (testFilename == "TEST_TYPE_NOT_SUPPORTED") return;
-            StorageFile testStorageFile;
-            string testReplayString = "";
-            try
-            {
-                Task<StorageFile> fileTask = ApplicationData
-                        .Current.LocalFolder
-                        .GetFileAsync(testFilename).AsTask<StorageFile>();
-                fileTask.Wait();
-                testStorageFile = fileTask.Result;
-                testReplayString = await FileIO.ReadTextAsync(testStorageFile);
-            }
-            catch { return; }
-            parseTestReplayFile(testReplayString);
-        }
         public string convertToString()
         {
             string testReplayString = "";
@@ -318,6 +303,22 @@ namespace SmartStroke
             lineString += (" " + lineData.getDateTime().ToString());
             return lineString;
         }
+        public async void loadTestReplay(string testFilename)
+        {
+            StorageFile testStorageFile;
+            string testReplayString = "";
+            try
+            {
+                Task<StorageFile> fileTask = ApplicationData
+                        .Current.LocalFolder
+                        .GetFileAsync(testFilename).AsTask<StorageFile>();
+                fileTask.Wait();
+                testStorageFile = fileTask.Result;
+                testReplayString = await FileIO.ReadTextAsync(testStorageFile);
+            }
+            catch { return; }
+            parseTestReplayFile(testReplayString);
+        }
         public void parseTestReplayFile(string testReplayString)
         {
             bool inActionSection = true;
@@ -343,7 +344,8 @@ namespace SmartStroke
                     if (lineWords.Count > 0)
                     {
                         DateTime date = new DateTime();
-                        date = Convert.ToDateTime(lineWords[0]);
+                        date = Convert.ToDateTime(
+                            lineWords[0].Replace("-"," "));
                         testNotes.Add(
                             new PatientNote(lineWords[1], lineWords[2], date));
                     }
