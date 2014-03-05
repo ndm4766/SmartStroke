@@ -116,7 +116,7 @@ namespace SmartStroke
     }
     public sealed class Stroke : TestAction
     {
-        private List<LineData> lines;
+        public List<LineData> lines;
         public Stroke() { lines = new List<LineData>(); }
         public Stroke(DateTime startTime, DateTime endTime)
             : base(startTime, endTime) { lines = new List<LineData>(); }
