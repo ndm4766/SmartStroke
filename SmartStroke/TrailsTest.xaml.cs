@@ -400,6 +400,11 @@ namespace SmartStroke
                             testReplay.endStroke();
                             testReplay.endTest();
                             testReplay.saveTestReplay();
+                            //TestReplay newTestReplay = new TestReplay(
+                                //new Patient("Leeroy Jenkins", 
+                                    //DateTime.Now,GENDER.MALE,EDU_LEVEL.PHD),
+                                    //TEST_TYPE.TRAILS_A);
+                            //newTestReplay.loadTestReplay();
 
                             submitButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
                             submitButton.IsHitTestVisible = true;
@@ -477,18 +482,11 @@ namespace SmartStroke
         // Test is finished.. take a picture of the screen.
         private void SubmitButtonClicked(object sender, RoutedEventArgs e)
         {
-            var foo = inkManager.GetStrokes();
-            foreach (InkStroke stroke in foo)
-            {
-                foreach (Line l in allLines[stroke])
-                {
-                    MyCanvas.Children.Remove(l);
-                    l.Stroke = new SolidColorBrush(Colors.Red);
-                    MyCanvas.Children.Add(l);
-                }
-            }
+            //this.Frame.Navigate(typeof(MainPage));
+            viewColorTimeMode();
+            
 
-            this.Frame.Navigate(typeof(MainPageCopy), testReplay);
+            //this.Frame.Navigate(typeof(MainPageCopy), testReplay);
         }
 
         private void MyCanvas_PointerPressed(object sender, PointerRoutedEventArgs e)
@@ -514,6 +512,32 @@ namespace SmartStroke
             }
 
             pressed = true;
+        }
+
+        private void viewColorTimeMode()
+        {
+            var allActions = testReplay.getTestActions();
+            var smartStrokes = allActions.OfType<SmartStroke.Stroke>();
+            var strokes = inkManager.GetStrokes();
+            int strokeNum = 0;
+            foreach (InkStroke stroke in strokes)
+            {
+                
+                var smartLines = smartStrokes.ElementAt(strokeNum).lines;
+                int lineNum = 0;
+                foreach (Line l in allLines[stroke])
+                {
+                    double secondsSinceStartOfTest = (smartLines[lineNum].getDateTime() - testReplay.getStartTime()).TotalSeconds;
+                    if (secondsSinceStartOfTest < 3.5)
+                    {
+                        MyCanvas.Children.Remove(l);
+                        l.Stroke = new SolidColorBrush(Colors.Red);
+                        MyCanvas.Children.Add(l);
+                    }
+                    lineNum++;
+                }
+                strokeNum++;
+            }
         }
 
         #endregion
