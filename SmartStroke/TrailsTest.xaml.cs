@@ -400,10 +400,10 @@ namespace SmartStroke
                             testReplay.endStroke();
                             testReplay.endTest();
                             testReplay.saveTestReplay();
-                            TestReplay newTestReplay = new TestReplay(
-                                new Patient("Leeroy Jenkins", 
-                                    DateTime.Now,GENDER.MALE,EDU_LEVEL.PHD),
-                                    TEST_TYPE.TRAILS_A);
+                            //TestReplay newTestReplay = new TestReplay(
+                                //new Patient("Leeroy Jenkins", 
+                                    //DateTime.Now,GENDER.MALE,EDU_LEVEL.PHD),
+                                    //TEST_TYPE.TRAILS_A);
                             //newTestReplay.loadTestReplay();
 
                             submitButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
@@ -516,16 +516,27 @@ namespace SmartStroke
 
         private void viewColorTimeMode()
         {
-            //testReplay.
+            var allActions = testReplay.getTestActions();
+            var smartStrokes = allActions.OfType<SmartStroke.Stroke>();
             var strokes = inkManager.GetStrokes();
+            int strokeNum = 0;
             foreach (InkStroke stroke in strokes)
             {
+                
+                var smartLines = smartStrokes.ElementAt(strokeNum).lines;
+                int lineNum = 0;
                 foreach (Line l in allLines[stroke])
                 {
-                    MyCanvas.Children.Remove(l);
-                    l.Stroke = new SolidColorBrush(Colors.Red);
-                    MyCanvas.Children.Add(l);
+                    double secondsSinceStartOfTest = (smartLines[lineNum].getDateTime() - testReplay.getStartTime()).TotalSeconds;
+                    if (secondsSinceStartOfTest < 3.5)
+                    {
+                        MyCanvas.Children.Remove(l);
+                        l.Stroke = new SolidColorBrush(Colors.Red);
+                        MyCanvas.Children.Add(l);
+                    }
+                    lineNum++;
                 }
+                strokeNum++;
             }
         }
 
