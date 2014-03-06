@@ -82,6 +82,8 @@ namespace SmartStroke
 
             inkManager = new Windows.UI.Input.Inking.InkManager();
 
+            
+
             // Create the trails test background. The test image is 117X917 px but to fit on a screen (surface) it is 686 X 939
             nodes = new List<TrailNode>();
             populateNodes(testVersion, nodes);
@@ -520,6 +522,29 @@ namespace SmartStroke
             var smartStrokes = allActions.OfType<SmartStroke.Stroke>();
             var strokes = inkManager.GetStrokes();
             int strokeNum = 0;
+            int timeInterval = getColorTimeInterval();
+            double msLineDuration = 0;
+            SolidColorBrush color = new SolidColorBrush(Colors.Black);
+            foreach (InkStroke stroke in strokes)
+            {
+
+                var smartLines = smartStrokes.ElementAt(strokeNum).lines;
+                int lineNum = 0;
+                DateTime prevTime = testReplay.getStartTime();
+                
+                foreach (Line l in allLines[stroke])
+                {
+                    //msLineDuration = (smartLines[lineNum].getDateTime()-prevTime).TotalMilliseconds;
+                    MyCanvas.Children.Remove(l);
+                    //l.StrokeThickness = msLineDuration * 1;//change one to a constant (less than 1) that makes it look okay
+                    l.StrokeThickness = 10;
+                    MyCanvas.Children.Add(l);
+                    lineNum++;
+                    //we probably want to render the line as a bezier curve. look at bezierCurveTo
+                }
+                strokeNum++;
+                
+            }
             foreach (InkStroke stroke in strokes)
             {
                 
@@ -527,17 +552,82 @@ namespace SmartStroke
                 int lineNum = 0;
                 foreach (Line l in allLines[stroke])
                 {
-                    double secondsSinceStartOfTest = (smartLines[lineNum].getDateTime() - testReplay.getStartTime()).TotalSeconds;
-                    if (secondsSinceStartOfTest < 3.5)
-                    {
-                        MyCanvas.Children.Remove(l);
-                        l.Stroke = new SolidColorBrush(Colors.Red);
-                        MyCanvas.Children.Add(l);
-                    }
+                    int secondsSinceStartOfTest = (int)Math.Floor((smartLines[lineNum].getDateTime() - testReplay.getStartTime()).TotalSeconds);
+                    //assign 1 of 8 colors
+                    if ((secondsSinceStartOfTest/timeInterval +1) % 8 == 1) { color = new SolidColorBrush(Color.FromArgb(255, 255,192,0)); }
+                    else if ((secondsSinceStartOfTest / timeInterval + 1) % 8 == 2) { color = new SolidColorBrush(Color.FromArgb(255, 255, 255, 0)); }
+                    else if ((secondsSinceStartOfTest / timeInterval + 1) % 8 == 3) { color = new SolidColorBrush(Color.FromArgb(255, 146, 208, 80)); }
+                    else if ((secondsSinceStartOfTest / timeInterval + 1) % 8 == 4) { color = new SolidColorBrush(Color.FromArgb(255, 0, 176, 80)); }
+                    else if ((secondsSinceStartOfTest / timeInterval + 1) % 8 == 5) { color = new SolidColorBrush(Color.FromArgb(255, 0, 176, 240)); }
+                    else if ((secondsSinceStartOfTest / timeInterval + 1) % 8 == 6) { color = new SolidColorBrush(Color.FromArgb(255, 0, 112, 192)); }
+                    else if ((secondsSinceStartOfTest / timeInterval + 1) % 8 == 7) { color = new SolidColorBrush(Color.FromArgb(255, 0, 32, 96)); }
+                    else if ((secondsSinceStartOfTest / timeInterval + 1) % 8 == 0) { color = new SolidColorBrush(Color.FromArgb(255, 112, 48, 160)); }
+                    MyCanvas.Children.Remove(l);
+                    l.Stroke = color;
+                    MyCanvas.Children.Add(l);
                     lineNum++;
                 }
                 strokeNum++;
             }
+            
+        }
+
+        //this is experimental code
+        /*private void makeBezier()
+        {
+            //drawingAttributes.FitToCurve = true;
+            //inkManager.SetDefaultDrawingAttributes(drawingAttributes);
+            RenderStroke(50);
+        }
+
+        private void RenderStroke(double width)
+        {
+            var strokes = inkManager.GetStrokes();
+      
+            foreach (InkStroke stroke in strokes)
+            {
+                // Each stroke might have more than one segments
+                var renderingStrokes = stroke.GetRenderingSegments();
+
+                //
+                // Set up the Path to insert the segments
+                var path = new Windows.UI.Xaml.Shapes.Path();
+                path.Data = new PathGeometry();
+                ((PathGeometry)path.Data).Figures = new PathFigureCollection();
+
+                var pathFigure = new PathFigure();
+                pathFigure.StartPoint = renderingStrokes.First().Position;
+                ((PathGeometry)path.Data).Figures.Add(pathFigure);
+
+                //
+                // Foreach segment, we add a BezierSegment
+                foreach (var renderStroke in renderingStrokes)
+                {
+                    pathFigure.Segments.Add(new BezierSegment()
+                    {
+                        Point1 = renderStroke.BezierControlPoint1,
+                        Point2 = renderStroke.BezierControlPoint2,
+                        Point3 = renderStroke.Position
+                    });
+                }
+
+                // Set the general options (i.e. Width and Color)
+                path.StrokeThickness = width;
+
+
+
+                MyCanvas.Children.Add(path);
+            }
+        }*/
+
+        private int getColorTimeInterval()
+        {
+            double testDuration = (testReplay.getEndTime() - testReplay.getStartTime()).TotalSeconds;
+            if (testDuration <= 8) { return 1; }
+            else if (testDuration <= 40) { return 5; }
+            else if (testDuration <= 120) { return 15; }
+            else { return 30; }
+      
         }
 
         #endregion
