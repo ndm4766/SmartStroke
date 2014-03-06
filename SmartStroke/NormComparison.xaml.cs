@@ -157,7 +157,7 @@ namespace SmartStroke
 
             }
 
-                /*
+                
                 for (int i = 0; i < 100; i++)
                 {
                     int j = rand.Next(15,90);
@@ -170,7 +170,7 @@ namespace SmartStroke
                     int j = rand.Next(15, 90);
                     double y = j * 0.82 + 200;
                     highEducationResults.Add(new Performance() { Age = j, Time = rand.NextDouble() * 11 + y });
-                }*/
+                }
 
                 //uniquePoints.Add(new Performance() { Age = 55, Time = 260 });
 
