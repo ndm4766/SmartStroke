@@ -46,7 +46,8 @@
         </Canvas>
 
         <Button Content="Analyze" Margin="141,43,0,27" Height="70" Width="150" Click="analyzeClicked" />
-        <Button Content="Recognize" Margin="1175,43,0,27" Height="70" Width="150" Click="recognizedWordClicked" />
+        <Button Content="Recognize" Margin="1175,43,0,27" Height="70" Width="150" Click="recognizedNumberClicked" />
+        <Button Content="Check Time" Margin="1006,43,0,27" Height="70" Width="150" Click="checkTimeClicked" />
 
         <!-- Back button and page title -->
         <Grid>
