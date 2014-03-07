@@ -53,7 +53,7 @@ namespace SmartStroke
         public int age;
         public DateTime birthday;
         public string educationLevel;
-        public string name;
+        public string name; //need a way to automatically increment the counter at end of string
         public Windows.Data.Json.JsonArray patients = new Windows.Data.Json.JsonArray();
 
 
