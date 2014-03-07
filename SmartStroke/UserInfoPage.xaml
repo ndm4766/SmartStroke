@@ -44,7 +44,7 @@
                         AutomationProperties.AutomationId="BackButton"
                         AutomationProperties.ItemType="Navigation Button"/>
         </Grid>
-        <TextBox Name="patientName" FontFamily="Segoe UI Light" FontSize="48" BorderThickness="1" BorderBrush="#000000" HorizontalAlignment="Center" Margin="335,25,357,0" Grid.Row="1"  Text="Patient Name" VerticalAlignment="Top" Width="674" TextChanged="nameBeingChanged"/>
+        <TextBox Name="patientName" FontFamily="Segoe UI Light" FontSize="48" BorderThickness="1" BorderBrush="#000000" HorizontalAlignment="Center" Margin="335,25,357,0" Grid.Row="1"  Text="AutomatedId1" VerticalAlignment="Top" Width="674" TextChanged="nameBeingChanged"/>
         <RadioButton Name="sexM" GroupName="sex" Content="Male" Foreground="#2F5597" HorizontalAlignment="Left" Margin="259,266,0,0" Grid.Row="1" VerticalAlignment="Top" Checked="radioButtonClicked"/>
         <RadioButton Name="sexF" GroupName="sex" Content="Female" Foreground="#2F5597" HorizontalAlignment="Left" Margin="259,301,0,0" Grid.Row="1" VerticalAlignment="Top" Checked="radioButtonClicked"/>
         <DatePicker Name="birthdayPicker" Foreground="#2F5597" HorizontalAlignment="Left" Margin="389,263,0,0" Grid.Row="1" VerticalAlignment="Top" />

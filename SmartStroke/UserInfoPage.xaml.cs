@@ -128,9 +128,6 @@ namespace SmartStroke
                 String data = await Windows.Storage.FileIO.ReadTextAsync(myFile);
 
                 patients = Windows.Data.Json.JsonArray.Parse(data);
-
-
-
             }
             catch
             {
@@ -239,7 +236,7 @@ namespace SmartStroke
                 saveUserData();
 
                 // Send the patient data (JSON array) moving forward to the test page
-                this.Frame.Navigate(typeof(MainPageCopy), this);
+                this.Frame.Navigate(typeof(MainMenu), this);
             }
         }
         private void radioButtonClicked(object sender, RoutedEventArgs e)

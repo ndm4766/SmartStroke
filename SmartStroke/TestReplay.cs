@@ -181,7 +181,7 @@ namespace SmartStroke
         public void endTest()
         {
             endTime = DateTime.Now;
-            saveTestReplay();
+            //saveTestReplay();
         }
         public void beginStroke()
         {
