@@ -21,10 +21,15 @@ namespace CodedUITestProject1
         {
         }
 
-        [DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV", "|DataDirectory|\\MOCK_DATA.csv", "MOCK_DATA#csv", DataAccessMethod.Sequential), DeploymentItem("MOCK_DATA.csv"), TestMethod]
+        [DeploymentItem("MOCK_DATA.csv"),
+        DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV",
+            "|DataDirectory|\\MOCK_DATA.csv",
+            "MOCK_DATA#csv",
+            DataAccessMethod.Sequential), TestMethod]
 
         public void CodedUITestMethod1()
         {
+            
             // To generate code for this test, select "Generate Code for Coded UI Test" from the shortcut menu and select one of the menu items.
            
             // Launch the app
@@ -45,6 +50,7 @@ namespace CodedUITestProject1
             Gesture.Tap(this.UIMap.UISmartStrokeWindow.UIAddnewPatientButton);
 
             // Delete name in box
+            Gesture.Tap(this.UIMap.UISmartStrokeWindow.UIPatientNameEdit);
             Gesture.Tap(this.UIMap.UISmartStrokeWindow.UIPatientNameEdit.UIDeleteButton);
 
             // Insert patient name
@@ -55,26 +61,71 @@ namespace CodedUITestProject1
             string gender = TestContext.DataRow["gender"].ToString();
             if (gender == "Male")
             {
-                Gesture.Tap(this.UIMap.UISmartStrokeWindow.UIMaleRadioButton);
+                this.UIMap.UISmartStrokeWindow.UIMaleRadioButton.Selected = true;
+                //Gesture.Tap(this.UIMap.UISmartStrokeWindow.UIMaleRadioButton);
             }
             else
             {
-                Gesture.Tap(this.UIMap.UISmartStrokeWindow.UIFemaleRadioButton);
+                this.UIMap.UISmartStrokeWindow.UIFemaleRadioButton.Selected = true;
+                //Gesture.Tap(this.UIMap.UISmartStrokeWindow.UIFemaleRadioButton);
             }
 
-            DateTime bday = Convert.ToDateTime(TestContext.DataRow["birthday"].ToString());
-
             // Select Month
-            this.UIMap.UISmartStrokeWindow.UIDatepickerGroup.UIMonthComboBox.SelectedItem = bday.Month.ToString();
-
+            DateTime bday = Convert.ToDateTime(TestContext.DataRow["birthday"].ToString());
+            string birthday = "NULL";
+            switch (Convert.ToInt32(bday.Month.ToString()))
+            {
+                case 1:
+                    birthday = "January";
+                    break;
+                case 2:
+                    birthday = "February";
+                    break;
+                case 3:
+                    birthday = "March";
+                    break;
+                case 4:
+                    birthday = "April";
+                    break;
+                case 5:
+                    birthday = "May";
+                    break;
+                case 6:
+                    birthday = "June";
+                    break;
+                case 7:
+                    birthday = "July";
+                    break;
+                case 8:
+                    birthday = "Augest";
+                    break;
+                case 9:
+                    birthday = "September";
+                    break;
+                case 10:
+                    birthday = "October";
+                    break;
+                case 11:
+                    birthday = "November";
+                    break;
+                case 12:
+                    birthday = "December";
+                    break;
+                default:
+                    birthday = "END_OF_CASE";
+                    break;
+            }
+            this.UIMap.UISmartStrokeWindow.UIDatepickerGroup.UIMonthComboBox.SelectedItem = birthday;
+            
             // Select day
-            this.UIMap.UISmartStrokeWindow.UIDatepickerGroup.UIDayComboBox.SelectedItem = bday.Day.ToString();
+            this.UIMap.UISmartStrokeWindow.UIDatepickerGroup.UIDayComboBox.SelectedIndex = (bday.Day - 1);
 
             // Select year
             this.UIMap.UISmartStrokeWindow.UIDatepickerGroup.UIYearComboBox.SelectedItem = bday.Year.ToString();
-
+            
             // Select Education Level
             string education = TestContext.DataRow["education"].ToString();
+            Gesture.Tap(UIMap.UISmartStrokeWindow.UIEducationComboBox);
 
             if (education == "True")
             {
@@ -87,6 +138,7 @@ namespace CodedUITestProject1
 
             // Click submit button
             Gesture.Tap(this.UIMap.UISmartStrokeWindow.UISubmitButton);
+
         }
 
         #region Additional test attributes
