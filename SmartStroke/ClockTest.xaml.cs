@@ -236,8 +236,8 @@ namespace SmartStroke
 
             foreach (InkStroke stroke in strokes)
             {
-                if(stroke.GetRenderingSegments())
-                Line startLine = allLines[strokes[0]];
+                //if(stroke.GetRenderingSegments())
+                //Line startLine = allLines[strokes[0]];
             }
             //set handwriting recognizer 
             var recname = "Microsoft English (US) Handwriting Recognizer";

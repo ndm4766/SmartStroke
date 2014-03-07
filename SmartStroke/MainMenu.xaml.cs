@@ -20,28 +20,34 @@ namespace SmartStroke
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainPageCopy : Page
+    public sealed partial class MainMenu : Page
     {
-        public MainPageCopy()
+
+        UserInfoPage infoPage;
+
+        public MainMenu()
         {
-            //2B | !2B
-            //Laramie's test commit
-            //the best comment
             this.InitializeComponent();
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            infoPage = e.Parameter as UserInfoPage;
         }
 
         private void trails_click(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(TrailsMenu));
+            this.Frame.Navigate(typeof(TrailsMenu), infoPage);
         }
         private void test_selection_click(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(TestSelection));
+            this.Frame.Navigate(typeof(TestSelection), infoPage);
         }
 
         private void clock_click(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(ClockTest));
+            this.Frame.Navigate(typeof(ClockTest), infoPage);
         }
     }
 }

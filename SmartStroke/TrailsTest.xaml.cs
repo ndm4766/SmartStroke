@@ -105,8 +105,9 @@ namespace SmartStroke
             disp = new DispatcherTimer();
             disp.Interval = new TimeSpan(0, 0, 0, 0, 100);
             disp.Tick += timer_tick;
-            disp.Start();
+            //disp.Start();  //comment out this line to not display the timer
 
+            //TODO must have real patient info here
             testReplay = new TestReplay(new Patient(
                 "Leeroy Jenkins", DateTime.Now,GENDER.MALE,EDU_LEVEL.PHD),
                 TEST_TYPE.TRAILS_A);
@@ -390,7 +391,7 @@ namespace SmartStroke
                         //reset the list of lines so that if an error is made, the lines just drawn do not get erased
                         currentEdge.Clear();
 
-                        //TODO: if the test is done...what to do?
+                        //if the test is done, this code is executed
                         if (nextIndex >= nodes.Count)
                         {
                             
@@ -399,9 +400,12 @@ namespace SmartStroke
                             MyCanvas.PointerMoved -= MyCanvas_PointerMoved;
                             MyCanvas.PointerReleased -= MyCanvas_PointerReleased;
                             MyCanvas.PointerExited -= MyCanvas_PointerReleased;
+
+                            inkManager.ProcessPointerUp(pt);
+
                             testReplay.endStroke();
                             testReplay.endTest();
-                            testReplay.saveTestReplay();
+                            
                             //TestReplay newTestReplay = new TestReplay(
                                 //new Patient("Leeroy Jenkins", 
                                     //DateTime.Now,GENDER.MALE,EDU_LEVEL.PHD),
@@ -413,8 +417,7 @@ namespace SmartStroke
 
                             saveButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
                             saveButton.IsHitTestVisible = true;
-
-                            inkManager.ProcessPointerUp(pt);
+                            
                             allLines.Add(inkManager.GetStrokes()[inkManager.GetStrokes().Count - 1], currentLine);
                             currentLine = new List<Line>();
                             finished = true;
@@ -484,8 +487,11 @@ namespace SmartStroke
         // Test is finished.. take a picture of the screen.
         private void SubmitButtonClicked(object sender, RoutedEventArgs e)
         {
-            //this.Frame.Navigate(typeof(MainPage));
-            viewColorTimeMode();
+            this.Frame.Navigate(typeof(UserInfoPage));
+
+            testReplay.saveTestReplay();
+
+            //viewColorTimeMode();
             
 
             //this.Frame.Navigate(typeof(MainPageCopy), testReplay);

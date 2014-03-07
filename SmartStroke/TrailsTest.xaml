@@ -13,7 +13,7 @@
             <RowDefinition Height="329*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Name="timer_box" Foreground="Black" Text="0:00:00" FontSize="50" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="0" />
+        <TextBlock Name="timer_box" Foreground="Black" Text="" FontSize="50" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="0" />
         <Viewbox HorizontalAlignment="Left" VerticalAlignment="Top" Grid.RowSpan="2">
             <Canvas Name="MyCanvas" Background="Transparent" />
         </Viewbox>
