@@ -198,8 +198,9 @@ namespace SmartStroke
                 if (!checkCurrentTestAction(ACTION_TYPE.STROKE)) return;
                 currentStroke.addLine(line);
             }
-            PatientNote p = new PatientNote("TITLE", "NOTE", DateTime.Now);
-            testNotes.Add(p);
+            //TODO: Proper note creation, this just puts a bunch of useless notes at the end of the file
+            //PatientNote p = new PatientNote("TITLE", "NOTE", DateTime.Now);
+            //testNotes.Add(p);
         }
         public void endStroke()
         {

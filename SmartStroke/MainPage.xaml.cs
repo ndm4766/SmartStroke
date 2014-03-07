@@ -28,9 +28,6 @@ namespace SmartStroke
     {
         public MainPage()
         {
-            //2B | !2B
-            //Laramie's test commit
-            //the best comment
             this.InitializeComponent();
         }
 
@@ -65,7 +62,7 @@ namespace SmartStroke
 
             protect();
 
-            this.Frame.Navigate(typeof (PatientSelection), userId.Text);
+            this.Frame.Navigate(typeof (PatientSelection), new InfoPasser(user));
         }
 
 

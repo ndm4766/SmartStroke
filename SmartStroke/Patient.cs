@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace SmartStroke
 {
     public enum GENDER { MALE, FEMALE }
-    public enum EDU_LEVEL { HIGHSCHOOL, ASSOCIATES, BACHELORS, MASTERS, PHD }
+    public enum EDU_LEVEL { HIGHSCHOOL, ASSOCIATES, BACHELORS, MASTERS, PHD, OTHER }
     public class PatientNote
     {
         private string title;

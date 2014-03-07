@@ -42,7 +42,7 @@ namespace SmartStroke
         private bool finished = false;
 
         //general globals
-        private string testVersion;
+        private InfoPasser passer;
         private const double DRAW_WIDTH = 4.0;
         private const double ERASE_WIDTH = 30.0;
         private Color DRAW_COLOR = Color.FromArgb(255, 50, 50, 50);
@@ -86,7 +86,7 @@ namespace SmartStroke
 
             // Create the trails test background. The test image is 117X917 px but to fit on a screen (surface) it is 686 X 939
             nodes = new List<TrailNode>();
-            populateNodes(testVersion, nodes);
+            //populateNodes(testVersion, nodes);
             currentLine = new List<Line>();
             allLines = new Dictionary<InkStroke, List<Line>>();
 
@@ -106,12 +106,6 @@ namespace SmartStroke
             disp.Interval = new TimeSpan(0, 0, 0, 0, 100);
             disp.Tick += timer_tick;
             //disp.Start();  //comment out this line to not display the timer
-
-            //TODO must have real patient info here
-            testReplay = new TestReplay(new Patient(
-                "Leeroy Jenkins", DateTime.Now,GENDER.MALE,EDU_LEVEL.PHD),
-                TEST_TYPE.TRAILS_A);
-            testReplay.startTest();
             
             screenHeight = Window.Current.Bounds.Height;
             screenWidth = Window.Current.Bounds.Width;
@@ -125,9 +119,9 @@ namespace SmartStroke
             determineScreenSize();
         }
 
-        private void populateNodes(string kind, List<TrailNode> nodes)
+        private void populateNodes(char kind, List<TrailNode> nodes)
         {
-            if (kind == "A")
+            if (kind == 'A')
             {
                 nodes.Add(new TrailNode(1, new Point(257, 421), MyCanvas));
                 TextBlock begin = new TextBlock()
@@ -141,7 +135,6 @@ namespace SmartStroke
                 r.Angle = 90;
                 begin.RenderTransform = r;
                 MyCanvas.Children.Add(begin);
-                //nodes[0].setFillColor(new SolidColorBrush(Colors.Green));
                 nodes.Add(new TrailNode(2, new Point(150, 322), MyCanvas));
                 nodes.Add(new TrailNode(3, new Point(150, 491), MyCanvas));
                 nodes.Add(new TrailNode(4, new Point(584, 501), MyCanvas));
@@ -175,10 +168,9 @@ namespace SmartStroke
                 end.RenderTransform = r;
                 MyCanvas.Children.Add(end);
             }
-            else if (kind == "B")
+            else if (kind == 'B')
             {
                 nodes.Add(new TrailNode(1, new Point(530, 355), MyCanvas));
-                //nodes[0].setFillColor(new SolidColorBrush(Colors.Green));
                 TextBlock begin = new TextBlock()
                 {
                     Text = "Begin",
@@ -378,6 +370,7 @@ namespace SmartStroke
                         if (!timer.IsRunning)
                         {
                             timer.Start();
+                            testReplay.startTest();
                         }
 
                         // Set the node completed value equal to true and change the color to Green
@@ -487,7 +480,8 @@ namespace SmartStroke
         // Test is finished.. take a picture of the screen.
         private void SubmitButtonClicked(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(UserInfoPage));
+            passer.currentPatient = null;
+            this.Frame.Navigate(typeof(UserInfoPage), passer);
 
             testReplay.saveTestReplay();
 
@@ -642,11 +636,18 @@ namespace SmartStroke
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            string vers = e.Parameter as string;    // This is the type of the trails test.
-            testVersion = vers;
+            passer = e.Parameter as InfoPasser;    // This is the type of the trails test.
 
             nodes.Clear();
-            populateNodes(testVersion, nodes);      // (Re)Populate the list of trail nodes
+            populateNodes(passer.trailsTestVersion, nodes);      // Populate the list of trail nodes (no longer occurs in constructor bec need to have passer to know which test to load)
+
+            //TODO must have real patient info here
+            TEST_TYPE type = TEST_TYPE.TRAILS_A;
+            if(passer.trailsTestVersion == 'A')
+                type = TEST_TYPE.TRAILS_A;
+            else if(passer.trailsTestVersion == 'B')
+                type = TEST_TYPE.TRAILS_B;
+            testReplay = new TestReplay(passer.currentPatient, type);
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)

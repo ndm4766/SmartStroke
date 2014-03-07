@@ -22,8 +22,7 @@ namespace SmartStroke
     /// </summary>
     public sealed partial class MainMenu : Page
     {
-
-        UserInfoPage infoPage;
+        InfoPasser passer;
 
         public MainMenu()
         {
@@ -33,21 +32,21 @@ namespace SmartStroke
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            infoPage = e.Parameter as UserInfoPage;
+            passer = e.Parameter as InfoPasser;
         }
 
         private void trails_click(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(TrailsMenu), infoPage);
+            this.Frame.Navigate(typeof(TrailsMenu), passer);
         }
         private void test_selection_click(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(TestSelection), infoPage);
+            this.Frame.Navigate(typeof(TestSelection), passer);
         }
 
         private void clock_click(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(ClockTest), infoPage);
+            this.Frame.Navigate(typeof(ClockTest), passer);
         }
     }
 }

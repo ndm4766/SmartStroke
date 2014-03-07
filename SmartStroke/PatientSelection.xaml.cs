@@ -22,7 +22,7 @@ namespace SmartStroke
     /// </summary>
     public sealed partial class PatientSelection : Page
     {
-        private string docName;
+        private InfoPasser passer;
         public PatientSelection()
         {
             this.InitializeComponent();
@@ -31,7 +31,7 @@ namespace SmartStroke
         // Add a new Patient
         private void newPatient(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(UserInfoPage), docName);
+            this.Frame.Navigate(typeof(UserInfoPage), passer);
         }
 
         // Doctor has started typing a patient's name in.. try to match the name
@@ -44,15 +44,14 @@ namespace SmartStroke
         // View the norms without a patient data.
         private void viewNorms(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(NormComparison), "patientName:none, doctorName:"+docName);
+            this.Frame.Navigate(typeof(NormComparison), "patientName:none, doctorName:" + passer.doctorId);
         }
 
         // Get the doctor's name
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            string doc = e.Parameter as string;    // This is the name of the doctor.
-            docName = doc;
-            greeting.Text = "Howdy, " + docName;
+            passer = e.Parameter as InfoPasser;
+            greeting.Text = "Howdy, " + passer.doctorId;
         }
 
         

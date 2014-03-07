@@ -25,6 +25,7 @@ namespace SmartStroke
     public sealed partial class UserInfoPage : Page
     {
         //Windows.Storage.StorageFile file;
+        InfoPasser passer;
         const string filename = "userInfo.txt";
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
@@ -107,8 +108,8 @@ namespace SmartStroke
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             navigationHelper.OnNavigatedTo(e);
-            var name = e.Parameter as string;
-            docName = name;
+            passer = e.Parameter as InfoPasser;
+            docName = passer.doctorId;
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -236,7 +237,22 @@ namespace SmartStroke
                 saveUserData();
 
                 // Send the patient data (JSON array) moving forward to the test page
-                this.Frame.Navigate(typeof(MainMenu), this);
+                //TODO: may want to change later so that patient is not just created from scratch here
+                    //might be better to create it earlier or later
+                GENDER g;
+                EDU_LEVEL edu;
+                if (sex.ToString() == "m") 
+                    g = GENDER.MALE; 
+                else 
+                    g = GENDER.FEMALE;
+                if (educationLevel == "Highschool Diploma") 
+                    edu = EDU_LEVEL.HIGHSCHOOL;
+                else if (educationLevel == "College Degree") 
+                    edu = EDU_LEVEL.BACHELORS;
+                else 
+                    edu = EDU_LEVEL.OTHER;
+                passer.currentPatient = new Patient(patientName.Text, birthday, g, edu);
+                this.Frame.Navigate(typeof(MainMenu), passer);
             }
         }
         private void radioButtonClicked(object sender, RoutedEventArgs e)

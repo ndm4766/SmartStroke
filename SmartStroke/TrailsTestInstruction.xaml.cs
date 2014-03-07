@@ -31,7 +31,7 @@ namespace SmartStroke
     /// </summary>
     public sealed partial class TrailsTestInstruction : Page
     {
-        private string version;
+        private InfoPasser passer;
         private List<TrailNode> nodes;
         private DispatcherTimer disp;
         private DispatcherTimer instructionTimer;
@@ -80,9 +80,9 @@ namespace SmartStroke
         {
             instructions.Clear();
             instructions.Add("Place the pen on the starting circle (1)");
-            if(version == "A")
+            if (passer.trailsTestVersion == 'A')
                 instructions.Add("Determine the next node in increasing order (2)");
-            else if(version == "B")
+            else if (passer.trailsTestVersion == 'B')
                 instructions.Add("Determine the next node in increasing order (A)");
             instructions.Add("Draw a line connecting the nodes");
             instructions.Add("Stop when you have connected all the nodes");
@@ -125,7 +125,7 @@ namespace SmartStroke
         private void populateNodes()
         {
             nodes.Clear();
-            if(version == "A")
+            if (passer.trailsTestVersion == 'A')
             {
                 nodes.Add(new TrailNode(1, new Point(377, 244), MyCanvas, false));
                 nodes.Add(new TrailNode(2, new Point(554, 68), MyCanvas, false));
@@ -136,7 +136,7 @@ namespace SmartStroke
                 nodes.Add(new TrailNode(7, new Point(109, 155), MyCanvas, false));
                 nodes.Add(new TrailNode(8, new Point(336, 137), MyCanvas, false));
             }
-            else if(version == "B")
+            else if(passer.trailsTestVersion == 'B')
             {
                 nodes.Add(new TrailNode(1, new Point(337, 260), MyCanvas, false));
                 nodes.Add(new TrailNode('A', new Point(523, 76), MyCanvas,false));
@@ -181,7 +181,7 @@ namespace SmartStroke
         {
             disp.Tick -= restart_tick;
             disp.Stop();
-            this.Frame.Navigate(typeof(TrailsTestInstruction), version);
+            this.Frame.Navigate(typeof(TrailsTestInstruction), passer);
         }
 
 
@@ -311,9 +311,8 @@ namespace SmartStroke
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             navigationHelper.OnNavigatedTo(e);
-            string vers = e.Parameter as string;    // This is the type of the trails test.
-            version = vers;
-            pageTitle.Text = "Instructions: Trails Test " + version;
+            passer = e.Parameter as InfoPasser;    // This is the type of the trails test.
+            pageTitle.Text = "Instructions: Trails Test " + passer.trailsTestVersion;
             populateNodes();
             makeInstructions();
         }
@@ -331,7 +330,7 @@ namespace SmartStroke
         {
             disp.Stop();
             instructionTimer.Stop();
-            this.Frame.Navigate(typeof(TrailsTest), version);
+            this.Frame.Navigate(typeof(TrailsTest), passer);
         }
     }
 }
