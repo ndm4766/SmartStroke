@@ -55,7 +55,7 @@ namespace SmartStroke
         public string educationLevel;
         public string name;
         public Windows.Data.Json.JsonArray patients = new Windows.Data.Json.JsonArray();
-
+        public const int medicalIdLength = 16;
 
         public UserInfoPage()
         {
@@ -118,6 +118,18 @@ namespace SmartStroke
 
         #endregion
 
+        // Return an id with the last x characters being the number of the patient.
+        private string newID( int numberDigits)
+        {
+            Random r = new Random();
+            string s = "";
+            for (int i = 0; i < numberDigits; i++)
+            {
+                s += r.Next(10).ToString();
+            }
+            return s;
+        }
+
         async void loadJson()
         {
             try
@@ -128,6 +140,9 @@ namespace SmartStroke
                 String data = await Windows.Storage.FileIO.ReadTextAsync(myFile);
 
                 patients = Windows.Data.Json.JsonArray.Parse(data);
+                int numDigits = medicalIdLength - (patients.Count.ToString().Length);
+                string prefix = newID(numDigits);
+                patientName.Text = prefix + patients.Count.ToString();
             }
             catch
             {
