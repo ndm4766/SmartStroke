@@ -487,7 +487,7 @@ namespace SmartStroke
         // Test is finished.. take a picture of the screen.
         private void SubmitButtonClicked(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(UserInfoPage));
+            this.Frame.Navigate(typeof(MainPage));
 
             testReplay.saveTestReplay();
 
