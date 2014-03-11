@@ -41,7 +41,8 @@ namespace SmartStroke
         private void tick(object sender, object e)
         {
             timer.Stop();
-            this.Frame.Navigate(typeof(PatientSelection), "WIPPTE");
+            InfoPasser passer = new InfoPasser("WIPPTE");
+            this.Frame.Navigate(typeof(PatientSelection), passer);
         }
 
         private async void protect()

@@ -23,6 +23,7 @@ namespace SmartStroke
     public sealed partial class PatientSelection : Page
     {
         private string docName = "";
+        InfoPasser passer;
         private Windows.Data.Json.JsonArray patients;
 
         public PatientSelection()
@@ -35,14 +36,14 @@ namespace SmartStroke
         // Add a new Patient
         private void newPatient(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(UserInfoPage), docName);
+            this.Frame.Navigate(typeof(UserInfoPage), passer);
         }
 
         // Doctor has started typing a patient's name in.. try to match the name
         // and output possible patients for him/her to select
         private void searchPatients(object sender, TextChangedEventArgs e)
         {
-            if (search.Text == "Search for a Patien")
+            if (search.Text == "Search for a Patient")
             {
                 search.Text = "";
                 return;
@@ -76,8 +77,8 @@ namespace SmartStroke
         // Get the doctor's name
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            string doc = e.Parameter as string;    // This is the name of the doctor.
-            docName = doc;
+            passer = e.Parameter as InfoPasser;    // This is the name of the doctor.
+            docName = passer.doctorId;
             greeting.Text = "Howdy, " + docName;
         }
 
