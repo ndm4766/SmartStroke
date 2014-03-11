@@ -249,6 +249,9 @@ namespace SmartStroke
                // y-b = mx
                // y-b/m = x
 
+               // Distance formula
+               // d = sqrt( (x2-x1)^2 + (y2-y1)^2 )
+
                //     X1           Y1               X           Y
                // (previous.X, previou.Y), (previous.X+deltaX, Y), slope
                double newX = previousPoint.X + deltaX;
