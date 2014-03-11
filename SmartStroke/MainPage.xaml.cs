@@ -26,9 +26,22 @@ namespace SmartStroke
     /// </summary>
     public sealed partial class MainPage : Page
     {
+
+        DispatcherTimer timer;  // Timer to fire after 1 second to send to the next screen
         public MainPage()
         {
             this.InitializeComponent();
+            timer = new DispatcherTimer();
+            timer.Tick += tick;
+            timer.Interval = new TimeSpan(0, 0, 1);
+            timer.Start();
+        }
+
+        // Auto-send the user to the User login page.. used for WIPPTE so people dont need to sign in
+        private void tick(object sender, object e)
+        {
+            timer.Stop();
+            this.Frame.Navigate(typeof(PatientSelection), "WIPPTE");
         }
 
         private async void protect()
