@@ -22,10 +22,14 @@ namespace SmartStroke
     /// </summary>
     public sealed partial class PatientSelection : Page
     {
-        private string docName;
+        private string docName = "";
+        private Windows.Data.Json.JsonArray patients;
+
         public PatientSelection()
         {
             this.InitializeComponent();
+            patients = new Windows.Data.Json.JsonArray();
+            loadJson("userInfo.txt");
         }
 
         // Add a new Patient
@@ -38,7 +42,29 @@ namespace SmartStroke
         // and output possible patients for him/her to select
         private void searchPatients(object sender, TextChangedEventArgs e)
         {
+            if (search.Text == "Search for a Patien")
+            {
+                search.Text = "";
+                return;
+            }
+            // Remove all ids from the listbox
+            while(MedicalID.Items.Count > 0)
+            {
+                MedicalID.Items.RemoveAt(MedicalID.Items.Count-1);
+            }
 
+            // Populate listbox with Possible suggestions
+            string query = search.Text;
+            for (uint i = 0; i < patients.Count; i++)
+            {
+                var name = patients.GetObjectAt(i).GetNamedString("Name");
+                var doctor = patients.GetObjectAt(i).GetNamedString("Doctor");
+                if (doctor == docName)
+                {
+                    if(name.StartsWith(query))
+                        MedicalID.Items.Add(name);
+                }
+            }
         }
         
         // View the norms without a patient data.
@@ -55,6 +81,34 @@ namespace SmartStroke
             greeting.Text = "Howdy, " + docName;
         }
 
-        
+        // If you click on a patient, send his/her ID and the doctor's name to the testing screen
+        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if(MedicalID.SelectedItem != null)
+            {
+                MedicalID.SelectionChanged -= ListBox_SelectionChanged;
+                search.TextChanged -= searchPatients;
+                this.Frame.Navigate(typeof(MainMenu), "patientName:"+MedicalID.SelectedItem+", doctorName:"+docName);
+            }
+        }
+
+        // Load the file with all the patients and display them for a doctor to pick
+        async void loadJson(string filename)
+        {
+            try
+            {
+                //get file
+                Windows.Storage.StorageFile myFile = await Windows.Storage.ApplicationData.Current.LocalFolder.GetFileAsync(filename);
+                //read
+                String data = await Windows.Storage.FileIO.ReadTextAsync(myFile);
+
+                patients = Windows.Data.Json.JsonArray.Parse(data);
+            }
+            catch
+            {
+                //json load failed
+            }
+        }
+
     }
 }
