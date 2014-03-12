@@ -90,6 +90,7 @@ namespace SmartStroke
             {
                 MedicalID.SelectionChanged -= ListBox_SelectionChanged;
                 search.TextChanged -= searchPatients;
+
                 this.Frame.Navigate(typeof(MainMenu), "patientName:"+MedicalID.SelectedItem+", doctorName:"+docName);
             }
         }
