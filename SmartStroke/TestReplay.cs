@@ -164,6 +164,11 @@ namespace SmartStroke
         private List<TestAction> testActions;
         private List<PatientNote> testNotes;
         private Stroke currentStroke;
+        public TestReplay()
+        {
+            testActions = new List<TestAction>();
+            testNotes = new List<PatientNote>();
+        }
         public TestReplay(Patient _patient, TEST_TYPE TestType)
         {
             patient = _patient;

@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.Storage;
 using WinRTXamlToolkit.Controls.DataVisualization.Charting;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234237
@@ -29,6 +30,7 @@ namespace SmartStroke
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
         List<PatientPlot> patientList = new List<PatientPlot>();
+        List<string> fileNames;
 
         /// <summary>
         /// This can be changed to a strongly typed view model.
@@ -62,6 +64,8 @@ namespace SmartStroke
             this.navigationHelper.LoadState += navigationHelper_LoadState;
             this.navigationHelper.SaveState += navigationHelper_SaveState;
             this.Loaded += NormComparisonPage_Loaded;
+
+            fileNames = new List<string>();
         }
 
         /// <summary>
@@ -120,7 +124,7 @@ namespace SmartStroke
         private void LoadChartContents()
         {
             loadJson();
-
+            TestReplay replay;
             Random rand = new Random();
             
             List<Performance> allResults = new List<Performance>();
@@ -129,11 +133,27 @@ namespace SmartStroke
             // Do not separate into different categories.
             for (int i = 0; i < patientList.Count; i++)
             {
+                replay = new TestReplay();
+                // Find the file that corresponds with this patient name and load it
+                foreach( string name in fileNames)
+                {
+                    if(name.Contains(patientList[i].patientName))
+                    {
+                        replay.loadTestReplay(name);
+                        break;
+                    }
+                }
+
+                DateTime start = replay.getStartTime();
+                DateTime end = replay.getEndTime();
+                TimeSpan TimeDifference = start - end;
+
+                double seconds = TimeDifference.Minutes * 60 + TimeDifference.Seconds + TimeDifference.Milliseconds / 100;
 
                 int tempAge = Convert.ToInt32(patientList[i].patientAge);
                 int j = rand.Next(tempAge - 5, tempAge + 5);
                 double y = j * 0.82 + 200;
-                allResults.Add(new Performance() { Age = tempAge, Time = rand.NextDouble() * 14 + y });
+                allResults.Add(new Performance() { Age = tempAge, Time = 60 });
             }
 
             (ScatterChart.Series[0] as ScatterSeries).ItemsSource = allResults;
@@ -223,6 +243,16 @@ namespace SmartStroke
         {
             //try
             {
+                // Clear all the fileNames in the directory
+                fileNames.Clear();
+                var names = await Windows.Storage.ApplicationData.Current.LocalFolder.GetFilesAsync();
+                /*foreach ( var name in names )
+                {
+                    // The fileName starts with a number
+                    if(name.Name[0] >= 48 && name.Name[0] <= 58)
+                        fileNames.Add(name.Name);
+                }*/
+
                 //get file
                 Windows.Storage.StorageFile myFile = await Windows.Storage.ApplicationData.Current.LocalFolder.GetFileAsync(filename);
                 //read
