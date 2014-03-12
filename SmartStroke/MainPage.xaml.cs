@@ -30,9 +30,6 @@ namespace SmartStroke
         DispatcherTimer timer;  // Timer to fire after 1 second to send to the next screen
         public MainPage()
         {
-            //2B | !2B
-            //Laramie's test commit
-            //the best comment
             this.InitializeComponent();
             timer = new DispatcherTimer();
             timer.Tick += tick;
@@ -44,7 +41,8 @@ namespace SmartStroke
         private void tick(object sender, object e)
         {
             timer.Stop();
-            this.Frame.Navigate(typeof(PatientSelection), "WIPPTE");
+            InfoPasser passer = new InfoPasser("WIPPTE");
+            this.Frame.Navigate(typeof(PatientSelection), passer);
         }
 
         private async void protect()
@@ -78,7 +76,7 @@ namespace SmartStroke
 
             protect();
 
-            this.Frame.Navigate(typeof (PatientSelection), userId.Text);
+            this.Frame.Navigate(typeof (PatientSelection), new InfoPasser(user));
         }
 
 

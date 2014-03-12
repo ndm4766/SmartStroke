@@ -13,7 +13,9 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.Storage;
 using WinRTXamlToolkit.Controls.DataVisualization.Charting;
+using System.Threading.Tasks;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234237
 
@@ -29,6 +31,7 @@ namespace SmartStroke
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
         List<PatientPlot> patientList = new List<PatientPlot>();
+        List<string> fileNames;
 
         /// <summary>
         /// This can be changed to a strongly typed view model.
@@ -62,7 +65,8 @@ namespace SmartStroke
             this.navigationHelper.LoadState += navigationHelper_LoadState;
             this.navigationHelper.SaveState += navigationHelper_SaveState;
             this.Loaded += NormComparisonPage_Loaded;
-            //loadJson();
+
+            fileNames = new List<string>();
         }
 
         /// <summary>
@@ -113,26 +117,63 @@ namespace SmartStroke
             navigationHelper.OnNavigatedFrom(e);
         }
 
-        private void ButtonRefresh_Click(object sender, RoutedEventArgs e)
-        {
-            LoadChartContents();
-        }
-
         void NormComparisonPage_Loaded(object sender, RoutedEventArgs e)
         {
             LoadChartContents();
         }
 
-        private void LoadChartContents()
+        private async void LoadChartContents()
         {
-            loadJson();
-
+            await loadJson();
+            TestReplay replay;
             Random rand = new Random();
             
+            List<Performance> allResults = new List<Performance>();
+
+            // Go through all the patients and display the complete data.
+            // Do not separate into different categories.
+            for (int i = 0; i < patientList.Count; i++)
+            {
+                replay = new TestReplay();
+                // Find the file that corresponds with this patient name and load it
+                foreach( string name in fileNames)
+                {
+                    if(name.Contains(patientList[i].patientName))
+                    {
+                        await replay.loadTestReplay(name);
+                        var actions = replay.getTestActions();
+
+                        DateTime start = actions[0].getStartTime();
+                        DateTime end = actions[actions.Count - 1].getEndTime();
+                        TimeSpan TimeDifference = end - start;
+
+                        double seconds = TimeDifference.Minutes * 60 + TimeDifference.Seconds + TimeDifference.Milliseconds / 100;
+
+                        int tempAge = Convert.ToInt32(patientList[i].patientAge);
+
+                        allResults.Add(new Performance() { Age = tempAge, Time = seconds });
+                        
+                        break;
+                    }
+                }
+                
+            }
+
+            (ScatterChart.Series[0] as ScatterSeries).ItemsSource = allResults;
+
+        }
+
+        private void RecreateChart(string way)
+        {
+
+            Random rand = new Random();
+
             List<Performance> lowEducationResults = new List<Performance>();
             List<Performance> highEducationResults = new List<Performance>();
             List<Performance> uniquePoints = new List<Performance>();
 
+            // Go through all the patients and display the complete data.
+            // Do not separate into different categories.
             for (int i = 0; i < patientList.Count; i++)
             {
 
@@ -143,7 +184,7 @@ namespace SmartStroke
 
                     int j = rand.Next(tempAge - 5, tempAge + 5);
                     double y = j * 0.82 + 200;
-                    lowEducationResults.Add(new Performance() { Age = tempAge, Time = rand.NextDouble() * 14 + y});
+                    lowEducationResults.Add(new Performance() { Age = tempAge, Time = rand.NextDouble() * 14 + y });
 
                 }
                 else
@@ -157,22 +198,22 @@ namespace SmartStroke
 
             }
 
-                
-                for (int i = 0; i < 100; i++)
-                {
-                    int j = rand.Next(15,90);
-                    double y = j * 0.98 + 204;
-                    lowEducationResults.Add(new Performance() { Age = j, Time = rand.NextDouble() * 14 + y });
-                }
 
-                for (int i = 0; i < 100; i++)
-                {
-                    int j = rand.Next(15, 90);
-                    double y = j * 0.82 + 200;
-                    highEducationResults.Add(new Performance() { Age = j, Time = rand.NextDouble() * 11 + y });
-                }
+            for (int i = 0; i < 100; i++)
+            {
+                int j = rand.Next(15, 90);
+                double y = j * 0.98 + 204;
+                lowEducationResults.Add(new Performance() { Age = j, Time = rand.NextDouble() * 14 + y });
+            }
 
-                //uniquePoints.Add(new Performance() { Age = 55, Time = 260 });
+            for (int i = 0; i < 100; i++)
+            {
+                int j = rand.Next(15, 90);
+                double y = j * 0.82 + 200;
+                highEducationResults.Add(new Performance() { Age = j, Time = rand.NextDouble() * 11 + y });
+            }
+
+            //uniquePoints.Add(new Performance() { Age = 55, Time = 260 });
 
             (ScatterChart.Series[0] as ScatterSeries).ItemsSource = lowEducationResults;
             (ScatterChart.Series[1] as ScatterSeries).ItemsSource = highEducationResults;
@@ -201,10 +242,20 @@ namespace SmartStroke
 
         };
 
-        async void loadJson()
+        async Task loadJson()
         {
             //try
             {
+                // Clear all the fileNames in the directory
+                fileNames.Clear();
+                var names = await Windows.Storage.ApplicationData.Current.LocalFolder.GetFilesAsync();
+                foreach ( var name in names )
+                {
+                    // The fileName starts with a number
+                    if(name.Name[0] >= 48 && name.Name[0] <= 58)
+                        fileNames.Add(name.Name);
+                }
+
                 //get file
                 Windows.Storage.StorageFile myFile = await Windows.Storage.ApplicationData.Current.LocalFolder.GetFileAsync(filename);
                 //read

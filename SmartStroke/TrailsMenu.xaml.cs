@@ -107,12 +107,16 @@ namespace SmartStroke
 
         private void AClick(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(TrailsTestInstruction), "A");
+            InfoPasser passer = args.Parameter as InfoPasser;
+            passer.trailsTestVersion = 'A';
+            this.Frame.Navigate(typeof(TrailsTestInstruction), passer);
         }
 
         private void BClick(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(TrailsTestInstruction), "B");
+            InfoPasser passer = args.Parameter as InfoPasser;
+            passer.trailsTestVersion = 'B';
+            this.Frame.Navigate(typeof(TrailsTestInstruction), 'B');
         }
     }
 }

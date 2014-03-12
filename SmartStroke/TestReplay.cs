@@ -164,6 +164,11 @@ namespace SmartStroke
         private List<TestAction> testActions;
         private List<PatientNote> testNotes;
         private Stroke currentStroke;
+        public TestReplay()
+        {
+            testActions = new List<TestAction>();
+            testNotes = new List<PatientNote>();
+        }
         public TestReplay(Patient _patient, TEST_TYPE TestType)
         {
             patient = _patient;
@@ -198,8 +203,9 @@ namespace SmartStroke
                 if (!checkCurrentTestAction(ACTION_TYPE.STROKE)) return;
                 currentStroke.addLine(line);
             }
-            PatientNote p = new PatientNote("TITLE", "NOTE", DateTime.Now);
-            testNotes.Add(p);
+            //TODO: Proper note creation, this just puts a bunch of useless notes at the end of the file
+            //PatientNote p = new PatientNote("TITLE", "NOTE", DateTime.Now);
+            //testNotes.Add(p);
         }
         public void endStroke()
         {
@@ -303,7 +309,7 @@ namespace SmartStroke
             lineString += (" " + lineData.getDateTime().ToString());
             return lineString;
         }
-        public async void loadTestReplay(string testFilename)
+        public async Task loadTestReplay(string testFilename)
         {
             StorageFile testStorageFile;
             string testReplayString = "";
@@ -337,7 +343,8 @@ namespace SmartStroke
                     else if (lineWords[0] == "DeletePreviousStroke")
                         testActions.Add(parseLineDelPrevStroke(lineWords));
                     else if (lineWords[0] == "=====NOTES=====")
-                        inActionSection = false;
+                        return;
+                        //inActionSection = false;
                 } else {
                     List<string> lineWords = testStrings[i]
                         .Split('\t').Cast<string>().ToList<string>();
@@ -345,7 +352,7 @@ namespace SmartStroke
                     {
                         DateTime date = new DateTime();
                         date = Convert.ToDateTime(
-                            lineWords[0].Replace("-"," "));
+                            lineWords[0].Replace("/"," "));
                         testNotes.Add(
                             new PatientNote(lineWords[1], lineWords[2], date));
                     }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace SmartStroke
 {
     public enum GENDER { MALE, FEMALE }
-    public enum EDU_LEVEL { HIGHSCHOOL, ASSOCIATES, BACHELORS, MASTERS, PHD }
+    public enum EDU_LEVEL { HIGHSCHOOL, ASSOCIATES, BACHELORS, MASTERS, PHD, OTHER }
     public class PatientNote
     {
         private string title;
@@ -45,15 +45,17 @@ namespace SmartStroke
     public class Patient
     {
         private string name;
+        private string doctor;
         private DateTime birthDate;
         private GENDER gender;
         private EDU_LEVEL eduLevel;
         private List<PatientNote> notes;
         private List<string> testFilenames;
-        public Patient(string Name, DateTime BirthDate,
+        public Patient(string Name, string doc, DateTime BirthDate,
             GENDER Gender, EDU_LEVEL EduLevel)
         {
             name = Name;
+            doctor = doc;
             birthDate = BirthDate;
             gender = Gender;
             eduLevel = EduLevel;
@@ -61,6 +63,7 @@ namespace SmartStroke
             testFilenames = new List<string>();
         }
         public string getName() { return name; }
+        public string getDoctor() { return doctor; }
         public DateTime getBirthDate() { return birthDate; }
         public GENDER getGender() { return gender; }
         public EDU_LEVEL getEduLevel() { return eduLevel; }
