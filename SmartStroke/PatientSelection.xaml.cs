@@ -48,6 +48,7 @@ namespace SmartStroke
                 search.Text = "";
                 return;
             }
+
             // Remove all ids from the listbox
             while(MedicalID.Items.Count > 0)
             {
@@ -103,7 +104,7 @@ namespace SmartStroke
                 //read
                 String data = await Windows.Storage.FileIO.ReadTextAsync(myFile);
 
-                patients = Windows.Data.Json.JsonArray.Parse(data);
+                Windows.Data.Json.JsonArray.TryParse(data, out patients);
             }
             catch
             {

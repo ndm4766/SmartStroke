@@ -62,7 +62,6 @@ namespace SmartStroke
             this.navigationHelper.LoadState += navigationHelper_LoadState;
             this.navigationHelper.SaveState += navigationHelper_SaveState;
             this.Loaded += NormComparisonPage_Loaded;
-            //loadJson();
         }
 
         /// <summary>
@@ -113,11 +112,6 @@ namespace SmartStroke
             navigationHelper.OnNavigatedFrom(e);
         }
 
-        private void ButtonRefresh_Click(object sender, RoutedEventArgs e)
-        {
-            LoadChartContents();
-        }
-
         void NormComparisonPage_Loaded(object sender, RoutedEventArgs e)
         {
             LoadChartContents();
@@ -129,10 +123,34 @@ namespace SmartStroke
 
             Random rand = new Random();
             
+            List<Performance> allResults = new List<Performance>();
+
+            // Go through all the patients and display the complete data.
+            // Do not separate into different categories.
+            for (int i = 0; i < patientList.Count; i++)
+            {
+
+                int tempAge = Convert.ToInt32(patientList[i].patientAge);
+                int j = rand.Next(tempAge - 5, tempAge + 5);
+                double y = j * 0.82 + 200;
+                allResults.Add(new Performance() { Age = tempAge, Time = rand.NextDouble() * 14 + y });
+            }
+
+            (ScatterChart.Series[0] as ScatterSeries).ItemsSource = allResults;
+
+        }
+
+        private void RecreateChart(string way)
+        {
+
+            Random rand = new Random();
+
             List<Performance> lowEducationResults = new List<Performance>();
             List<Performance> highEducationResults = new List<Performance>();
             List<Performance> uniquePoints = new List<Performance>();
 
+            // Go through all the patients and display the complete data.
+            // Do not separate into different categories.
             for (int i = 0; i < patientList.Count; i++)
             {
 
@@ -143,7 +161,7 @@ namespace SmartStroke
 
                     int j = rand.Next(tempAge - 5, tempAge + 5);
                     double y = j * 0.82 + 200;
-                    lowEducationResults.Add(new Performance() { Age = tempAge, Time = rand.NextDouble() * 14 + y});
+                    lowEducationResults.Add(new Performance() { Age = tempAge, Time = rand.NextDouble() * 14 + y });
 
                 }
                 else
@@ -157,22 +175,22 @@ namespace SmartStroke
 
             }
 
-                
-                for (int i = 0; i < 100; i++)
-                {
-                    int j = rand.Next(15,90);
-                    double y = j * 0.98 + 204;
-                    lowEducationResults.Add(new Performance() { Age = j, Time = rand.NextDouble() * 14 + y });
-                }
 
-                for (int i = 0; i < 100; i++)
-                {
-                    int j = rand.Next(15, 90);
-                    double y = j * 0.82 + 200;
-                    highEducationResults.Add(new Performance() { Age = j, Time = rand.NextDouble() * 11 + y });
-                }
+            for (int i = 0; i < 100; i++)
+            {
+                int j = rand.Next(15, 90);
+                double y = j * 0.98 + 204;
+                lowEducationResults.Add(new Performance() { Age = j, Time = rand.NextDouble() * 14 + y });
+            }
 
-                //uniquePoints.Add(new Performance() { Age = 55, Time = 260 });
+            for (int i = 0; i < 100; i++)
+            {
+                int j = rand.Next(15, 90);
+                double y = j * 0.82 + 200;
+                highEducationResults.Add(new Performance() { Age = j, Time = rand.NextDouble() * 11 + y });
+            }
+
+            //uniquePoints.Add(new Performance() { Age = 55, Time = 260 });
 
             (ScatterChart.Series[0] as ScatterSeries).ItemsSource = lowEducationResults;
             (ScatterChart.Series[1] as ScatterSeries).ItemsSource = highEducationResults;

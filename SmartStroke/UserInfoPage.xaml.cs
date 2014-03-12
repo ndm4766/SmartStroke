@@ -140,7 +140,8 @@ namespace SmartStroke
                 //read
                 String data = await Windows.Storage.FileIO.ReadTextAsync(myFile);
 
-                patients = Windows.Data.Json.JsonArray.Parse(data);
+
+                Windows.Data.Json.JsonArray.TryParse(data, out patients);
                 int numDigits = medicalIdLength - (patients.Count.ToString().Length);
                 string prefix = newID(numDigits);
                 patientName.Text = prefix + patients.Count.ToString();
@@ -262,11 +263,17 @@ namespace SmartStroke
                     g = GENDER.FEMALE;
                 if (educationLevel == "Highschool Diploma") 
                     edu = EDU_LEVEL.HIGHSCHOOL;
-                else if (educationLevel == "College Degree") 
+                else if (educationLevel == "Bachelors") 
                     edu = EDU_LEVEL.BACHELORS;
+                else if (educationLevel == "Associates")
+                    edu = EDU_LEVEL.ASSOCIATES;
+                else if (educationLevel == "Masters")
+                    edu = EDU_LEVEL.MASTERS;
+                else if (educationLevel == "PHD")
+                    edu = EDU_LEVEL.PHD;
                 else 
                     edu = EDU_LEVEL.OTHER;
-                passer.currentPatient = new Patient(patientName.Text, birthday, g, edu);
+                passer.currentPatient = new Patient(patientName.Text, docName, birthday, g, edu);
                 this.Frame.Navigate(typeof(MainMenu), passer);
             }
         }
