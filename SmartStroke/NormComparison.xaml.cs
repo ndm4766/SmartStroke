@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.Storage;
 using WinRTXamlToolkit.Controls.DataVisualization.Charting;
+using System.Threading.Tasks;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234237
 
@@ -121,9 +122,9 @@ namespace SmartStroke
             LoadChartContents();
         }
 
-        private void LoadChartContents()
+        private async void LoadChartContents()
         {
-            loadJson();
+            await loadJson();
             TestReplay replay;
             Random rand = new Random();
             
@@ -139,21 +140,23 @@ namespace SmartStroke
                 {
                     if(name.Contains(patientList[i].patientName))
                     {
-                        replay.loadTestReplay(name);
+                        await replay.loadTestReplay(name);
+                        var actions = replay.getTestActions();
+
+                        DateTime start = actions[0].getStartTime();
+                        DateTime end = actions[actions.Count - 1].getEndTime();
+                        TimeSpan TimeDifference = end - start;
+
+                        double seconds = TimeDifference.Minutes * 60 + TimeDifference.Seconds + TimeDifference.Milliseconds / 100;
+
+                        int tempAge = Convert.ToInt32(patientList[i].patientAge);
+
+                        allResults.Add(new Performance() { Age = tempAge, Time = seconds });
+                        
                         break;
                     }
                 }
-
-                DateTime start = replay.getStartTime();
-                DateTime end = replay.getEndTime();
-                TimeSpan TimeDifference = start - end;
-
-                double seconds = TimeDifference.Minutes * 60 + TimeDifference.Seconds + TimeDifference.Milliseconds / 100;
-
-                int tempAge = Convert.ToInt32(patientList[i].patientAge);
-                int j = rand.Next(tempAge - 5, tempAge + 5);
-                double y = j * 0.82 + 200;
-                allResults.Add(new Performance() { Age = tempAge, Time = 60 });
+                
             }
 
             (ScatterChart.Series[0] as ScatterSeries).ItemsSource = allResults;
@@ -239,19 +242,19 @@ namespace SmartStroke
 
         };
 
-        async void loadJson()
+        async Task loadJson()
         {
             //try
             {
                 // Clear all the fileNames in the directory
                 fileNames.Clear();
                 var names = await Windows.Storage.ApplicationData.Current.LocalFolder.GetFilesAsync();
-                /*foreach ( var name in names )
+                foreach ( var name in names )
                 {
                     // The fileName starts with a number
                     if(name.Name[0] >= 48 && name.Name[0] <= 58)
                         fileNames.Add(name.Name);
-                }*/
+                }
 
                 //get file
                 Windows.Storage.StorageFile myFile = await Windows.Storage.ApplicationData.Current.LocalFolder.GetFileAsync(filename);

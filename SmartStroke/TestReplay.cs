@@ -309,7 +309,7 @@ namespace SmartStroke
             lineString += (" " + lineData.getDateTime().ToString());
             return lineString;
         }
-        public async void loadTestReplay(string testFilename)
+        public async Task loadTestReplay(string testFilename)
         {
             StorageFile testStorageFile;
             string testReplayString = "";
@@ -343,7 +343,8 @@ namespace SmartStroke
                     else if (lineWords[0] == "DeletePreviousStroke")
                         testActions.Add(parseLineDelPrevStroke(lineWords));
                     else if (lineWords[0] == "=====NOTES=====")
-                        inActionSection = false;
+                        return;
+                        //inActionSection = false;
                 } else {
                     List<string> lineWords = testStrings[i]
                         .Split('\t').Cast<string>().ToList<string>();
@@ -351,7 +352,7 @@ namespace SmartStroke
                     {
                         DateTime date = new DateTime();
                         date = Convert.ToDateTime(
-                            lineWords[0].Replace("-"," "));
+                            lineWords[0].Replace("/"," "));
                         testNotes.Add(
                             new PatientNote(lineWords[1], lineWords[2], date));
                     }
