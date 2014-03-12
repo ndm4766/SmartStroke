@@ -105,11 +105,12 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="InfoPasser.cs" />
     <Compile Include="LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MainPage - Copy.xaml.cs">
-      <DependentUpon>MainPage - Copy.xaml</DependentUpon>
+    <Compile Include="MainMenu.xaml.cs">
+      <DependentUpon>MainMenu.xaml</DependentUpon>
     </Compile>
     <Compile Include="NormComparison.xaml.cs">
       <DependentUpon>NormComparison.xaml</DependentUpon>
@@ -175,7 +176,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainPage - Copy.xaml">
+    <Page Include="MainMenu.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

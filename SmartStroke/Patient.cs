@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace SmartStroke
 {
     public enum GENDER { MALE, FEMALE }
-    public enum EDU_LEVEL { HIGHSCHOOL, ASSOCIATES, BACHELORS, MASTERS, PHD }
+    public enum EDU_LEVEL { HIGHSCHOOL, ASSOCIATES, BACHELORS, MASTERS, PHD, OTHER }
     public class PatientNote
     {
         private string title;
@@ -33,6 +33,14 @@ namespace SmartStroke
         public string getNote() { return note; }
         public void changeTime(DateTime Time) { time = Time; }
         public DateTime getTime() { return time; }
+        public string convertToString()
+        {
+            string stringNote = time.ToString() + '\t';
+            stringNote = stringNote.Replace(" ","-");
+            stringNote += (title + '\t');
+            stringNote += (note + '\n');
+            return stringNote;
+        }
     }
     public class Patient
     {
@@ -41,6 +49,7 @@ namespace SmartStroke
         private GENDER gender;
         private EDU_LEVEL eduLevel;
         private List<PatientNote> notes;
+        private List<string> testFilenames;
         public Patient(string Name, DateTime BirthDate,
             GENDER Gender, EDU_LEVEL EduLevel)
         {
@@ -49,12 +58,16 @@ namespace SmartStroke
             gender = Gender;
             eduLevel = EduLevel;
             notes = new List<PatientNote>();
+            testFilenames = new List<string>();
         }
         public string getName() { return name; }
         public DateTime getBirthDate() { return birthDate; }
         public GENDER getGender() { return gender; }
         public EDU_LEVEL getEduLevel() { return eduLevel; }
         public List<PatientNote> getNotes() { return notes; }
+        public List<string> getTestFilenames() { return testFilenames; }
+        public void addNote(PatientNote patNote) { notes.Add(patNote); }
+        public void addFile(string testFile) { testFilenames.Add(testFile); }
         public string convertToString() {
             char genderChar = (gender == GENDER.MALE ? 'M' : 'F');
             return name + " - "

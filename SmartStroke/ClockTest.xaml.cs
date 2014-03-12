@@ -153,6 +153,8 @@ namespace SmartStroke
             }
         }
 
+        #region quadrant ink weight analysis
+
         private Rectangle getQuadrantCollision(Line line)
         {
             List<Rectangle> quadrants = new List<Rectangle>();
@@ -215,9 +217,90 @@ namespace SmartStroke
                     }
                 }
             }
-
-            
         }
+
+        #endregion
+
+        #region sketch number recognition analysis
+
+        private int distanceBetweenStrokes(InkStroke stroke1, InkStroke stroke2)
+        {
+
+            return -1;
+        }
+
+        private async void recognizedNumberClicked(object sender, RoutedEventArgs e)
+        {
+            //get the available strokes from ink manager and select the strokes 
+            var strokes = inkManager.GetStrokes();
+
+            foreach (InkStroke stroke in strokes)
+            {
+                //if(stroke.GetRenderingSegments())
+                //Line startLine = allLines[strokes[0]];
+            }
+            //set handwriting recognizer 
+            var recname = "Microsoft English (US) Handwriting Recognizer";
+            var recognizers = inkManager.GetRecognizers();
+            for (int i = 0, len = recognizers.Count; i < len; i++)
+            {
+                if (recname == recognizers[i].Name)
+                {
+                    inkManager.SetDefaultRecognizer(recognizers[i]);
+                    break;
+                }
+            }
+            //asynchronously recognize the word 
+            IReadOnlyList<InkRecognitionResult> recognitionResults = await inkManager.RecognizeAsync(InkRecognitionTarget.All);
+
+            // Doing a recognition does not update the storage of results (manually update from ink manager)
+            inkManager.UpdateRecognitionResults(recognitionResults);
+
+            string numbers = "";
+            foreach (InkRecognitionResult i in recognitionResults)
+            {
+                var candidates = i.GetTextCandidates();
+                foreach (var possibleWord in candidates)
+                {
+                    int num;
+                    if (int.TryParse(possibleWord, out num))
+                    {
+                        numbers += num + " : ";
+                        break;
+                    }
+                }
+            }
+
+            Windows.UI.Popups.MessageDialog mg = new Windows.UI.Popups.MessageDialog(numbers + "");
+            await mg.ShowAsync();
+        }
+
+        #endregion
+
+        #region sketch correct-time analysis
+
+        private async void checkTimeClicked(object sender, RoutedEventArgs e)
+        {
+            //for now, assume the last 2 strokes are the 2 hands being drawn
+            var strokes = inkManager.GetStrokes();
+
+           foreach(InkStroke stroke in strokes)
+           {
+               //check if this stroke does not have a possible number representation
+               //if it dsnt, check if it starts in/near the center
+                   //if it does, check if the slope from the starting line point to the ending line point is correct
+                       //if 2 hands have not already been found, then it is one of the hands and do the following:
+                           //if 2 hands HAVE been found and another is found, then err
+                           //if the hand pointing at 2 is significantly shorter or longer than the circle radius, then err
+                           //if the hand pointing at 11 is significantly shorter or longer than half the circle radius, then err
+           }
+
+
+            Windows.UI.Popups.MessageDialog mg = new Windows.UI.Popups.MessageDialog("");
+            await mg.ShowAsync();
+        }
+
+        #endregion
 
         private bool eraserHitTest(InkStroke s, Point testPoint)
         {
@@ -387,7 +470,7 @@ namespace SmartStroke
 
         #endregion
 
-
+        #region navigation events
 
         /// <summary>
         /// Populates the page with content passed during navigation. Any saved state is also
@@ -439,51 +522,8 @@ namespace SmartStroke
 
         #endregion
 
-        private async void recognizedWordClicked(object sender, RoutedEventArgs e)
-        {
-            //get the available strokes from ink manager and select the strokes 
-            string numbers = "";
-            var strokes = inkManager.GetStrokes();
+        #endregion
 
-            for (int i = 0; i < strokes.Count; i++)
-            {
-                strokes[i].Selected = true;
-            }
-            //set handwriting recognizer 
-            var recname = "Microsoft English (US) Handwriting Recognizer";
-            var recognizers = inkManager.GetRecognizers();
-            for (int i = 0, len = recognizers.Count; i < len; i++)
-            {
-                if (recname == recognizers[i].Name)
-                {
-                    inkManager.SetDefaultRecognizer(recognizers[i]);
-
-                }
-            }
-            //asynchronously recognize the word 
-            IReadOnlyList<InkRecognitionResult> x = await inkManager.RecognizeAsync(InkRecognitionTarget.Selected);
-            //IReadOnlyList<String> text; 
-            // Doing a recognition does not update the storage of results (the results that are stored inside the ink manager). 
-            // We do that ourselves by calling this below method 
-            inkManager.UpdateRecognitionResults((x));
-
-            foreach (InkRecognitionResult i in x)
-            {
-                var candidates = i.GetTextCandidates();
-                foreach (var possibleWord in candidates)
-                {
-                    int num;
-                    if (int.TryParse(possibleWord, out num))
-                    {
-                        numbers += num + " : ";
-                    }
-                    break;  // Why is the break outside the if? It will only try one possible word out of all the candidates then..
-                }
-            }
-
-            Windows.UI.Popups.MessageDialog mg = new Windows.UI.Popups.MessageDialog(numbers + "");
-            await mg.ShowAsync();
-        }
 
     }
 }
