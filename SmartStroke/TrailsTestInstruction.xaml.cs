@@ -250,7 +250,13 @@ namespace SmartStroke
                // y-b/m = x
 
                // Distance formula
-               // d = sqrt( (x2-x1)^2 + (y2-y1)^2 )
+               // d = sqrt( (x1-x)^2 + (y1-y)^2 )
+               // d = sqrt( (previous.X-x)^2 + (previous.Y-((slope * (newX - previousPoint.X)) + prevY))^2 )
+               // d^2 = (previous.X-x)^2 + (previous.Y-((slope * (newX - previousPoint.X)) + prevY))^2
+               // d^2 - (previous.Y-((slope * (newX - previousPoint.X)) + prevY))^2 = (previous.X-x)^2
+               // sqrt(d^2 - (previous.Y-((slope * (newX - previousPoint.X)) + prevY))^2) = previous.X-x
+               // x = previous.X - sqrt(d^2 - (previous.Y-((slope * (newX - previousPoint.X)) + prevY))^2)
+               // x = rcos(theta)
 
                //     X1           Y1               X           Y
                // (previous.X, previou.Y), (previous.X+deltaX, Y), slope
