@@ -477,6 +477,14 @@ namespace SmartStroke
             e.Handled = true;
         }
 
+        // Need to cancel the test for some reason
+        private void cancelTest(object sender, RoutedEventArgs e)
+        {
+            timer.Stop();
+            disp.Stop();
+            this.Frame.Navigate(typeof(MainMenu), passer);
+        }
+
         // Test is finished.. take a picture of the screen.
         private void SubmitButtonClicked(object sender, RoutedEventArgs e)
         {

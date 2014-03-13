@@ -17,7 +17,20 @@
         <Viewbox HorizontalAlignment="Left" VerticalAlignment="Top" Grid.RowSpan="2">
             <Canvas Name="MyCanvas" Background="Transparent" />
         </Viewbox>
-        <Button Name="saveButton" Content="Save" Margin="1004,255,0,353" Width="100" Height="50" Visibility="Collapsed" Click="btnScreenshot_Click" Grid.Row="1" IsHitTestVisible="False"/>
-        <Button Name="submitButton" Content="Submit" Margin="1100,255,0,353" Width="100" Height="50" Visibility="Collapsed" Click="SubmitButtonClicked" Grid.Row="1" IsHitTestVisible="False"/>
+        <Button Name="saveButton" Content="Save" Margin="1250,193,0,415" Width="100" Height="50" Visibility="Collapsed" Click="btnScreenshot_Click" Grid.Row="1" IsHitTestVisible="False" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto">
+            <Button.RenderTransform>
+                <CompositeTransform Rotation="90"/>
+            </Button.RenderTransform>
+        </Button>
+        <Button Name="submitButton" Content="Submit" Margin="1252,327,0,281" Width="100" Height="50" Visibility="Collapsed" Click="SubmitButtonClicked" Grid.Row="1" IsHitTestVisible="False" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto">
+            <Button.RenderTransform>
+                <CompositeTransform Rotation="90"/>
+            </Button.RenderTransform>
+        </Button>
+        <Button x:Name="cancel" Content="Cancel Test" Margin="1248,-5,0,613" Width="100" Height="50" Visibility="Visible" Click="cancelTest" Grid.Row="1" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto">
+            <Button.RenderTransform>
+                <CompositeTransform Rotation="90"/>
+            </Button.RenderTransform>
+        </Button>
     </Grid>
 </Page>

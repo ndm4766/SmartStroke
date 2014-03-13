@@ -43,7 +43,12 @@ namespace SmartStroke
         {
             this.Frame.Navigate(typeof(TestSelection), passer);
         }
-
+        private void logout(object sender, RoutedEventArgs e)
+        {
+            passer = new InfoPasser();
+            passer.currentPatient = null;
+            this.Frame.Navigate(typeof(MainPage), passer);
+        }
         private void clock_click(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(ClockTest), passer);
