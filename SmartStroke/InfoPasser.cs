@@ -17,12 +17,14 @@ namespace SmartStroke
         {
             doctorId = "0";
             trailsTestVersion = 'x';
+            currentPatient = null;
         }
 
         public InfoPasser(String docId)
         {
             doctorId = docId;
             trailsTestVersion = 'x';
+            currentPatient = null;
         }
 
     }

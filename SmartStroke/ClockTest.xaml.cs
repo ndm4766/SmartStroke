@@ -35,12 +35,13 @@ namespace SmartStroke
     /// </summary>
     public sealed partial class ClockTest : Page
     {
-
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
 
-        //test replay container
+        InfoPasser passer = new InfoPasser();
+
         private TestReplay testReplay;
+        bool testStarted;
 
         //general globals
         private string testVersion;
@@ -63,7 +64,7 @@ namespace SmartStroke
         private List<Line> currentLine;
         private Dictionary<InkStroke, List<Line>> allLines;
 
-        private List<int> quadWeights;
+        //private List<int> quadWeights;
 
         //TrailNode handling members
         private List<Line> currentEdge;
@@ -103,12 +104,14 @@ namespace SmartStroke
             currentLine = new List<Line>();
             allLines = new Dictionary<InkStroke, List<Line>>();
 
+            testStarted = false;
+            /*
             quadWeights = new List<int>();
             quadWeights.Add(0);
             quadWeights.Add(0);
             quadWeights.Add(0);
             quadWeights.Add(0);
-
+            */
             //add all the event handlers for touch/pen/mouse input (pointer handles all 3)
             MyCanvas.PointerPressed += new PointerEventHandler(MyCanvas_PointerPressed);
             MyCanvas.PointerMoved += new PointerEventHandler(MyCanvas_PointerMoved);
@@ -153,6 +156,7 @@ namespace SmartStroke
             }
         }
 
+        /*
         #region quadrant ink weight analysis
 
         private Rectangle getQuadrantCollision(Line line)
@@ -301,6 +305,7 @@ namespace SmartStroke
         }
 
         #endregion
+        */
 
         private bool eraserHitTest(InkStroke s, Point testPoint)
         {
@@ -318,6 +323,7 @@ namespace SmartStroke
             return Math.Sqrt(Math.Pow((x2 - x1), 2) + Math.Pow((y2 - y1), 2));
         }
 
+        
 
         #region PointerEvents
 
@@ -337,7 +343,7 @@ namespace SmartStroke
                     //cant just clear the list cuz its c#, have to point to a new list, not a memory leak
                     currentLine = new List<Line>();
 
-                    //testReplay.endStroke();
+                    testReplay.endStroke();
                 }
             }
 
@@ -375,6 +381,12 @@ namespace SmartStroke
                         return;
                     }
 
+                    if (!testStarted)
+                    {
+                        testStarted = true;
+                        testReplay.startTest();
+                    }
+
                     if (erasing)
                     {
                         //check if the pressed cursor has collided with any strokes
@@ -410,7 +422,7 @@ namespace SmartStroke
                         currentEdge.Add(line);
                         MyCanvas.Children.Add(line);
 
-                        //testReplay.addLine(line);
+                        testReplay.addLine(line);
                     }
 
                     inkManager.ProcessPointerUpdate(pt);
@@ -427,7 +439,9 @@ namespace SmartStroke
 
         private void SubmitButtonClicked(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(MainPage));
+            testReplay.endTest();
+            testReplay.saveTestReplay();
+            this.Frame.Navigate(typeof(ClockTestReplay), passer);
         }
 
         private void MyCanvas_PointerPressed(object sender, PointerRoutedEventArgs e)
@@ -450,7 +464,7 @@ namespace SmartStroke
                 else
                 {
                     inkManager.Mode = Windows.UI.Input.Inking.InkManipulationMode.Inking;
-                    //testReplay.beginStroke();
+                    testReplay.beginStroke();
                     erasing = false;
                 }
 
@@ -513,6 +527,9 @@ namespace SmartStroke
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             navigationHelper.OnNavigatedTo(e);
+
+            passer = e.Parameter as InfoPasser;
+            testReplay = new TestReplay(passer.currentPatient, TEST_TYPE.CLOCK);
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)

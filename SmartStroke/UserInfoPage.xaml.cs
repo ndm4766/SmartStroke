@@ -257,7 +257,7 @@ namespace SmartStroke
                     //might be better to create it earlier or later
                 GENDER g;
                 EDU_LEVEL edu;
-                if (sex.ToString() == "m") 
+                if (sex.ToString() == "M") 
                     g = GENDER.MALE; 
                 else 
                     g = GENDER.FEMALE;

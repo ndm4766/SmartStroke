@@ -28,6 +28,7 @@ namespace SmartStroke
     {
 
         const string filename = "userInfo.txt";
+        InfoPasser passer = new InfoPasser();
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
         List<PatientPlot> patientList = new List<PatientPlot>();
@@ -110,6 +111,7 @@ namespace SmartStroke
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             navigationHelper.OnNavigatedTo(e);
+            passer = e.Parameter as InfoPasser;
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)

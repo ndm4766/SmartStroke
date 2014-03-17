@@ -21,6 +21,7 @@
         * Row 1 contains the rest of the page layout
     -->
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <!--
         <Grid.ChildrenTransitions>
             <TransitionCollection>
                 <EntranceThemeTransition/>
@@ -30,26 +31,31 @@
             <RowDefinition Height="140"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-
+        -->
         <!--my code here-->
 
         <Canvas Name="MyCanvas" Background="Transparent" Grid.RowSpan="2">
+            <!--
             <Rectangle Name="box1" Stroke="Transparent" Height="300" Width="300" Grid.RowSpan="2" Canvas.Left="684" Canvas.Top="84" />
             <Rectangle Name="box2" Stroke="Transparent" Height="300" Width="300" Grid.RowSpan="2" Canvas.Left="384" Canvas.Top="84" />
             <Rectangle Name="box3" Stroke="Transparent" Height="300" Width="300" Grid.Row="1" Canvas.Left="384" Canvas.Top="384" />
             <Rectangle Name="box4" Stroke="Transparent" Height="300" Width="300" Grid.Row="1" Canvas.Left="684" Canvas.Top="384" />
-
+            -->
             <Ellipse Stroke="Black" StrokeThickness="10" Grid.RowSpan="2" Width="600" Height="600" Canvas.Left="384" Canvas.Top="84"/>
-            <Ellipse Stroke="Black" Fill="Black" StrokeThickness="10" Grid.RowSpan="2" Width="10" Height="10" Canvas.Left="679" Canvas.Top="379"/>
-
+            <!--
             <TextBlock Name="dataTextblock" Text="NoDataYet" Grid.Row="1" FontSize="20" Height="230" Canvas.Left="25" Canvas.Top="168" Width="300"/>
+            -->
         </Canvas>
+        
+        
+        <Button Content="Submit" Margin="141,43,0,27" Height="70" Width="150" Click="SubmitButtonClicked" />
 
-        <Button Content="Analyze" Margin="141,43,0,27" Height="70" Width="150" Click="analyzeClicked" />
+        <!--
         <Button Content="Recognize" Margin="1175,43,0,27" Height="70" Width="150" Click="recognizedNumberClicked" />
         <Button Content="Check Time" Margin="1006,43,0,27" Height="70" Width="150" Click="checkTimeClicked" />
-
+        -->
         <!-- Back button and page title -->
+        <!--
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="120"/>
@@ -62,7 +68,7 @@
                         AutomationProperties.AutomationId="BackButton"
                         AutomationProperties.ItemType="Navigation Button"/>
         </Grid>
-
+        -->
 
     </Grid>
 </Page>

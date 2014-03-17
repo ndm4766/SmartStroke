@@ -237,7 +237,7 @@ namespace SmartStroke
             if (testActions.Count == 0) return null;
             else return testActions[testActions.Count - 1];
         }
-        private string getFileName()
+        public string getFileName()
         {
             string fileSuffix = testType.ToString() + fileExtension;
             string filename = patient.getName()
@@ -260,15 +260,17 @@ namespace SmartStroke
                     .AsTask<StorageFile>();
                 fileTask.Wait();
                 testStorageFile = fileTask.Result;
+                patient.addFile(testFilename);
                 await FileIO.WriteTextAsync(testStorageFile, stringToSave);
             }
             catch { return; }
-            patient.addFile(testFilename);
+            
         }
         public string convertToString()
         {
             string testReplayString = "";
             testReplayString += (patient.convertToString() + "\n");
+            testReplayString += (startTime.ToString() + "\n");
             for (int i = 0; i < testActions.Count; i++)
             {
                 testReplayString += testActions[i].getActionTypeString() + " ";
@@ -330,7 +332,13 @@ namespace SmartStroke
             bool inActionSection = true;
             List<string> testStrings = 
                 testReplayString.Split('\n').Cast<string>().ToList<string>();
-            for(int i = 1; i < testStrings.Count; i++)
+
+            List<string> firstLineWords = testStrings[0].Split(' ').Cast<string>().ToList<string>();
+
+            string dateTimeString = testStrings[1];
+            startTime = Convert.ToDateTime(dateTimeString);
+
+            for(int i = 2; i < testStrings.Count; i++)
             {
                 if (inActionSection) {
                     List<string> lineWords = testStrings[i].Split(' ')

@@ -72,7 +72,7 @@ namespace SmartStroke
         // View the norms without a patient data.
         private void viewNorms(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(NormComparison), "patientName:none, doctorName:"+docName);
+            this.Frame.Navigate(typeof(NormComparison), passer);
         }
 
         // Get the doctor's name
@@ -91,7 +91,45 @@ namespace SmartStroke
                 MedicalID.SelectionChanged -= ListBox_SelectionChanged;
                 search.TextChanged -= searchPatients;
 
-                this.Frame.Navigate(typeof(MainMenu), "patientName:"+MedicalID.SelectedItem+", doctorName:"+docName);
+                //find the patient that was selected and recreate patient object using information (if patient is not found, it wont navigate but this SHOULD be impossible)
+                for (uint i = 0; i < patients.Count; i++)
+                {
+                    String name = patients.GetObjectAt(i).GetNamedString("Name");
+                    String doctor = patients.GetObjectAt(i).GetNamedString("Doctor");
+                    if (doctor == docName && name == MedicalID.SelectedItem.ToString())
+                    {
+                        String birthdayString = patients.GetObjectAt(i).GetNamedString("Birthday");
+
+                        DateTime birthday = Convert.ToDateTime(birthdayString);
+
+                        String genderString = patients.GetObjectAt(i).GetNamedString("Sex");
+                        GENDER gender;
+                        if (genderString == "M")
+                            gender = GENDER.MALE;
+                        else
+                            gender = GENDER.FEMALE;
+
+                        String educationString = patients.GetObjectAt(i).GetNamedString("Education");
+                        EDU_LEVEL edu;
+                        if (educationString == "Highschool Diploma")
+                            edu = EDU_LEVEL.HIGHSCHOOL;
+                        else if (educationString == "Bachelors")
+                            edu = EDU_LEVEL.BACHELORS;
+                        else if (educationString == "Associates")
+                            edu = EDU_LEVEL.ASSOCIATES;
+                        else if (educationString == "Masters")
+                            edu = EDU_LEVEL.MASTERS;
+                        else if (educationString == "PHD")
+                            edu = EDU_LEVEL.PHD;
+                        else
+                            edu = EDU_LEVEL.OTHER;
+                        
+
+                        passer.currentPatient = new Patient(name, docName, birthday, gender, edu);
+                        this.Frame.Navigate(typeof(MainMenu), passer);
+                        return;
+                    }
+                }
             }
         }
 
