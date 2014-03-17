@@ -127,6 +127,7 @@ namespace SmartStroke
 
                         passer.currentPatient = new Patient(name, docName, birthday, gender, edu);
                         this.Frame.Navigate(typeof(MainMenu), passer);
+                        return;
                     }
                 }
             }
