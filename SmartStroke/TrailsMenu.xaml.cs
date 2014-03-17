@@ -116,7 +116,7 @@ namespace SmartStroke
         {
             InfoPasser passer = args.Parameter as InfoPasser;
             passer.trailsTestVersion = 'B';
-            this.Frame.Navigate(typeof(TrailsTestInstruction), 'B');
+            this.Frame.Navigate(typeof(TrailsTestInstruction), passer);
         }
     }
 }
