@@ -492,10 +492,6 @@ namespace SmartStroke
             testReplay.saveTestReplay();
             this.Frame.Navigate(typeof(MainPage), passer);
 
-            //viewColorTimeMode();
-            
-
-            //this.Frame.Navigate(typeof(MainPageCopy), testReplay);
         }
 
         private void MyCanvas_PointerPressed(object sender, PointerRoutedEventArgs e)
