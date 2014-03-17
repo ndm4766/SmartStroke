@@ -21,6 +21,7 @@
         * Row 1 contains the rest of the page layout
     -->
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <!--
         <Grid.ChildrenTransitions>
             <TransitionCollection>
                 <EntranceThemeTransition/>
@@ -30,7 +31,7 @@
             <RowDefinition Height="140"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-
+        -->
         <!--my code here-->
 
         <Canvas Name="MyCanvas" Background="Transparent" Grid.RowSpan="2">
@@ -48,11 +49,13 @@
         
         
         <Button Content="Submit" Margin="141,43,0,27" Height="70" Width="150" Click="SubmitButtonClicked" />
+
         <!--
         <Button Content="Recognize" Margin="1175,43,0,27" Height="70" Width="150" Click="recognizedNumberClicked" />
         <Button Content="Check Time" Margin="1006,43,0,27" Height="70" Width="150" Click="checkTimeClicked" />
         -->
         <!-- Back button and page title -->
+        <!--
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="120"/>
@@ -65,7 +68,7 @@
                         AutomationProperties.AutomationId="BackButton"
                         AutomationProperties.ItemType="Navigation Button"/>
         </Grid>
-
+        -->
 
     </Grid>
 </Page>

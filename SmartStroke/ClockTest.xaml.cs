@@ -40,8 +40,8 @@ namespace SmartStroke
 
         InfoPasser passer = new InfoPasser();
 
-        //test replay container
         private TestReplay testReplay;
+        bool testStarted;
 
         //general globals
         private string testVersion;
@@ -104,6 +104,7 @@ namespace SmartStroke
             currentLine = new List<Line>();
             allLines = new Dictionary<InkStroke, List<Line>>();
 
+            testStarted = false;
             /*
             quadWeights = new List<int>();
             quadWeights.Add(0);
@@ -322,6 +323,7 @@ namespace SmartStroke
             return Math.Sqrt(Math.Pow((x2 - x1), 2) + Math.Pow((y2 - y1), 2));
         }
 
+        
 
         #region PointerEvents
 
@@ -379,6 +381,12 @@ namespace SmartStroke
                         return;
                     }
 
+                    if (!testStarted)
+                    {
+                        testStarted = true;
+                        testReplay.startTest();
+                    }
+
                     if (erasing)
                     {
                         //check if the pressed cursor has collided with any strokes
@@ -433,7 +441,7 @@ namespace SmartStroke
         {
             testReplay.endTest();
             testReplay.saveTestReplay();
-            this.Frame.Navigate(typeof(MainPage), passer);
+            this.Frame.Navigate(typeof(ClockTestReplay), passer);
         }
 
         private void MyCanvas_PointerPressed(object sender, PointerRoutedEventArgs e)
