@@ -26,6 +26,7 @@ namespace SmartStroke
 
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
+        private InfoPasser passer;
 
         /// <summary>
         /// This can be changed to a strongly typed view model.
@@ -94,6 +95,7 @@ namespace SmartStroke
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             navigationHelper.OnNavigatedTo(e);
+            passer = e.Parameter as InfoPasser;
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -108,22 +110,22 @@ namespace SmartStroke
 
         private void select_trails_test(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(TrailsMenu));
+            this.Frame.Navigate(typeof(TrailsMenu), passer);
         }
 
         private void norm_button_click(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(NormComparison));
+            this.Frame.Navigate(typeof(NormComparison), passer);
         }
 
         private void select_clock_test(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(ClockTest));
+            this.Frame.Navigate(typeof(ClockTest), passer);
         }
 
         private void view_old_clock_click(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(ClockTestReplay));
+            this.Frame.Navigate(typeof(ClockTestReplay), passer);
         }
     }
 }

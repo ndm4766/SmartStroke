@@ -37,6 +37,7 @@ namespace SmartStroke
         List<Line> linesRedrawn; //necessary bec the lines are already children of the other page
 
         bool granular;
+        string currentlySelectedDate;
 
         private const double DRAW_WIDTH = 4.0;
         private const double ERASE_WIDTH = 30.0;
@@ -55,6 +56,7 @@ namespace SmartStroke
             previousStroke = new List<Line>();
             linesRedrawn = new List<Line>();
             granular = false;
+            
         }
 
         async private void loadTest()
@@ -62,8 +64,7 @@ namespace SmartStroke
             List<String> filenames = passer.currentPatient.getTestFilenames();
             foreach (String filename in filenames)
             {
-                DateTime dateSelected = DateTime.Now;
-                if(filename.Contains(dateSelected.ToString()))
+                if(filename.Contains(currentlySelectedDate))
                 {
                     await testReplay.loadTestReplay(filename);
                     break;
@@ -210,6 +211,7 @@ namespace SmartStroke
 
         private void renderGranularTestReplay(object sender, RoutedEventArgs e)
         {
+            loadTest();
             replayButton.IsEnabled = false;
             granularReplayButton.IsEnabled = false;
 
@@ -235,7 +237,24 @@ namespace SmartStroke
 
             passer = e.Parameter as InfoPasser;
             testReplay = new TestReplay(passer.currentPatient, TEST_TYPE.CLOCK);
-            loadTest();
+
+            if (passer.currentPatient.getTestFilenames().Count > 0)
+            {
+                currentlySelectedDate = passer.currentPatient.getTestFilenames()[0];
+            }
+            else
+            {
+                granularReplayButton.IsEnabled = false;
+            }
+
+            var stuff = passer.currentPatient.getTestFilenames();
+            foreach(string filename in stuff)
+            {
+                if (filename.Contains(testReplay.getTestType().ToString()))
+                {
+                    testDatesBox.Items.Add(filename.Substring(filename.Length - (14 + 4), 14));
+                }
+            }
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -248,7 +267,7 @@ namespace SmartStroke
 
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            currentlySelectedDate = testDatesBox.SelectedItem.ToString();
         }
 
     }

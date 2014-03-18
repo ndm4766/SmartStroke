@@ -78,5 +78,18 @@ namespace SmartStroke
                 + genderChar + " - "
                 + eduLevel.ToString();
         }
+
+        async public void loadFiles()
+        {
+            var filenames = await Windows.Storage.ApplicationData.Current.LocalFolder.GetFilesAsync();
+            foreach (var filename in filenames)
+            {
+                // The fileName starts with a number
+                if (filename.Name[0] >= 48 && filename.Name[0] <= 58 && filename.Name.Contains(name))
+                {
+                    testFilenames.Add(filename.Name);
+                }
+            }
+        }
     }
 }
