@@ -89,7 +89,7 @@ namespace SmartStroke
         private void timer_tick(object sender, object e)
         {
             //get all actions
-            var allActions = testReplay.getTestActions();
+            var allActions = testReplay.getTestActions(); //TODO: bug - this list does not include deletions
 
             if (!granular)
             {
