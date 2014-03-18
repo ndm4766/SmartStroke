@@ -120,5 +120,10 @@ namespace SmartStroke
         {
             this.Frame.Navigate(typeof(ClockTest));
         }
+
+        private void view_old_clock_click(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(ClockTestReplay));
+        }
     }
 }

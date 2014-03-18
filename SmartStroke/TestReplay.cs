@@ -239,9 +239,7 @@ namespace SmartStroke
         }
         public string getFileName()
         {
-            string fileSuffix = testType.ToString() + fileExtension;
-            string filename = patient.getName()
-                + patient.getBirthDate().ToString() + fileSuffix;
+            string filename = patient.getName() + testType.ToString() + getStartTime().ToString() + fileExtension;
             filename = filename.Replace(":", "");
             filename = filename.Replace("/", "");
             return filename.Replace(" ", "");

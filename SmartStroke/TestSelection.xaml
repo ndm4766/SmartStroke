@@ -55,7 +55,7 @@
         
         <StackPanel Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" x:Name="RightStackPanel" VerticalAlignment="Center" Margin="680,69,0,471" Width="680">
             <Button Content="Clock Test" HorizontalAlignment="Center" Margin="0,0,0,0" Grid.Row="1" VerticalAlignment="Top" Click="select_clock_test"/>
-            <Button Content="View Old" HorizontalAlignment="Center" Margin="0,0,0,0" Grid.Row="1" VerticalAlignment="Top"/>
+            <Button Content="View Old" HorizontalAlignment="Center" Margin="0,0,0,0" Grid.Row="1" VerticalAlignment="Top" Click="view_old_clock_click"/>
         </StackPanel>
         <Button Content="Compare to Norm" HorizontalAlignment="Left" Margin="1137,533,0,0" Grid.Row="1" VerticalAlignment="Top" Click="norm_button_click"/>
 
