@@ -441,7 +441,7 @@ namespace SmartStroke
         {
             testReplay.endTest();
             testReplay.saveTestReplay();
-            this.Frame.Navigate(typeof(ClockTestReplay), passer);
+            this.Frame.Navigate(typeof(MainMenu), passer);
         }
 
         private void MyCanvas_PointerPressed(object sender, PointerRoutedEventArgs e)

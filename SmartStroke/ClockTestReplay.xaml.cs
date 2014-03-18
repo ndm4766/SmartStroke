@@ -62,7 +62,8 @@ namespace SmartStroke
             List<String> filenames = passer.currentPatient.getTestFilenames();
             foreach (String filename in filenames)
             {
-                if (filename == testReplay.getFileName())
+                DateTime dateSelected = DateTime.Now;
+                if(filename.Contains(dateSelected.ToString()))
                 {
                     await testReplay.loadTestReplay(filename);
                     break;
@@ -243,6 +244,11 @@ namespace SmartStroke
 
             timer.Stop();
             stopwatch.Stop();
+        }
+
+        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
 
     }
