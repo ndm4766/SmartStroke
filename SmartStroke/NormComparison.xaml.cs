@@ -33,6 +33,7 @@ namespace SmartStroke
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
         List<PatientPlot> patientList = new List<PatientPlot>();
         List<string> fileNames;
+        private TestReplay testReplay;
 
         /// <summary>
         /// This can be changed to a strongly typed view model.
@@ -112,6 +113,7 @@ namespace SmartStroke
         {
             navigationHelper.OnNavigatedTo(e);
             passer = e.Parameter as InfoPasser;
+            testReplay = new TestReplay();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -127,7 +129,6 @@ namespace SmartStroke
         private async void LoadChartContents()
         {
             await loadJson();
-            TestReplay replay;
             Random rand = new Random();
             
             List<Performance> allResults = new List<Performance>();
@@ -136,14 +137,15 @@ namespace SmartStroke
             // Do not separate into different categories.
             for (int i = 0; i < patientList.Count; i++)
             {
-                replay = new TestReplay();
+                testReplay = new TestReplay();
                 // Find the file that corresponds with this patient name and load it
                 foreach( string name in fileNames)
                 {
                     if(name.Contains(patientList[i].patientName))
                     {
-                        await replay.loadTestReplay(name);
-                        var actions = replay.getTestActions();
+                        await testReplay.loadTestReplay(name);
+                        var actions = testReplay.getTestActions();
+                        if (actions.Count < 1) continue;
 
                         DateTime start = actions[0].getStartTime();
                         DateTime end = actions[actions.Count - 1].getEndTime();
@@ -262,7 +264,7 @@ namespace SmartStroke
                 Windows.Storage.StorageFile myFile = await Windows.Storage.ApplicationData.Current.LocalFolder.GetFileAsync(filename);
                 //read
                 String data = await Windows.Storage.FileIO.ReadTextAsync(myFile);
-                patients = Windows.Data.Json.JsonArray.Parse(data);
+                Windows.Data.Json.JsonArray.TryParse(data, out patients);
 
                 for (uint i = 0; i < patients.Count; i++)
                 {
