@@ -306,7 +306,7 @@ namespace SmartStroke
 
         #region PointerEvents
 
-        private void MyCanvas_PointerReleased(object sender, PointerRoutedEventArgs e)
+        private void MyCanvas_PointerReleased(object sender, PointerRoutedEventArgs e) //TODO: need a way to ensure that pointerMoved has been handled before now
         {
             if (e.Pointer.PointerId == penId)
             {

@@ -287,7 +287,13 @@ namespace SmartStroke
                                     ("line " + formatLineDataAsString(lineData[j]) + "\n");
                             break;
                         }
-                    case ACTION_TYPE.DEL_PREV_STROKE: { break; }
+                    case ACTION_TYPE.DEL_PREV_STROKE: 
+                    {
+                        testReplayString += (testActions[i].getActionTypeString() + 
+                                             testActions[i].getStartTime().ToString() + 
+                                             testActions[i].getEndTime().ToString() + "\n");
+                        break;
+                    }
                     default: { break; }
                 }
             }
