@@ -311,6 +311,7 @@ namespace SmartStroke
         }
         public async Task loadTestReplay(string testFilename)
         {
+            testActions.Clear();
             StorageFile testStorageFile;
             string testReplayString = "";
             try
