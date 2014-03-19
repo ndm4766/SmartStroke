@@ -59,8 +59,12 @@ namespace SmartStroke
             
         }
 
+        // Load a previous clock test from a test replay object.
+        // Need to create a new TestReplay object so that you do not add
+        // more lines - test replay load will currently append information.
         async private void loadTest()
         {
+            testReplay = new TestReplay();
             List<String> filenames = passer.currentPatient.getTestFilenames();
             foreach (String filename in filenames)
             {
@@ -220,10 +224,11 @@ namespace SmartStroke
             {
                 MyCanvas.Children.Remove(line);
             }
-            previousStroke.Clear();
-            linesRedrawn.Clear();
+            stopwatch = new Stopwatch();
             actionIndex = 0;
-            stopwatch.Reset();
+            linesIndex = 0;
+            previousStroke = new List<Line>();
+            linesRedrawn = new List<Line>();
 
             granular = true;
 
