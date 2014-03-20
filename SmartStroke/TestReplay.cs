@@ -54,7 +54,7 @@ Load a previous TestReplay:  WIP
 
 namespace SmartStroke
 {
-    public enum ACTION_TYPE { STROKE, DEL_PREV_STROKE, NONE }
+    public enum ACTION_TYPE { STROKE, DEL_STROKE, NONE }
     public abstract class TestAction
     {
         protected DateTime startTime;
@@ -138,18 +138,23 @@ namespace SmartStroke
             return "Stroke";
         }
     }
-    public sealed class DeletePreviousStroke : TestAction
+    public sealed class DeleteStroke : TestAction
     {
-        public DeletePreviousStroke() { finished = true; }
-        public DeletePreviousStroke(DateTime startTime, DateTime endTime)
-            : base(startTime, endTime) { }
+        private int actionIndex;
+        public DeleteStroke() { finished = true; }
+        public DeleteStroke(DateTime occuranceTime, int index)
+            : base(occuranceTime, occuranceTime) 
+        { 
+            actionIndex = index;
+        }
+        public int getIndex() { return actionIndex; }
         public override ACTION_TYPE getActionType()
         {
-            return ACTION_TYPE.DEL_PREV_STROKE;
+            return ACTION_TYPE.DEL_STROKE;
         }
         public override string getActionTypeString()
         {
-            return "DeletePreviousStroke";
+            return "DeleteStroke";
         }
     }
 
@@ -216,12 +221,12 @@ namespace SmartStroke
             }
             currentStroke.endAction();
         }
-        public void deletePreviousStroke()
+        public void deleteStroke(int index)
         {
             if (getCurrentTestAction() == null) return;
             if (!getCurrentTestAction().isFinished()) return;
             if (!checkCurrentTestAction(ACTION_TYPE.STROKE)) return;
-            testActions.Add(new DeletePreviousStroke());
+            testActions.Add(new DeleteStroke(DateTime.Now, index));
         }
         public void addTestNote(PatientNote patientNote) 
         { 
@@ -271,15 +276,16 @@ namespace SmartStroke
             testReplayString += (startTime.ToString() + "\n");
             for (int i = 0; i < testActions.Count; i++)
             {
-                testReplayString += testActions[i].getActionTypeString() + " ";
-                testReplayString
-                    += testActions[i].getStartTime().ToString() + " ";
-                testReplayString
-                    += testActions[i].getEndTime().ToString() + "\n";
                 switch (testActions[i].getActionType())
                 {
                     case ACTION_TYPE.STROKE:
                         {
+                            testReplayString += testActions[i].getActionTypeString() + " ";
+                            testReplayString
+                                += testActions[i].getStartTime().ToString() + " ";
+                            testReplayString
+                                += testActions[i].getEndTime().ToString() + "\n";
+
                             Stroke stroke = (Stroke)testActions[i];
                             List<LineData> lineData = stroke.getLines();
                             for (int j = 0; j < lineData.Count; j++)
@@ -287,11 +293,11 @@ namespace SmartStroke
                                     ("line " + formatLineDataAsString(lineData[j]) + "\n");
                             break;
                         }
-                    case ACTION_TYPE.DEL_PREV_STROKE: 
+                    case ACTION_TYPE.DEL_STROKE: 
                     {
-                        testReplayString += (testActions[i].getActionTypeString() + 
-                                             testActions[i].getStartTime().ToString() + 
-                                             testActions[i].getEndTime().ToString() + "\n");
+                        testReplayString += (testActions[i].getActionTypeString() + " " +
+                                             testActions[i].getStartTime().ToString() + " " +
+                                             (testActions[i] as DeleteStroke).getIndex().ToString() + "\n");
                         break;
                     }
                     default: { break; }
@@ -353,7 +359,7 @@ namespace SmartStroke
                             .addLineData(parseLineLineData(lineWords));
                     else if (lineWords[0] == "Stroke")
                         testActions.Add(parseLineStroke(lineWords));
-                    else if (lineWords[0] == "DeletePreviousStroke")
+                    else if (lineWords[0] == "DeleteStroke")
                         testActions.Add(parseLineDelPrevStroke(lineWords));
                     else if (lineWords[0] == "=====NOTES=====")
                         return;
@@ -375,18 +381,17 @@ namespace SmartStroke
         public Stroke parseLineStroke(List<string> line)
         {
             DateTime startTime = DateTime.Parse(
-                line[1] + " " + line[2] + " " + line [3]);
+                line[1] + " " + line[2] + " " + line[3]);
             DateTime endTime = DateTime.Parse(
                 line[4] + " " + line[5] + " " + line[6]);
             return new Stroke(startTime, endTime);
         }
-        public DeletePreviousStroke parseLineDelPrevStroke(List<string> line)
+        public DeleteStroke parseLineDelPrevStroke(List<string> line)
         {
-            DateTime startTime = DateTime.Parse(
+            DateTime occuranceTime = DateTime.Parse(
                 line[1] + " " + line[2] + " " + line[3]);
-            DateTime endTime = DateTime.Parse(
-                line[4] + " " + line[5] + " " + line[6]);
-            return new DeletePreviousStroke(startTime, endTime);
+            int index = Convert.ToInt32(line[4]);
+            return new DeleteStroke(occuranceTime, index);
         }
         public LineData parseLineLineData(List<string> line)
         {
