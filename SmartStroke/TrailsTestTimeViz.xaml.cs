@@ -43,6 +43,8 @@ namespace SmartStroke
 
         private bool finished = false;
 
+        private string currentlySelectedDate;
+
         //general globals
         private InfoPasser passer;
         private const double DRAW_WIDTH = 4.0;
@@ -78,9 +80,9 @@ namespace SmartStroke
         {
             this.InitializeComponent();
 
-                        inkManager = new Windows.UI.Input.Inking.InkManager();
+            inkManager = new Windows.UI.Input.Inking.InkManager();
 
-            
+
 
             // Create the trails test background. The test image is 117X917 px but to fit on a screen (surface) it is 686 X 939
             nodes = new List<TrailNode>();
@@ -88,14 +90,14 @@ namespace SmartStroke
             currentLine = new List<Line>();
             allLines = new Dictionary<InkStroke, List<Line>>();
 
-            
+
 
             nextIndex = 0;
             currentIndex = 0;
             incorrectNodes = new Queue<int>();
             currentEdge = new List<Line>();
 
-           
+
             screenHeight = Window.Current.Bounds.Height;
             screenWidth = Window.Current.Bounds.Width;
 
@@ -125,7 +127,7 @@ namespace SmartStroke
                 r.Angle = 90;
                 begin.RenderTransform = r;
                 MyCanvas.Children.Add(begin);
-                
+
                 nodes.Add(new TrailNode(2, new Point(150, 322), MyCanvas));
                 nodes.Add(new TrailNode(3, new Point(150, 491), MyCanvas));
                 nodes.Add(new TrailNode(4, new Point(584, 501), MyCanvas));
@@ -206,7 +208,7 @@ namespace SmartStroke
                 {
                     node.setFillColor(backgroundColor);
                 }
-                
+
                 TextBlock end = new TextBlock()
                 {
                     Text = "End",
@@ -234,7 +236,7 @@ namespace SmartStroke
             ResolutionScale scale = display.ResolutionScale;
 
             //if large screen
-            if(xdpi < 50)
+            if (xdpi < 50)
             {
                 MyCanvas.Height = 768;
                 MyCanvas.Width = 1366;
@@ -312,7 +314,7 @@ namespace SmartStroke
                     line.Y2 = l.Y2;
 
 
-                    line.StrokeThickness = msLineDuration * 1; 
+                    line.StrokeThickness = msLineDuration * 1;
                     MyCanvas.Children.Add(line);
                     lineNum++;
                     //we probably want to render the line as a bezier curve. look at bezierCurveTo
@@ -324,16 +326,16 @@ namespace SmartStroke
             strokeNum = 0;
             foreach (var stroke in smartStrokes)
             {
-                
+
                 var smartLines = smartStrokes.ElementAt(strokeNum).lines;
                 int lineNum = 0;
                 foreach (LineData lineData in smartLines)
                 {
-                    
+
                     Line l = lineData.getLine();
                     int secondsSinceStartOfTest = (int)Math.Floor((smartLines[lineNum].getDateTime() - testReplay.getStartTime()).TotalSeconds);
                     //assign 1 of 8 colors
-                    if ((secondsSinceStartOfTest/timeInterval +1) % 8 == 1) { color = new SolidColorBrush(Color.FromArgb(255, 255,192,0)); }
+                    if ((secondsSinceStartOfTest / timeInterval + 1) % 8 == 1) { color = new SolidColorBrush(Color.FromArgb(255, 255, 192, 0)); }
                     else if ((secondsSinceStartOfTest / timeInterval + 1) % 8 == 2) { color = new SolidColorBrush(Color.FromArgb(255, 255, 255, 0)); }
                     else if ((secondsSinceStartOfTest / timeInterval + 1) % 8 == 3) { color = new SolidColorBrush(Color.FromArgb(255, 146, 208, 80)); }
                     else if ((secondsSinceStartOfTest / timeInterval + 1) % 8 == 4) { color = new SolidColorBrush(Color.FromArgb(255, 0, 176, 80)); }
@@ -359,11 +361,11 @@ namespace SmartStroke
                 }
                 strokeNum++;
             }
-            
+
         }
 
 
-       
+
 
 
 
@@ -371,21 +373,60 @@ namespace SmartStroke
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             passer = e.Parameter as InfoPasser;    // This is the type of the trails test.
-            
+
 
             nodes.Clear();
             populateNodes(passer.trailsTestVersion, nodes);      // Populate the list of trail nodes (no longer occurs in constructor bec need to have passer to know which test to load)
-            testReplay = passer.testReplay;
+
             //TODO must have real patient info here
             TEST_TYPE type = TEST_TYPE.TRAILS_A;
             if (passer.trailsTestVersion == 'A')
                 type = TEST_TYPE.TRAILS_A;
             else if (passer.trailsTestVersion == 'B')
                 type = TEST_TYPE.TRAILS_B;
-            //testReplay = new TestReplay(passer.currentPatient, type);
 
-            viewColorTimeMode();
+            testReplay = new TestReplay(passer.currentPatient, type);
+
+            if (passer.currentPatient.getTestFilenames().Count > 0)
+            {
+                currentlySelectedDate = passer.currentPatient.getTestFilenames()[0];
+            }
+
+            var stuff = passer.currentPatient.getTestFilenames();
+            foreach (string filename in stuff)
+            {
+                if (filename.Contains(testReplay.getTestType().ToString()))
+                {
+                    testDatesBox.Items.Add(filename.Substring(filename.Length - (14 + 4), 14));
+                }
+            }
         }
-        
+
+        async void loadTest()
+        {
+            currentlySelectedDate = testDatesBox.SelectedItem.ToString();
+            List<string> fileNames = passer.currentPatient.getTestFilenames();
+            foreach (string name in fileNames)
+            {
+                if (name.Contains(currentlySelectedDate))
+                {
+                    await testReplay.loadTestReplay(name);
+                    break;
+                }
+            }
+            testDatesBox.SelectionChanged -= testSelected;
+            viewColorTimeMode();
+            testDatesBox.SelectionChanged += testSelected;
+        }
+
+        void testSelected(object sender, SelectionChangedEventArgs e)
+        {
+            loadTest();
+        }
+
+        private void goToMenu(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(MainMenu), passer);
+        }
     }
 }

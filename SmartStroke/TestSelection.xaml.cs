@@ -96,6 +96,25 @@ namespace SmartStroke
         {
             navigationHelper.OnNavigatedTo(e);
             passer = e.Parameter as InfoPasser;
+
+            // Check to disable any buttons
+            List<string> fileNames = passer.currentPatient.getTestFilenames();
+            // Check if the file name includes trailsA, trailsB, or Clock and allow button press
+            foreach(string name in fileNames)
+            {
+                if(name.Contains("TRAILS_A"))
+                {
+                    viewTrailsA.IsEnabled = true;
+                }
+                else if (name.Contains("TRAILS_B"))
+                {
+                    viewTrailsB.IsEnabled = true;
+                }
+                else if (name.Contains("CLOCK"))
+                {
+                    viewClock.IsEnabled = true;
+                }
+            }
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -121,6 +140,19 @@ namespace SmartStroke
         private void select_clock_test(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(ClockTest), passer);
+        }
+
+        private void trailsAOld(object sender, RoutedEventArgs e)
+        {
+            TestReplay replay = new TestReplay();
+            passer.trailsTestVersion = 'A';
+            this.Frame.Navigate(typeof(TrailsTestTimeViz), passer);
+        }
+
+        private void trailsBOld(object sender, RoutedEventArgs e)
+        {
+            passer.trailsTestVersion = 'B';
+            this.Frame.Navigate(typeof(TrailsTestTimeViz), passer);
         }
 
         private void view_old_clock_click(object sender, RoutedEventArgs e)

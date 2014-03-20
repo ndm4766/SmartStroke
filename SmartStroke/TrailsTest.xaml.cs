@@ -408,9 +408,6 @@ namespace SmartStroke
                             submitButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
                             submitButton.IsHitTestVisible = true;
 
-                            timeButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
-                            timeButton.IsHitTestVisible = true;
-
                             saveButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
                             saveButton.IsHitTestVisible = true;
                             
