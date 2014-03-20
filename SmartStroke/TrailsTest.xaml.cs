@@ -306,7 +306,7 @@ namespace SmartStroke
 
         #region PointerEvents
 
-        private void MyCanvas_PointerReleased(object sender, PointerRoutedEventArgs e)
+        private void MyCanvas_PointerReleased(object sender, PointerRoutedEventArgs e) //TODO: need a way to ensure that pointerMoved has been handled before now
         {
             if (e.Pointer.PointerId == penId)
             {
@@ -408,6 +408,9 @@ namespace SmartStroke
                             submitButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
                             submitButton.IsHitTestVisible = true;
 
+                            timeButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                            timeButton.IsHitTestVisible = true;
+
                             saveButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
                             saveButton.IsHitTestVisible = true;
                             
@@ -445,7 +448,7 @@ namespace SmartStroke
                             MyCanvas.Children.Remove(l);
                         }
                         testReplay.endStroke();
-                        testReplay.deletePreviousStroke();
+                        testReplay.deleteStroke(testReplay.getTestActions().Count-1);
                         //}
                     }
                     
@@ -491,6 +494,12 @@ namespace SmartStroke
             passer.currentPatient = null;
             testReplay.saveTestReplay();
             this.Frame.Navigate(typeof(MainPage), passer);
+
+        }
+        private void TimeButtonClicked(object sender, RoutedEventArgs e)
+        {
+            passer.addTestToPasser(testReplay);
+            this.Frame.Navigate(typeof(TrailsTestTimeViz), passer);
 
         }
 

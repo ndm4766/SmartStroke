@@ -327,7 +327,7 @@ namespace SmartStroke
 
         #region PointerEvents
 
-        private void MyCanvas_PointerReleased(object sender, PointerRoutedEventArgs e)
+        private void MyCanvas_PointerReleased(object sender, PointerRoutedEventArgs e) //TODO: Need a way to ensure that pointerMoved has been executed and handled before now
         {
             if (e.Pointer.PointerId == penId)
             {
@@ -339,7 +339,7 @@ namespace SmartStroke
                 if (!erasing)
                 {
                     //create the link from the completed stroke to its list of lines on the canvas
-                    allLines.Add(inkManager.GetStrokes()[inkManager.GetStrokes().Count - 1], currentLine);//TODO: erasing causing outofrange err
+                    allLines.Add(inkManager.GetStrokes()[inkManager.GetStrokes().Count - 1], currentLine);
                     //cant just clear the list cuz its c#, have to point to a new list, not a memory leak
                     currentLine = new List<Line>();
 
@@ -389,21 +389,35 @@ namespace SmartStroke
 
                     if (erasing)
                     {
+                        int eraseIndex = 0;
                         //check if the pressed cursor has collided with any strokes
-                        foreach (var stroke in inkManager.GetStrokes())
+                        var strokes = inkManager.GetStrokes();
+                        for (int i = 0; i < strokes.Count; i++)
                         {
-                            if (eraserHitTest(stroke, new Point(x2, y2)))
+                            if (eraserHitTest(strokes[i], new Point(x2, y2)))
                             {
-                                stroke.Selected = true;
+                                strokes[i].Selected = true;
 
                                 //remove each of the lines associated with this single stroke from canvas
-                                foreach (Line line in allLines[stroke])
+                                foreach (Line line in allLines[strokes[i]])
                                 {
                                     MyCanvas.Children.Remove(line);
-                                    allLines.Remove(stroke);
                                 }
+
+                                List<TestAction> actionsSoFar = testReplay.getTestActions();
+                                eraseIndex = i;
+                                for (int j = 0; j < eraseIndex; j++)
+                                {
+                                    if(actionsSoFar[i].getActionType() != ACTION_TYPE.STROKE)
+                                    {
+                                        eraseIndex++;
+                                    }
+                                }
+                                allLines.Remove(strokes[i]);
                             }
                         }
+
+                        testReplay.deleteStroke(eraseIndex);
                         //tell the ink manager to stop tracking the strokes that were erased
                         inkManager.DeleteSelected();
                     }
@@ -441,7 +455,7 @@ namespace SmartStroke
         {
             testReplay.endTest();
             testReplay.saveTestReplay();
-            this.Frame.Navigate(typeof(ClockTestReplay), passer);
+            this.Frame.Navigate(typeof(MainMenu), passer);
         }
 
         private void MyCanvas_PointerPressed(object sender, PointerRoutedEventArgs e)
@@ -452,16 +466,16 @@ namespace SmartStroke
 
             // Accept input only from a pen or mouse with the left button pressed. 
             PointerDeviceType pointerDevType = e.Pointer.PointerDeviceType;
-            if (pointerDevType == PointerDeviceType.Pen || (pointerDevType == PointerDeviceType.Mouse && pt.Properties.IsLeftButtonPressed))
+            if (pointerDevType == PointerDeviceType.Pen || pointerDevType == PointerDeviceType.Mouse)
             {
                 //first check if the stylus' eraser is being used
-                if (pt.Properties.IsEraser)
+                if (pt.Properties.IsEraser || pt.Properties.IsRightButtonPressed)
                 {
                     inkManager.Mode = Windows.UI.Input.Inking.InkManipulationMode.Erasing;
                     erasing = true;
                     //selCanvas.style.cursor = "url(images/erase.cur), auto"; 
                 }
-                else
+                else //if left click
                 {
                     inkManager.Mode = Windows.UI.Input.Inking.InkManipulationMode.Inking;
                     testReplay.beginStroke();
@@ -473,13 +487,12 @@ namespace SmartStroke
                 penId = pt.PointerId;
 
                 e.Handled = true;
+                pressed = true;
             }
             else if (pointerDevType == PointerDeviceType.Touch)
             {
                 // Process touch input (from finger)
             }
-
-            pressed = true;
         }
 
         #endregion
