@@ -55,7 +55,25 @@
             </Charting:Chart>
             <Charting:AxisLabel DataContext="Age" HorizontalAlignment="Center" Height="100" Margin="0,0,0,0" VerticalAlignment="Bottom" Width="100"/>
             <Charting:AxisLabel DataContext="Time (seconds)" HorizontalAlignment="Left" Height="100" Margin="20,-70,0,0" VerticalAlignment="Center" Width="100"/>
-            
+            <Button Content="Options" HorizontalAlignment="Left" Margin="1274,587,0,0" VerticalAlignment="Top" Width="89" Click="chartOptions">
+                <Button.Flyout>
+                    <Flyout>
+                        <Grid Height="600" Width="250">
+                            <TextBlock HorizontalAlignment="Left" Margin="109,100,0,0" Grid.Row="1" TextWrapping="Wrap" Text="X-Axis" VerticalAlignment="Top"/>
+                            <TextBlock HorizontalAlignment="Left" Margin="109,0,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Y-Axis" VerticalAlignment="Top"/>
+                            <TextBox HorizontalAlignment="Left" Margin="28,28,0,0" TextWrapping="Wrap" Text="From" VerticalAlignment="Top" Width="70"/>
+                            <TextBox HorizontalAlignment="Left" Margin="156,28,0,0" TextWrapping="Wrap" Text="To" VerticalAlignment="Top" Width="70"/>
+                            <TextBox HorizontalAlignment="Left" Margin="28,128,0,0" TextWrapping="Wrap" Text="From" VerticalAlignment="Top" Width="70"/>
+                            <TextBox HorizontalAlignment="Left" Margin="156,128,0,0" TextWrapping="Wrap" Text="To" VerticalAlignment="Top" Width="70"/>
+                            <CheckBox Content="Male" HorizontalAlignment="Left" Margin="25,193,0,0" VerticalAlignment="Top"/>
+                            <CheckBox Content="Female" HorizontalAlignment="Left" Margin="25,231,0,0" VerticalAlignment="Top"/>
+                            
+                            <TextBlock HorizontalAlignment="Left" Margin="156,280,0,288" TextWrapping="Wrap" FontSize="14" Text="Education" VerticalAlignment="Center" Height="32"/>
+                        </Grid>
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
+
         </Grid>
     </Grid>
 </Page>

@@ -294,5 +294,13 @@ namespace SmartStroke
         }
 
         #endregion
+
+        private void chartOptions(object sender, RoutedEventArgs e)
+        {
+
+            var popup = new Windows.UI.Popups.PopupMenu();
+            popup.ShowAsync(new Point(50,50));
+        
+        }
     }
 }
