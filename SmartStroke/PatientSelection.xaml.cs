@@ -152,5 +152,10 @@ namespace SmartStroke
             }
         }
 
+        private void clearText(object sender, RoutedEventArgs e)
+        {
+            search.Text = "";
+        }
+
     }
 }
