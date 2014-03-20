@@ -105,6 +105,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TrailsTestTimeViz.xaml.cs">
+      <DependentUpon>TrailsTestTimeViz.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ClockTestReplay.xaml.cs">
       <DependentUpon>ClockTestReplay.xaml</DependentUpon>
     </Compile>
@@ -175,6 +178,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="TrailsTestTimeViz.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ClockTestReplay.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
