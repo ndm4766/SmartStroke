@@ -47,7 +47,7 @@ namespace SmartStroke
         private string testVersion;
         private const double DRAW_WIDTH = 4.0;
         private const double ERASE_WIDTH = 30.0;
-        private Color DRAW_COLOR = Colors.Blue;
+        private Color DRAW_COLOR = Color.FromArgb(255, 50, 50, 50);
         private Color ERASE_COLOR = Colors.White;
 
         //boolean program state flags

@@ -34,13 +34,13 @@ namespace SmartStroke
         int actionIndex;
         int linesIndex;
         List<Line> previousStroke;
-        List<Line> linesRedrawn; //necessary bec the lines are already children of the other page
+        Dictionary<Stroke, List<Line>> linesRedrawn; //necessary bec the lines are already children of the other page
 
         string currentlySelectedDate;
 
         private const double DRAW_WIDTH = 4.0;
         private const double ERASE_WIDTH = 30.0;
-        private Color DRAW_COLOR = Colors.Blue;
+        private Color DRAW_COLOR = Color.FromArgb(255, 50, 50, 50);
 
         public ClockTestReplay()
         {
@@ -53,7 +53,7 @@ namespace SmartStroke
             actionIndex = 0;
             linesIndex = 0;
             previousStroke = new List<Line>();
-            linesRedrawn = new List<Line>();
+            linesRedrawn = new Dictionary<Stroke, List<Line>>();
         }
 
         // Load a previous clock test from a test replay object.
@@ -114,24 +114,26 @@ namespace SmartStroke
 
                         MyCanvas.Children.Add(line);
                         previousStroke.Add(line);
-                        linesRedrawn.Add(line);
                         linesIndex++;
                     }
 
                     if (linesIndex >= lines.Count)
                     {
                         linesIndex = 0;
+                        linesRedrawn.Add(stroke, previousStroke);
+                        previousStroke = new List<Line>();
                         actionIndex++;
                     }
                 }
                 //if the action is an erasure, remove all the lines that were part of the stroke that was erased
                 else if (allActions[actionIndex].getActionType() == ACTION_TYPE.DEL_STROKE)
                 {
-                    DeleteStroke stroke = allActions[actionIndex] as DeleteStroke;
+                    Stroke deletedStroke = allActions[(allActions[actionIndex] as DeleteStroke).getIndex()] as Stroke;
 
-                    foreach (Line line in previousStroke)
+                    foreach (Line line in linesRedrawn[deletedStroke])
                     {
-                        MyCanvas.Children.Remove(line);
+                        //MyCanvas.Children.Remove(line);
+                        MyCanvas.Children[MyCanvas.Children.IndexOf(line)].Opacity = .2;
                     }
                     actionIndex++;
                 }
@@ -152,15 +154,18 @@ namespace SmartStroke
             granularReplayButton.IsEnabled = false;
 
             //reset all the things
-            foreach (Line line in linesRedrawn)
+            foreach (KeyValuePair<Stroke, List<Line>> item in linesRedrawn)
             {
-                MyCanvas.Children.Remove(line);
+                foreach(Line line in item.Value)
+                {
+                    MyCanvas.Children.Remove(line);
+                }
             }
             stopwatch = new Stopwatch();
             actionIndex = 0;
             linesIndex = 0;
-            previousStroke = new List<Line>();
-            linesRedrawn = new List<Line>();
+            previousStroke.Clear();
+            linesRedrawn.Clear();
 
             stopwatch.Start();
             timer.Start();
