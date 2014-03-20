@@ -17,8 +17,10 @@
         <Viewbox HorizontalAlignment="Left" VerticalAlignment="Top" Grid.RowSpan="2">
             <Canvas Name="MyCanvas" Background="Transparent" />
         </Viewbox>
-       
+        <ListBox Name="testDatesBox" HorizontalAlignment="Left" ScrollViewer.IsVerticalRailEnabled="True"  Height="229" Margin="1029,74,0,0" Grid.Row="1" VerticalAlignment="Top" Width="312" SelectionChanged="testSelected" />
+        <Button Click="goToMenu" Content="Menu" HorizontalAlignment="Left" Margin="1084,509,0,0" Grid.Row="1" VerticalAlignment="Top" Height="97" Width="216"/>
 
-        
+
+
     </Grid>
 </Page>

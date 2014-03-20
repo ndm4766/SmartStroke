@@ -362,7 +362,7 @@ namespace SmartStroke
                     else if (lineWords[0] == "DeleteStroke")
                         testActions.Add(parseLineDelPrevStroke(lineWords));
                     else if (lineWords[0] == "=====NOTES=====") { 
-                        inActionSection = false;
+                        //inActionSection = false;
                     }     
                 } else {
                     

@@ -27,11 +27,6 @@
                 <CompositeTransform Rotation="90"/>
             </Button.RenderTransform>
         </Button>
-        <Button x:Name="timeButton" Content="View Time Elapsed" Visibility="Collapsed" Click="TimeButtonClicked" Grid.Row="1" IsHitTestVisible="False" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto" Margin="1223.88,479.41,-11.648,145.082">
-            <Button.RenderTransform>
-                <CompositeTransform Rotation="90"/>
-            </Button.RenderTransform>
-        </Button>
         <Button x:Name="cancel" Content="Cancel Test" Margin="1239.791,3.209,0,604.791" Width="116.418" Height="50" Visibility="Visible" Click="cancelTest" Grid.Row="1" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto">
             <Button.RenderTransform>
                 <CompositeTransform Rotation="90"/>

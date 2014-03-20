@@ -408,9 +408,6 @@ namespace SmartStroke
                             submitButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
                             submitButton.IsHitTestVisible = true;
 
-                            timeButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
-                            timeButton.IsHitTestVisible = true;
-
                             saveButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
                             saveButton.IsHitTestVisible = true;
                             
@@ -492,10 +489,6 @@ namespace SmartStroke
         private void SubmitButtonClicked(object sender, RoutedEventArgs e)
         {
             passer.currentPatient = null;
-            testReplay.addTestNote(
-                new PatientNote("Example note title","Example Note")
-                );
-
             testReplay.saveTestReplay();
             this.Frame.Navigate(typeof(MainPage), passer);
 
