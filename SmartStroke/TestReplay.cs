@@ -361,19 +361,22 @@ namespace SmartStroke
                         testActions.Add(parseLineStroke(lineWords));
                     else if (lineWords[0] == "DeleteStroke")
                         testActions.Add(parseLineDelPrevStroke(lineWords));
-                    else if (lineWords[0] == "=====NOTES=====")
-                        return;
-                        //inActionSection = false;
+                    else if (lineWords[0] == "=====NOTES=====") { 
+                        inActionSection = false;
+                    }     
                 } else {
+                    
                     List<string> lineWords = testStrings[i]
                         .Split('\t').Cast<string>().ToList<string>();
                     if (lineWords.Count > 0)
                     {
                         DateTime date = new DateTime();
-                        date = Convert.ToDateTime(
-                            lineWords[0].Replace("/"," "));
+                        date = DateTime.Parse(lineWords[0] + " " + 
+                            lineWords[1] + " " + lineWords[2]);
+                        lineWords[3] = lineWords[3].Replace("[SPC]", "");
+                        lineWords[4] = lineWords[4].Replace("[SPC]", "");
                         testNotes.Add(
-                            new PatientNote(lineWords[1], lineWords[2], date));
+                            new PatientNote(lineWords[3], lineWords[4], date));
                     }
                 }
             }
