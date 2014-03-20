@@ -67,8 +67,9 @@
                             <TextBox HorizontalAlignment="Left" Margin="156,128,0,0" TextWrapping="Wrap" Text="To" VerticalAlignment="Top" Width="70"/>
                             <CheckBox Content="Male" HorizontalAlignment="Left" Margin="25,193,0,0" VerticalAlignment="Top"/>
                             <CheckBox Content="Female" HorizontalAlignment="Left" Margin="25,231,0,0" VerticalAlignment="Top"/>
-                            
-                            <TextBlock HorizontalAlignment="Left" Margin="156,280,0,288" TextWrapping="Wrap" FontSize="14" Text="Education" VerticalAlignment="Center" Height="32"/>
+                            <TextBlock HorizontalAlignment="Left" Margin="75,280,0,288" TextWrapping="Wrap" FontSize="14" Text="Education Range" VerticalAlignment="Center" Height="32"/>
+                            <TextBox HorizontalAlignment="Left" Margin="28,300,0,0" TextWrapping="Wrap" Text="Min" VerticalAlignment="Top" Width="70"/>
+                            <TextBox HorizontalAlignment="Left" Margin="156,300,0,0" TextWrapping="Wrap" Text="Max" VerticalAlignment="Top" Width="70"/>
                         </Grid>
                     </Flyout>
                 </Button.Flyout>
