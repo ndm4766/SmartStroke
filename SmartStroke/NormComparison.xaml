@@ -55,21 +55,28 @@
             </Charting:Chart>
             <Charting:AxisLabel DataContext="Age" HorizontalAlignment="Center" Height="100" Margin="0,0,0,0" VerticalAlignment="Bottom" Width="100"/>
             <Charting:AxisLabel DataContext="Time (seconds)" HorizontalAlignment="Left" Height="100" Margin="20,-70,0,0" VerticalAlignment="Center" Width="100"/>
-            <Button Content="Options" HorizontalAlignment="Left" Margin="1274,587,0,0" VerticalAlignment="Top" Width="89" Click="chartOptions">
+            <Button Content="Options" HorizontalAlignment="Left" Margin="1270,0,0,0" VerticalAlignment="Top" Width="89" Click="chartOptions">
                 <Button.Flyout>
                     <Flyout>
-                        <Grid Height="600" Width="250">
-                            <TextBlock HorizontalAlignment="Left" Margin="109,100,0,0" Grid.Row="1" TextWrapping="Wrap" Text="X-Axis" VerticalAlignment="Top"/>
-                            <TextBlock HorizontalAlignment="Left" Margin="109,0,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Y-Axis" VerticalAlignment="Top"/>
-                            <TextBox HorizontalAlignment="Left" Margin="28,28,0,0" TextWrapping="Wrap" Text="From" VerticalAlignment="Top" Width="70"/>
-                            <TextBox HorizontalAlignment="Left" Margin="156,28,0,0" TextWrapping="Wrap" Text="To" VerticalAlignment="Top" Width="70"/>
-                            <TextBox HorizontalAlignment="Left" Margin="28,128,0,0" TextWrapping="Wrap" Text="From" VerticalAlignment="Top" Width="70"/>
-                            <TextBox HorizontalAlignment="Left" Margin="156,128,0,0" TextWrapping="Wrap" Text="To" VerticalAlignment="Top" Width="70"/>
-                            <CheckBox Content="Male" HorizontalAlignment="Left" Margin="25,193,0,0" VerticalAlignment="Top"/>
-                            <CheckBox Content="Female" HorizontalAlignment="Left" Margin="25,231,0,0" VerticalAlignment="Top"/>
-                            <TextBlock HorizontalAlignment="Left" Margin="75,280,0,288" TextWrapping="Wrap" FontSize="14" Text="Education Range" VerticalAlignment="Center" Height="32"/>
-                            <TextBox HorizontalAlignment="Left" Margin="28,300,0,0" TextWrapping="Wrap" Text="Min" VerticalAlignment="Top" Width="70"/>
-                            <TextBox HorizontalAlignment="Left" Margin="156,300,0,0" TextWrapping="Wrap" Text="Max" VerticalAlignment="Top" Width="70"/>
+                        <Grid Height="300" Width="420">
+                            <TextBlock HorizontalAlignment="Left" Margin="60,0,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Time Range" VerticalAlignment="Top"/>
+                            <TextBox HorizontalAlignment="Left" Margin="10,15,0,0" TextWrapping="Wrap" Text="Min" VerticalAlignment="Top" Width="70"/>
+                            <TextBox HorizontalAlignment="Left" Margin="100,15,0,0" TextWrapping="Wrap" Text="Max" VerticalAlignment="Top" Width="70"/>
+                            <TextBlock HorizontalAlignment="Left" Margin="175,25,0,0" Grid.Row="1" TextWrapping="Wrap" Text="seconds" VerticalAlignment="Top"/>
+                            
+                            <TextBlock HorizontalAlignment="Left" Margin="60,55,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Age Range" VerticalAlignment="Top"/>
+                            <TextBox HorizontalAlignment="Left" Margin="10,70,0,0" TextWrapping="Wrap" Text="Min" VerticalAlignment="Top" Width="70"/>
+                            <TextBox HorizontalAlignment="Left" Margin="100,70,0,0" TextWrapping="Wrap" Text="Max" VerticalAlignment="Top" Width="70"/>
+                            <TextBlock HorizontalAlignment="Left" Margin="175,80,0,0" Grid.Row="1" TextWrapping="Wrap" Text="years" VerticalAlignment="Top"/>
+
+                            <TextBlock HorizontalAlignment="Left" Margin="50,110,0,0" TextWrapping="Wrap" Text="Education Range" VerticalAlignment="Top" Height="32"/>
+                            <TextBox HorizontalAlignment="Left" Margin="10,125,0,0" TextWrapping="Wrap" Text="Min" VerticalAlignment="Top" Width="70"/>
+                            <TextBox HorizontalAlignment="Left" Margin="100,125,0,0" TextWrapping="Wrap" Text="Max" VerticalAlignment="Top" Width="70"/>
+                            <TextBlock HorizontalAlignment="Left" Margin="175,135,0,0" Grid.Row="1" TextWrapping="Wrap" Text="years" VerticalAlignment="Top"/>
+
+                            <CheckBox Content="Male" HorizontalAlignment="Left" Margin="10,165,0,0" VerticalAlignment="Top"/>
+                            <CheckBox Content="Female" HorizontalAlignment="Left" Margin="10,190,0,0" VerticalAlignment="Top"/>
+                          
                         </Grid>
                     </Flyout>
                 </Button.Flyout>

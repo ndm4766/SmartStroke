@@ -301,7 +301,7 @@ namespace SmartStroke
         {
 
             var popup = new Windows.UI.Popups.PopupMenu();
-            popup.ShowAsync(new Point(50,50));
+            popup.ShowAsync(new Point(0,0));
         
         }
     }

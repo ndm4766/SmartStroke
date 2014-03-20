@@ -36,9 +36,10 @@ namespace SmartStroke
         public string convertToString()
         {
             string stringNote = time.ToString() + '\t';
-            stringNote = stringNote.Replace(" ","-");
-            stringNote += (title + '\t');
-            stringNote += (note + '\n');
+            string SPCtitle = title.Replace(" ", "[SPC]");
+            string SPCnote = note.Replace(" ", "[SPC]");
+            stringNote += (SPCtitle + '\t');
+            stringNote += (SPCnote + '\n');
             return stringNote;
         }
     }
