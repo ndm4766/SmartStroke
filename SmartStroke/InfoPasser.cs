@@ -12,6 +12,7 @@ namespace SmartStroke
         public char trailsTestVersion;
         public Patient currentPatient;
         public String doctorId;
+        public TestReplay testReplay;
 
         public InfoPasser()
         {
@@ -25,6 +26,11 @@ namespace SmartStroke
             doctorId = docId;
             trailsTestVersion = 'x';
             currentPatient = null;
+        }
+
+        public void addTestToPasser(TestReplay tr)
+        {
+            testReplay = tr;
         }
 
     }

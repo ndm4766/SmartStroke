@@ -43,6 +43,9 @@ namespace SmartStroke
             createShapes(letter.ToString(), position, c);
         }
 
+
+ 
+
         public bool getCompleted() { return completed; }
         public int getNumber() { return number; }
         public char getLetter() { return letter; }

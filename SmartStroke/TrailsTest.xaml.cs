@@ -408,6 +408,9 @@ namespace SmartStroke
                             submitButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
                             submitButton.IsHitTestVisible = true;
 
+                            timeButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                            timeButton.IsHitTestVisible = true;
+
                             saveButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
                             saveButton.IsHitTestVisible = true;
                             
@@ -491,6 +494,12 @@ namespace SmartStroke
             passer.currentPatient = null;
             testReplay.saveTestReplay();
             this.Frame.Navigate(typeof(MainPage), passer);
+
+        }
+        private void TimeButtonClicked(object sender, RoutedEventArgs e)
+        {
+            passer.addTestToPasser(testReplay);
+            this.Frame.Navigate(typeof(TrailsTestTimeViz), passer);
 
         }
 
