@@ -74,8 +74,9 @@
                             <TextBox HorizontalAlignment="Left" Margin="100,125,0,0" TextWrapping="Wrap" Text="Max" VerticalAlignment="Top" Width="70"/>
                             <TextBlock HorizontalAlignment="Left" Margin="175,135,0,0" Grid.Row="1" TextWrapping="Wrap" Text="years" VerticalAlignment="Top"/>
 
-                            <CheckBox Content="Male" HorizontalAlignment="Left" Margin="10,165,0,0" VerticalAlignment="Top"/>
-                            <CheckBox Content="Female" HorizontalAlignment="Left" Margin="10,190,0,0" VerticalAlignment="Top"/>
+                            <CheckBox Content="Male" HorizontalAlignment="Left" Margin="7,165,0,0" VerticalAlignment="Top"/>
+                            <CheckBox Content="Female" HorizontalAlignment="Left" Margin="7,190,0,0" VerticalAlignment="Top"/>
+                            <CheckBox Content="Graph Average Line" HorizontalAlignment="Left" Margin="7,215,0,0" VerticalAlignment="Top"/>
                           
                         </Grid>
                     </Flyout>
