@@ -120,28 +120,29 @@ namespace SmartStroke
 
                     if (linesIndex >= lines.Count)
                     {
-                        actionIndex++;
                         linesIndex = 0;
+                        actionIndex++;
                     }
                 }
                 //if the action is an erasure, remove all the lines that were part of the stroke that was erased
-                else if (allActions[actionIndex].getActionType() == ACTION_TYPE.DEL_PREV_STROKE)
+                else if (allActions[actionIndex].getActionType() == ACTION_TYPE.DEL_STROKE)
                 {
-                    DeletePreviousStroke stroke = allActions[actionIndex] as DeletePreviousStroke;
+                    DeleteStroke stroke = allActions[actionIndex] as DeleteStroke;
 
                     foreach (Line line in previousStroke)
                     {
                         MyCanvas.Children.Remove(line);
                     }
+                    actionIndex++;
                 }
-            }
 
-            if (actionIndex >= allActions.Count)
-            {
-                stopwatch.Stop();
-                timer.Stop();
+                if (actionIndex >= allActions.Count)
+                {
+                    stopwatch.Stop();
+                    timer.Stop();
 
-                granularReplayButton.IsEnabled = true;
+                    granularReplayButton.IsEnabled = true;
+                }
             }
         }
 

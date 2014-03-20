@@ -445,7 +445,7 @@ namespace SmartStroke
                             MyCanvas.Children.Remove(l);
                         }
                         testReplay.endStroke();
-                        testReplay.deletePreviousStroke();
+                        testReplay.deleteStroke(testReplay.getTestActions().Count-1);
                         //}
                     }
                     

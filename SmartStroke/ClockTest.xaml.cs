@@ -389,21 +389,35 @@ namespace SmartStroke
 
                     if (erasing)
                     {
+                        int eraseIndex = 0;
                         //check if the pressed cursor has collided with any strokes
-                        foreach (var stroke in inkManager.GetStrokes())
+                        var strokes = inkManager.GetStrokes();
+                        for (int i = 0; i < strokes.Count; i++)
                         {
-                            if (eraserHitTest(stroke, new Point(x2, y2)))
+                            if (eraserHitTest(strokes[i], new Point(x2, y2)))
                             {
-                                stroke.Selected = true;
+                                strokes[i].Selected = true;
 
                                 //remove each of the lines associated with this single stroke from canvas
-                                foreach (Line line in allLines[stroke])
+                                foreach (Line line in allLines[strokes[i]])
                                 {
                                     MyCanvas.Children.Remove(line);
-                                    allLines.Remove(stroke);
                                 }
+
+                                List<TestAction> actionsSoFar = testReplay.getTestActions();
+                                eraseIndex = i;
+                                for (int j = 0; j < eraseIndex; j++)
+                                {
+                                    if(actionsSoFar[i].getActionType() != ACTION_TYPE.STROKE)
+                                    {
+                                        eraseIndex++;
+                                    }
+                                }
+                                allLines.Remove(strokes[i]);
                             }
                         }
+
+                        testReplay.deleteStroke(eraseIndex);
                         //tell the ink manager to stop tracking the strokes that were erased
                         inkManager.DeleteSelected();
                     }
