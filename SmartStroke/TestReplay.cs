@@ -362,13 +362,13 @@ namespace SmartStroke
                     else if (lineWords[0] == "DeleteStroke")
                         testActions.Add(parseLineDelPrevStroke(lineWords));
                     else if (lineWords[0] == "=====NOTES=====") { 
-                        //inActionSection = false;
+                        inActionSection = false;
                     }     
                 } else {
                     
                     List<string> lineWords = testStrings[i]
                         .Split('\t').Cast<string>().ToList<string>();
-                    if (lineWords.Count > 0)
+                    if (lineWords.Count >= 5)
                     {
                         DateTime date = new DateTime();
                         date = DateTime.Parse(lineWords[0] + " " + 
