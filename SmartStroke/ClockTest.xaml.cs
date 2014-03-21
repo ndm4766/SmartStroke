@@ -389,7 +389,6 @@ namespace SmartStroke
 
                     if (erasing)
                     {
-                        int eraseIndex = 0;
                         //check if the pressed cursor has collided with any strokes
                         var strokes = inkManager.GetStrokes();
                         for (int i = 0; i < strokes.Count; i++)
@@ -405,7 +404,7 @@ namespace SmartStroke
                                 }
 
                                 List<TestAction> actionsSoFar = testReplay.getTestActions();
-                                eraseIndex = i;
+                                int eraseIndex = i;
                                 for (int j = 0; j < eraseIndex; j++)
                                 {
                                     if(actionsSoFar[i].getActionType() != ACTION_TYPE.STROKE)
@@ -414,10 +413,11 @@ namespace SmartStroke
                                     }
                                 }
                                 allLines.Remove(strokes[i]);
+                                testReplay.deleteStroke(eraseIndex);
                             }
                         }
 
-                        testReplay.deleteStroke(eraseIndex);
+                        
                         //tell the ink manager to stop tracking the strokes that were erased
                         inkManager.DeleteSelected();
                     }
