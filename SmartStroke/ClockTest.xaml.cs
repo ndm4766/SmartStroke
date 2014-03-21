@@ -403,7 +403,7 @@ namespace SmartStroke
                                     MyCanvas.Children.Remove(line);
                                 }
 
-                                List<TestAction> actionsSoFar = testReplay.getTestActions();
+                                /*List<TestAction> actionsSoFar = testReplay.getTestActions();
                                 int eraseIndex = i;
                                 for (int j = 0; j < eraseIndex; j++)
                                 {
@@ -411,9 +411,10 @@ namespace SmartStroke
                                     {
                                         eraseIndex++;
                                     }
-                                }
-                                allLines.Remove(strokes[i]);
-                                testReplay.deleteStroke(eraseIndex);
+                                }*/
+                                //allLines.Add(new InkStroke(), new List<Line>());
+                                //allLines.Remove(strokes[i]);
+                                //testReplay.deleteStroke(eraseIndex);
                             }
                         }
 
