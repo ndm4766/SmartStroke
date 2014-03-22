@@ -428,6 +428,10 @@ namespace SmartStroke
                             // this code
                         //if (!nodes[indexHit].getCompleted() && nodes[indexHit].getEllipse().Fill != null)
                         //{
+
+                        //TODO: need to take out the successive red nodes(only the first err should be red)
+                        //TODO: after an err, no lines should be able to be drawn if they are still holding down the pen (when you collide with ANOTHER node after the first wrong one, it continues drawing)
+
                         //set error colors
                         nodes[indexHit].setFillColor(new SolidColorBrush(Colors.Red));
                         nodes[currentIndex].setFillColor(new SolidColorBrush(Colors.Yellow));
