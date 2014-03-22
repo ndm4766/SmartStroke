@@ -33,7 +33,8 @@ namespace SmartStroke
         Stopwatch stopwatch;
         int actionIndex;
         int linesIndex;
-        Dictionary<Stroke, List<Line>> allLines; //necessary bec the lines are already children of the other page
+        //Dictionary<Stroke, List<Line>> allLines; //necessary bec the lines are already children of the other page
+        List<List<Line>> allLines;
         List<Line> currentLine;
 
         string currentlySelectedDate;
@@ -52,7 +53,8 @@ namespace SmartStroke
             stopwatch = new Stopwatch();
             actionIndex = 0;
             linesIndex = 0;
-            allLines = new Dictionary<Stroke, List<Line>>();
+            //allLines = new Dictionary<Stroke, List<Line>>();
+            allLines = new List<List<Line>>();
             currentLine = new List<Line>();
         }
 
@@ -120,7 +122,8 @@ namespace SmartStroke
                     if (linesIndex >= lines.Count)
                     {
                         linesIndex = 0;
-                        allLines.Add(stroke, currentLine);
+                        //allLines.Add(stroke, currentLine);
+                        allLines.Add(currentLine);
                         currentLine = new List<Line>();
                         actionIndex++;
                     }
@@ -129,9 +132,9 @@ namespace SmartStroke
                 else if (allActions[actionIndex].getActionType() == ACTION_TYPE.DEL_STROKE)
                 {
                     int strokeDeletedIndex = (allActions[actionIndex] as DeleteStroke).getIndex();
-                    Stroke deletedStroke = allActions[strokeDeletedIndex] as Stroke;
+                    //Stroke deletedStroke = allActions[strokeDeletedIndex] as Stroke;
 
-                    foreach (Line line in allLines[deletedStroke])
+                    foreach (Line line in allLines[strokeDeletedIndex])
                     {
                         //MyCanvas.Children.Remove(line);
                         MyCanvas.Children[MyCanvas.Children.IndexOf(line)].Opacity = .2;
@@ -155,9 +158,9 @@ namespace SmartStroke
             granularReplayButton.IsEnabled = false;
 
             //reset all the things
-            foreach (KeyValuePair<Stroke, List<Line>> item in allLines)
+            foreach (var stroke in allLines)
             {
-                foreach(Line line in item.Value)
+                foreach(Line line in stroke)
                 {
                     MyCanvas.Children.Remove(line);
                 }
