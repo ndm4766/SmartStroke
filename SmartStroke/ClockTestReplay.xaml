@@ -9,7 +9,7 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Canvas Name="MyCanvas" Background="Transparent" Grid.RowSpan="2">
-            <Ellipse Stroke="Black" StrokeThickness="10" Grid.RowSpan="2" Width="600" Height="600" Canvas.Left="384" Canvas.Top="84"/>
+            <Ellipse Stroke="Black" StrokeThickness="10" Grid.RowSpan="2" Width="600" Height="600" Canvas.Left="384" Canvas.Top="129"/>
         </Canvas>
 
         <Button Content="Menu" Name="menuButton" Click="menuClicked" Margin="24,24,0,676" Height="68" Width="159" />
