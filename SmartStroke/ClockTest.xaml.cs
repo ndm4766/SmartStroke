@@ -456,6 +456,12 @@ namespace SmartStroke
 
         private void SubmitButtonClicked(object sender, RoutedEventArgs e)
         {
+            if(testReplay.getTestActions().Count == 0)
+            {
+                testReplay.endTest();
+                this.Frame.Navigate(typeof(MainMenu), passer);
+            }
+
             testReplay.endTest();
             testReplay.saveTestReplay();
             this.Frame.Navigate(typeof(MainMenu), passer);
@@ -554,6 +560,12 @@ namespace SmartStroke
         }
 
         #endregion
+
+        private void CancelButtonClicked(object sender, RoutedEventArgs e)
+        {
+            testReplay.endTest();
+            this.Frame.Navigate(typeof(MainMenu), passer);
+        }
 
         #endregion
 

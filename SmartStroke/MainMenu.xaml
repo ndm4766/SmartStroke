@@ -8,10 +8,10 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Button Content="Trails" HorizontalAlignment="Left" Margin="445,56,0,0" VerticalAlignment="Top" Height="196" Width="265" Click="trails_click"/>
-        <Button Content="View Past Tests" HorizontalAlignment="Left" Margin="904,333,0,0" VerticalAlignment="Top" Height="215" Width="441" Click="test_selection_click"/>
-        <Button Content="Clock" HorizontalAlignment="Left" Margin="769,56,0,0" VerticalAlignment="Top" Height="196" Width="260" Click="clock_click"/>
-        <Button Content="Logout" HorizontalAlignment="Left" Margin="19.731,651.726,0,0" VerticalAlignment="Top" Height="92.44" Width="189.609" Click="logout" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto">
+        <Button Content="Take Trail-Making Test" HorizontalAlignment="Left" FontSize="40" Margin="97,56,0,0" VerticalAlignment="Top" Height="196" Width="500" Click="trails_click"/>
+        <Button Content="View Past Tests" HorizontalAlignment="Left" FontSize="50" Margin="430,333,0,0" VerticalAlignment="Top" Height="300" Width="500" Click="test_selection_click"/>
+        <Button Content="Take Clock Test" HorizontalAlignment="Left" FontSize="40" Margin="766,56,0,0" VerticalAlignment="Top" Height="196" Width="500" Click="clock_click"/>
+        <Button Content="Logout" HorizontalAlignment="Left" FontSize="30" Margin="19.731,651.726,0,0" VerticalAlignment="Top" Height="92.44" Width="189.609" Click="logout" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto">
         </Button>
     </Grid>
 </Page>
