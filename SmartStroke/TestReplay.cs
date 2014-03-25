@@ -225,7 +225,7 @@ namespace SmartStroke
         {
             if (getCurrentTestAction() == null) return;
             if (!getCurrentTestAction().isFinished()) return;
-            if (!checkCurrentTestAction(ACTION_TYPE.STROKE)) return;
+            //if (!checkCurrentTestAction(ACTION_TYPE.STROKE)) return;
             testActions.Add(new DeleteStroke(DateTime.Now, index));
         }
         public void addTestNote(PatientNote patientNote) 

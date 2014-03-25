@@ -63,6 +63,7 @@ namespace SmartStroke
         private Point currentContactPt;
         private List<Line> currentLine;
         private Dictionary<InkStroke, List<Line>> allLines;
+        private List<InkStroke> drawingOrder;
 
         //private List<int> quadWeights;
 
@@ -103,6 +104,7 @@ namespace SmartStroke
             // Create the trails test background. The test image is 117X917 px but to fit on a screen (surface) it is 686 X 939
             currentLine = new List<Line>();
             allLines = new Dictionary<InkStroke, List<Line>>();
+            drawingOrder = new List<InkStroke>();
 
             testStarted = false;
             /*
@@ -340,6 +342,7 @@ namespace SmartStroke
                 {
                     //create the link from the completed stroke to its list of lines on the canvas
                     allLines.Add(inkManager.GetStrokes()[inkManager.GetStrokes().Count - 1], currentLine);
+                    drawingOrder.Add(inkManager.GetStrokes()[inkManager.GetStrokes().Count - 1]);
                     //cant just clear the list cuz its c#, have to point to a new list, not a memory leak
                     currentLine = new List<Line>();
 
@@ -412,9 +415,8 @@ namespace SmartStroke
                                         eraseIndex++;
                                     }
                                 }*/
-                                //allLines.Add(new InkStroke(), new List<Line>());
-                                //allLines.Remove(strokes[i]);
-                                //testReplay.deleteStroke(eraseIndex);
+                                
+                                testReplay.deleteStroke(drawingOrder.IndexOf(strokes[i]));
                             }
                         }
 

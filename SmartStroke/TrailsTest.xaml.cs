@@ -247,7 +247,9 @@ namespace SmartStroke
         // Return which index of node the user has hit
         private int stylusHitTest(double x, double y)
         {
-            int radius = 25;
+            //adds a buffer zone surrounding each node so that the patient can be off by a little but it will still count
+            int buffer = 3;
+            int radius = 25 + buffer;
             double left;
             double top;
             double first;
@@ -256,8 +258,8 @@ namespace SmartStroke
             //calculate whether the stylus x and y are within the circle defined by the node[i] using definition of circle
             for (int i = 0; i < nodes.Count; i++)
             {
-                left = nodes[i].getEllipse().Margin.Left;
-                top = nodes[i].getEllipse().Margin.Top;
+                left = nodes[i].getEllipse().Margin.Left - buffer;
+                top = nodes[i].getEllipse().Margin.Top - buffer;
                 first = Math.Pow(x - (left + radius), 2);
                 second = Math.Pow(y - (top + radius), 2);
                 if ((first + second <= radius * radius) == true)
@@ -426,6 +428,10 @@ namespace SmartStroke
                             // this code
                         //if (!nodes[indexHit].getCompleted() && nodes[indexHit].getEllipse().Fill != null)
                         //{
+
+                        //TODO: need to take out the successive red nodes(only the first err should be red)
+                        //TODO: after an err, no lines should be able to be drawn if they are still holding down the pen (when you collide with ANOTHER node after the first wrong one, it continues drawing)
+
                         //set error colors
                         if(incorrectNodes.Count < 1)
                             nodes[indexHit].setFillColor(new SolidColorBrush(Colors.Red));

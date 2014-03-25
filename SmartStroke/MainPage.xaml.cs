@@ -31,10 +31,13 @@ namespace SmartStroke
         public MainPage()
         {
             this.InitializeComponent();
+
+            /* // Commented out to test Doctor Registration, 3/24/2014, Josh
             timer = new DispatcherTimer();
             timer.Tick += tick;
             timer.Interval = new TimeSpan(0, 0, 1);
             timer.Start();
+             */
         }
 
         // Auto-send the user to the User login page.. used for WIPPTE so people dont need to sign in
@@ -68,6 +71,11 @@ namespace SmartStroke
         // Authenticate the doctor.
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            // Currently only testing WIPPTE user, remove the two below lines to test all
+            // 3/24/2014, Josh
+            InfoPasser passer = new InfoPasser("WIPPTE");
+            this.Frame.Navigate(typeof(PatientSelection), passer);
+
             // Navigate to the patient selection screen - send the doctor
             // name for patient authentication
             string user = userId.Text;
@@ -119,7 +127,7 @@ namespace SmartStroke
         // ToDo: Create a new account for a doctor
         private void createAccount_Click(object sender, RoutedEventArgs e)
         {
-
+            this.Frame.Navigate(typeof(CreateAccountPage));
         }
     }
 }
