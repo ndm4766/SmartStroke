@@ -427,7 +427,8 @@ namespace SmartStroke
                         //if (!nodes[indexHit].getCompleted() && nodes[indexHit].getEllipse().Fill != null)
                         //{
                         //set error colors
-                        nodes[indexHit].setFillColor(new SolidColorBrush(Colors.Red));
+                        if(incorrectNodes.Count < 1)
+                            nodes[indexHit].setFillColor(new SolidColorBrush(Colors.Red));
                         nodes[currentIndex].setFillColor(new SolidColorBrush(Colors.Yellow));
 
                         //reset the index back 1
@@ -435,7 +436,7 @@ namespace SmartStroke
 
                         if (!incorrectNodes.Contains(currentIndex))
                             incorrectNodes.Enqueue(currentIndex);
-                                
+
                         if (!incorrectNodes.Contains(indexHit))
                             incorrectNodes.Enqueue(indexHit);
 
