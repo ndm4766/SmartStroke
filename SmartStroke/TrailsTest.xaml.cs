@@ -433,7 +433,8 @@ namespace SmartStroke
                         //TODO: after an err, no lines should be able to be drawn if they are still holding down the pen (when you collide with ANOTHER node after the first wrong one, it continues drawing)
 
                         //set error colors
-                        nodes[indexHit].setFillColor(new SolidColorBrush(Colors.Red));
+                        if(incorrectNodes.Count < 1)
+                            nodes[indexHit].setFillColor(new SolidColorBrush(Colors.Red));
                         nodes[currentIndex].setFillColor(new SolidColorBrush(Colors.Yellow));
 
                         //reset the index back 1
@@ -441,7 +442,7 @@ namespace SmartStroke
 
                         if (!incorrectNodes.Contains(currentIndex))
                             incorrectNodes.Enqueue(currentIndex);
-                                
+
                         if (!incorrectNodes.Contains(indexHit))
                             incorrectNodes.Enqueue(indexHit);
 
