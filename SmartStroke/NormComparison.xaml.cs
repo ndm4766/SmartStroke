@@ -219,9 +219,9 @@ namespace SmartStroke
 
             //uniquePoints.Add(new Performance() { Age = 55, Time = 260 });
 
-            (ScatterChart.Series[0] as ScatterSeries).ItemsSource = lowEducationResults;
-            (ScatterChart.Series[1] as ScatterSeries).ItemsSource = highEducationResults;
-            (ScatterChart.Series[2] as ScatterSeries).ItemsSource = uniquePoints;
+            //(ScatterChart.Series[0] as ScatterSeries).ItemsSource = lowEducationResults;
+            //(ScatterChart.Series[1] as ScatterSeries).ItemsSource = highEducationResults;
+            //(ScatterChart.Series[2] as ScatterSeries).ItemsSource = uniquePoints;
 
         }
 
