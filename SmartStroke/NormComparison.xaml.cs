@@ -133,6 +133,9 @@ namespace SmartStroke
             
             List<Performance> allResults = new List<Performance>();
 
+            List<double> testTimes = new List<double>();
+            List<double> patientAges = new List<double>();
+
             // Go through all the patients and display the complete data.
             // Do not separate into different categories.
             for (int i = 0; i < patientList.Count; i++)
@@ -152,8 +155,10 @@ namespace SmartStroke
                         TimeSpan TimeDifference = end - start;
 
                         double seconds = TimeDifference.Minutes * 60 + TimeDifference.Seconds + TimeDifference.Milliseconds / 100;
-
                         int tempAge = Convert.ToInt32(patientList[i].patientAge);
+
+                        testTimes.Add(seconds);
+                        patientAges.Add(tempAge);
 
                         allResults.Add(new Performance() { Age = tempAge, Time = seconds });
                         
@@ -161,6 +166,53 @@ namespace SmartStroke
                     }
                 }
                 
+            }
+
+            testTimes.Sort();
+            patientAges.Sort();
+
+            double medTestTime = 0;
+            double medAge = 0;
+
+            if (testTimes.Count > 0)
+            {
+
+                if (testTimes.Count % 2 == 0)
+                {
+                    double tempDouble = Convert.ToDouble(testTimes.Count);
+                    int topIndex = Convert.ToInt32(Math.Floor(tempDouble) / 2);
+                    medTestTime = ((testTimes[topIndex - 1] + testTimes[topIndex]) / 2.0);
+                }
+                else
+                {
+                    medTestTime = testTimes[testTimes.Count / 2];
+                }
+
+                if (patientAges.Count % 2 == 0)
+                {
+                    double tempDouble = Convert.ToDouble(patientAges.Count);
+                    int topIndex = Convert.ToInt32(Math.Floor(tempDouble) / 2);
+                    medAge = ((patientAges[topIndex - 1] + patientAges[topIndex]) / 2.0);
+                }
+                else
+                {
+                    medAge = Convert.ToDouble(patientAges[patientAges.Count / 2]);
+                }
+
+                double avgTestTime = testTimes.Average();
+                double avgAge = patientAges.Average();
+
+                double minTestTime = testTimes[0];
+                double minAge = patientAges[0];
+
+                double maxTestTime = testTimes[testTimes.Count - 1];
+                double maxAge = patientAges[patientAges.Count - 1];
+
+            }
+
+            else
+            {
+                //no data, do nothing
             }
 
             (ScatterChart.Series[0] as ScatterSeries).ItemsSource = allResults;
