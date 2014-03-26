@@ -300,7 +300,7 @@ namespace SmartStroke
 
         async Task loadJson()
         {
-            //try
+            try
             {
                 // Clear all the fileNames in the directory
                 fileNames.Clear();
@@ -341,7 +341,7 @@ namespace SmartStroke
                 }
 
             }
-            //catch
+            catch
             {
                 //json load failed
             }
