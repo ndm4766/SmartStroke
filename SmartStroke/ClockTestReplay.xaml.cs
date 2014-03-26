@@ -174,6 +174,16 @@ namespace SmartStroke
             timer.Start();
         }
 
+        private string getFilenameString(string filename)
+        {
+            //3-25-2014_5;00;50_PM
+            string datetime = filename.Substring(filename.Length - (20 + 4), 20);
+            datetime = datetime.Replace("-", "/");
+            datetime = datetime.Replace("_", " ");
+            datetime = datetime.Replace(";", ":");
+            return datetime;
+        }
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -195,7 +205,7 @@ namespace SmartStroke
             {
                 if (filename.Contains(testReplay.getTestType().ToString()))
                 {
-                    testDatesBox.Items.Add(filename.Substring(filename.Length - (14 + 4), 14));
+                    testDatesBox.Items.Add(getFilenameString(filename));
                 }
             }
         }

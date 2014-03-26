@@ -13,7 +13,7 @@
         </Canvas>
 
         <Button Content="Menu" Name="menuButton" Click="menuClicked" Margin="24,24,0,676" Height="68" Width="159" />
-        <Button Content="Granular Replay" Name="granularReplayButton" Click="renderGranularTestReplay" Margin="24,130,0,570" Height="68" Width="159" />
+        <Button Content="Replay Test" Name="granularReplayButton" Click="renderGranularTestReplay" Margin="24,130,0,570" Height="68" Width="159" />
 
         <ListBox Name="testDatesBox" HorizontalAlignment="Left" FontSize="24" BorderThickness="0" ScrollViewer.VerticalScrollMode="Enabled" Height="323" Margin="1038,27,0,0" VerticalAlignment="Top" Width="300" SelectionChanged="ListBox_SelectionChanged">
         </ListBox>

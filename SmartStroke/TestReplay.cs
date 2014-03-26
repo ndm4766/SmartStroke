@@ -244,10 +244,10 @@ namespace SmartStroke
         }
         public string getFileName()
         {
-            string filename = patient.getName() + testType.ToString() + getStartTime().ToString() + fileExtension;
-            filename = filename.Replace(":", "");
-            filename = filename.Replace("/", "");
-            return filename.Replace(" ", "");
+            string timeString = getStartTime().ToString().Replace("/", "-");
+            string filename = patient.getName() + testType.ToString() + timeString + fileExtension;
+            filename = filename.Replace(":", ";");
+            return filename.Replace(" ", "_");
         }
         public async void saveTestReplay()
         {

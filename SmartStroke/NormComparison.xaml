@@ -49,6 +49,7 @@
         </Grid>
         <Grid Grid.Row="1">
             <Charting:Chart x:Name="ScatterChart" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="100,0,0,0" Width="1200" Height="500">
+                
                 <Charting:ScatterSeries Title="High School Education" Margin="0" IndependentValuePath="Age" DependentValuePath="Time" IsSelectionEnabled="True"/>
                 <Charting:ScatterSeries Title="College Education" Margin="0" IndependentValuePath="Age" DependentValuePath="Time" IsSelectionEnabled="True"/>
                 <Charting:ScatterSeries Title="Patient" Margin="0" IndependentValuePath="Age" DependentValuePath="Time" IsSelectionEnabled="True"/>
