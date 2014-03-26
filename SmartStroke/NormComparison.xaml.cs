@@ -344,6 +344,7 @@ namespace SmartStroke
             catch
             {
                 //json load failed
+                this.Frame.Navigate(typeof(MainPage));
             }
         }
 
