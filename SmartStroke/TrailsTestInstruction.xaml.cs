@@ -108,7 +108,7 @@ namespace SmartStroke
             ink_manager.SetDefaultDrawingAttributes(drawingAttributes);
 
             disp = new DispatcherTimer();
-            disp.Interval = new TimeSpan(0, 0, 0, 0, 10);
+            disp.Interval = new TimeSpan(0, 0, 0, 0, 1);
             disp.Tick += timer_tick;
 
             instructionTimer = new DispatcherTimer();
@@ -119,7 +119,7 @@ namespace SmartStroke
             pen = new Image();
 
             instructions = new List<string>();
-            amountToMove = 2;
+            amountToMove = 3;
         }
 
         private void populateNodes()
@@ -221,7 +221,14 @@ namespace SmartStroke
                double deltaY = (currY - prevY);
                double deltaX = (currentPoint.X - previousPoint.X);
                double slope = deltaY / deltaX;
+               
 
+               // Radians
+               double theta = (Math.Atan(deltaY / deltaX));
+
+               // Total Distance from beginning to end
+               double dist = Math.Sqrt(Math.Pow((currentPoint.X - previousPoint.X), 2) + Math.Pow((currentPoint.Y - previousPoint.Y), 2));
+               
                if(Math.Abs(deltaX) > amountToMove)
                {
                    if (deltaX < 0)
@@ -236,33 +243,17 @@ namespace SmartStroke
                    else
                        deltaY = amountToMove;
                }
-
-               // (0,b)
-               // y-y1 = m(x-x1)
-               // y-y1 = mx - mx1
-               // y-y1+mx1 = mx
-
-               // (x1,y1) = (previousPoint.X,previousPoint.Y)
-               // (x, y) = (currentPoint.X, currentPoint.Y)
-
-               // y = mx+b
-               // y-b = mx
-               // y-b/m = x
-
-               // Distance formula
-               // d = sqrt( (x1-x)^2 + (y1-y)^2 )
-               // d = sqrt( (previous.X-x)^2 + (previous.Y-((slope * (newX - previousPoint.X)) + prevY))^2 )
-               // d^2 = (previous.X-x)^2 + (previous.Y-((slope * (newX - previousPoint.X)) + prevY))^2
-               // d^2 - (previous.Y-((slope * (newX - previousPoint.X)) + prevY))^2 = (previous.X-x)^2
-               // sqrt(d^2 - (previous.Y-((slope * (newX - previousPoint.X)) + prevY))^2) = previous.X-x
-               // x = previous.X - sqrt(d^2 - (previous.Y-((slope * (newX - previousPoint.X)) + prevY))^2)
-               // x = rcos(theta)
-
+               
+           
                //     X1           Y1               X           Y
                // (previous.X, previou.Y), (previous.X+deltaX, Y), slope
-               double newX = previousPoint.X + deltaX;
-               double newY = (slope * (newX - previousPoint.X)) + prevY;
-               newY *= -1;
+               double newX = previousPoint.X + deltaX * Math.Cos(theta);
+
+               double newY;
+               if(theta < 0)
+                   newY = previousPoint.Y + (deltaY * Math.Sin(theta));
+               else
+                   newY = previousPoint.Y - (deltaY * Math.Sin(theta));
 
                Line line = new Line()
                {
