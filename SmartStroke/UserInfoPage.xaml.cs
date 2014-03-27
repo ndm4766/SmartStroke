@@ -148,6 +148,10 @@ namespace SmartStroke
             }
             catch
             {
+                // No patients so far. Add the first one
+                int numDigits = medicalIdLength - 1;
+                string prefix = newID(numDigits);
+                patientName.Text = prefix + '0';
                 //json load failed
             }
         }
