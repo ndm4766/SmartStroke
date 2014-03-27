@@ -58,6 +58,31 @@ namespace SmartStroke
             currentLine = new List<Line>();
         }
 
+        // Take a string in format d/m/y hh:mm PM
+        // Convert to format d-m-y_hh;mm_PM
+        public string replaceDate(string d)
+        {
+            string date = "";
+            for (int i = 0; i < d.Length; i++)
+            {
+                if (d[i] == ' ')
+                {
+                    date += '_';
+                }
+                else if (d[i] == ':')
+                {
+                    date += ';';
+                }
+                else if (d[i] == '/')
+                {
+                    date += '-';
+                }
+                else
+                    date += d[i];
+            }
+            return date;
+        }
+
         // Load a previous clock test from a test replay object.
         // Need to create a new TestReplay object so that you do not add
         // more lines - test replay load will currently append information.
@@ -67,7 +92,7 @@ namespace SmartStroke
             List<String> filenames = passer.currentPatient.getTestFilenames();
             foreach (String filename in filenames)
             {
-                if(filename.Contains(currentlySelectedDate))
+                if(filename.Contains(replaceDate(currentlySelectedDate)))
                 {
                     await testReplay.loadTestReplay(filename);
                     break;
@@ -154,6 +179,9 @@ namespace SmartStroke
 
         private void renderGranularTestReplay(object sender, RoutedEventArgs e)
         {
+            stopwatch.Reset();
+            timer.Stop();
+
             loadTest();
             granularReplayButton.IsEnabled = false;
 
@@ -165,7 +193,6 @@ namespace SmartStroke
                     MyCanvas.Children.Remove(line);
                 }
             }
-            stopwatch.Reset();
             actionIndex = 0;
             linesIndex = 0;
             allLines.Clear();
@@ -174,15 +201,9 @@ namespace SmartStroke
             timer.Start();
         }
 
-        private string getFilenameString(string filename)
-        {
-            //3-25-2014_5;00;50_PM
-            string datetime = filename.Substring(filename.Length - (20 + 4), 20);
-            datetime = datetime.Replace("-", "/");
-            datetime = datetime.Replace("_", " ");
-            datetime = datetime.Replace(";", ":");
-            return datetime;
-        }
+        
+
+        
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -205,7 +226,7 @@ namespace SmartStroke
             {
                 if (filename.Contains(testReplay.getTestType().ToString()))
                 {
-                    testDatesBox.Items.Add(getFilenameString(filename));
+                    testDatesBox.Items.Add(testReplay.getDisplayedDatetime(filename));
                 }
             }
         }
@@ -220,7 +241,7 @@ namespace SmartStroke
 
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            currentlySelectedDate = testDatesBox.SelectedItem.ToString();
+            currentlySelectedDate = testReplay.getFilenameString(testDatesBox.SelectedItem.ToString());
         }
 
         private void menuClicked(object sender, RoutedEventArgs e)

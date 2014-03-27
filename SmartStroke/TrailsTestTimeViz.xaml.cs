@@ -365,11 +365,6 @@ namespace SmartStroke
         }
 
 
-
-
-
-
-
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             passer = e.Parameter as InfoPasser;    // This is the type of the trails test.
@@ -397,14 +392,14 @@ namespace SmartStroke
             {
                 if (filename.Contains(testReplay.getTestType().ToString()))
                 {
-                    testDatesBox.Items.Add(filename.Substring(filename.Length - (14 + 4), 14));
+                    testDatesBox.Items.Add(testReplay.getDisplayedDatetime(filename));
                 }
             }
         }
 
         async void loadTest()
         {
-            currentlySelectedDate = testDatesBox.SelectedItem.ToString();
+            currentlySelectedDate = testReplay.getFilenameString(testDatesBox.SelectedItem.ToString());
             List<string> fileNames = passer.currentPatient.getTestFilenames();
             foreach (string name in fileNames)
             {

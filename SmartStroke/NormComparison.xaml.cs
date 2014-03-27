@@ -173,6 +173,15 @@ namespace SmartStroke
 
             double medTestTime = 0;
             double medAge = 0;
+            
+            double avgTestTime = 0;
+            double avgAge = 0;
+
+            double minTestTime = 0;
+            double minAge = 0;
+
+            double maxTestTime = 0;
+            double maxAge = 0;
 
             if (testTimes.Count > 0)
             {
@@ -199,14 +208,14 @@ namespace SmartStroke
                     medAge = Convert.ToDouble(patientAges[patientAges.Count / 2]);
                 }
 
-                double avgTestTime = testTimes.Average();
-                double avgAge = patientAges.Average();
+                avgTestTime = testTimes.Average();
+                avgAge = patientAges.Average();
 
-                double minTestTime = testTimes[0];
-                double minAge = patientAges[0];
+                minTestTime = testTimes[0];
+                minAge = patientAges[0];
 
-                double maxTestTime = testTimes[testTimes.Count - 1];
-                double maxAge = patientAges[patientAges.Count - 1];
+                maxTestTime = testTimes[testTimes.Count - 1];
+                maxAge = patientAges[patientAges.Count - 1];
 
             }
 
@@ -215,7 +224,32 @@ namespace SmartStroke
                 //no data, do nothing
             }
 
+            //Plottting patients
             (ScatterChart.Series[0] as ScatterSeries).ItemsSource = allResults;
+
+            //Plotting average test time
+            List<Performance> tempAvgTestTime = new List<Performance>();
+            tempAvgTestTime.Add(new Performance() {Age = Convert.ToInt32(minAge), Time = avgTestTime});
+            tempAvgTestTime.Add(new Performance() { Age = Convert.ToInt32(maxAge), Time = avgTestTime });
+            (ScatterChart.Series[1] as LineSeries).ItemsSource = tempAvgTestTime;
+
+            //Plotting average age
+            List<Performance> tempAvgAge = new List<Performance>();
+            tempAvgAge.Add(new Performance() { Age = Convert.ToInt32(avgAge), Time = minTestTime });
+            tempAvgAge.Add(new Performance() { Age = Convert.ToInt32(avgAge), Time = maxTestTime });
+            (ScatterChart.Series[2] as LineSeries).ItemsSource = tempAvgAge;
+
+            //Plotting median test time
+            List<Performance> tempMedTestTime = new List<Performance>();
+            tempMedTestTime.Add(new Performance() { Age = Convert.ToInt32(minAge), Time = medTestTime });
+            tempMedTestTime.Add(new Performance() { Age = Convert.ToInt32(maxAge), Time = medTestTime });
+            (ScatterChart.Series[3] as LineSeries).ItemsSource = tempMedTestTime;
+
+            //Plotting median age
+            List<Performance> tempMedAge = new List<Performance>();
+            tempMedAge.Add(new Performance() { Age = Convert.ToInt32(medAge), Time = minTestTime });
+            tempMedAge.Add(new Performance() { Age = Convert.ToInt32(medAge), Time = maxTestTime });
+            (ScatterChart.Series[4] as LineSeries).ItemsSource = tempMedAge;
 
         }
 
