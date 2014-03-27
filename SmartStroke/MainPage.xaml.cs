@@ -8,6 +8,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Security.Cryptography;
 using Windows.Security.Cryptography.DataProtection;
+using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -26,12 +27,12 @@ namespace SmartStroke
     /// </summary>
     public sealed partial class MainPage : Page
     {
-
+        Dictionary<string, string> usernameHashDictionary;
         DispatcherTimer timer;  // Timer to fire after 1 second to send to the next screen
         public MainPage()
         {
             this.InitializeComponent();
-
+            usernameHashDictionary = new Dictionary<string, string>();
             /* // Commented out to test Doctor Registration, 3/24/2014, Josh
             timer = new DispatcherTimer();
             timer.Tick += tick;
@@ -71,22 +72,57 @@ namespace SmartStroke
         // Authenticate the doctor.
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            // Currently only testing WIPPTE user, remove the two below lines to test all
-            // 3/24/2014, Josh
-            InfoPasser passer = new InfoPasser("WIPPTE");
-            this.Frame.Navigate(typeof(PatientSelection), passer);
-
             // Navigate to the patient selection screen - send the doctor
             // name for patient authentication
             string user = userId.Text;
             string pass = userPassword.Password;
-            if (user == "User Id" || pass == userId.PlaceholderText) { return; }
-
-            protect();
-
-            this.Frame.Navigate(typeof (PatientSelection), new InfoPasser(user));
+            if (user == "User Id" || pass == userId.PlaceholderText) return;
+            loadAccounts();
+            foreach (KeyValuePair<string, string> K in usernameHashDictionary)
+            {
+                if(K.Key == user && 
+                    K.Value == pass.GetHashCode().ToString())
+                    this.Frame.Navigate(typeof(PatientSelection), 
+                        new InfoPasser(user));
+            }
+            usernameHashDictionary.Clear();
         }
-
+        async private void loadAccounts()
+        {
+            await loadRegisteredUsersFile("registeredUsers.txt");
+        }
+        private async Task loadRegisteredUsersFile(string testFilename)
+        {
+            StorageFile registeredUsersStorageFile;
+            string registeredUsersString = "";
+            try
+            {
+                Task<StorageFile> fileTask = ApplicationData
+                        .Current.LocalFolder
+                        .GetFileAsync(testFilename).AsTask<StorageFile>();
+                fileTask.Wait();
+                registeredUsersStorageFile = fileTask.Result;
+                registeredUsersString
+                    = await FileIO.ReadTextAsync(registeredUsersStorageFile);
+            }
+            catch { return; }
+            parseRegisteredUsersFile(registeredUsersString);
+        }
+        private void parseRegisteredUsersFile(string registeredUsersText)
+        {
+            List<string> testStrings =
+                registeredUsersText.Split('\n').Cast<string>()
+                .ToList<string>();
+            foreach (string line in testStrings)
+            {
+                if (line.Split('\t').Length > 1)
+                {
+                    string username = line.Split('\t')[0];
+                    string passHash = line.Split('\t')[1];
+                    usernameHashDictionary.Add(username, passHash);
+                }
+            }
+        }
 
         // Encrypt the user name and password combination
         public async Task<IBuffer> SampleProtectAsync(String strMsg, String strDescriptor,BinaryStringEncoding encoding)
