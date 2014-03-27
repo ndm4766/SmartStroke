@@ -58,6 +58,31 @@ namespace SmartStroke
             currentLine = new List<Line>();
         }
 
+        // Take a string in format d/m/y hh:mm PM
+        // Convert to format d-m-y_hh;mm_PM
+        public string replaceDate(string d)
+        {
+            string date = "";
+            for (int i = 0; i < d.Length; i++)
+            {
+                if (d[i] == ' ')
+                {
+                    date += '_';
+                }
+                else if (d[i] == ':')
+                {
+                    date += ';';
+                }
+                else if (d[i] == '/')
+                {
+                    date += '-';
+                }
+                else
+                    date += d[i];
+            }
+            return date;
+        }
+
         // Load a previous clock test from a test replay object.
         // Need to create a new TestReplay object so that you do not add
         // more lines - test replay load will currently append information.
@@ -67,7 +92,7 @@ namespace SmartStroke
             List<String> filenames = passer.currentPatient.getTestFilenames();
             foreach (String filename in filenames)
             {
-                if(filename.Contains(currentlySelectedDate))
+                if(filename.Contains(replaceDate(currentlySelectedDate)))
                 {
                     await testReplay.loadTestReplay(filename);
                     break;
