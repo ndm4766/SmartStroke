@@ -154,6 +154,9 @@ namespace SmartStroke
 
         private void renderGranularTestReplay(object sender, RoutedEventArgs e)
         {
+            stopwatch.Reset();
+            timer.Stop();
+
             loadTest();
             granularReplayButton.IsEnabled = false;
 
@@ -165,7 +168,6 @@ namespace SmartStroke
                     MyCanvas.Children.Remove(line);
                 }
             }
-            stopwatch.Reset();
             actionIndex = 0;
             linesIndex = 0;
             allLines.Clear();
@@ -174,14 +176,22 @@ namespace SmartStroke
             timer.Start();
         }
 
-        private string getFilenameString(string filename)
+        private string getDisplayedDatetime(string filename)
         {
             //3-25-2014_5;00;50_PM
-            string datetime = filename.Substring(filename.Length - (20 + 4), 20);
+            string datetime = filename.Substring(15+5+1, filename.Length-(15+5+1)-4);
             datetime = datetime.Replace("-", "/");
             datetime = datetime.Replace("_", " ");
             datetime = datetime.Replace(";", ":");
             return datetime;
+        }
+
+        private string getFilenameString(string date)
+        {
+            date = date.Replace("/", "-");
+            date = date.Replace(" ", "_");
+            date = date.Replace(":", ";");
+            return date;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -205,7 +215,7 @@ namespace SmartStroke
             {
                 if (filename.Contains(testReplay.getTestType().ToString()))
                 {
-                    testDatesBox.Items.Add(getFilenameString(filename));
+                    testDatesBox.Items.Add(getDisplayedDatetime(filename));
                 }
             }
         }
@@ -220,7 +230,7 @@ namespace SmartStroke
 
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            currentlySelectedDate = testDatesBox.SelectedItem.ToString();
+            currentlySelectedDate = getFilenameString(testDatesBox.SelectedItem.ToString());
         }
 
         private void menuClicked(object sender, RoutedEventArgs e)
