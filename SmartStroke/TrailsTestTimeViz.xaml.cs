@@ -365,27 +365,6 @@ namespace SmartStroke
         }
 
 
-
-
-        private string getDisplayedDatetime(string filename)
-        {
-            //3-25-2014_5;00;50_PM
-            string datetime = filename.Substring(15 + 5 + 1, filename.Length - (15 + 5 + 1) - 4);
-            datetime = datetime.Replace("-", "/");
-            datetime = datetime.Replace("_", " ");
-            datetime = datetime.Replace(";", ":");
-            return datetime;
-        }
-
-        private string getFilenameString(string date)
-        {
-            date = date.Replace("/", "-");
-            date = date.Replace(" ", "_");
-            date = date.Replace(":", ";");
-            return date;
-        }
-
-
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             passer = e.Parameter as InfoPasser;    // This is the type of the trails test.
@@ -413,14 +392,14 @@ namespace SmartStroke
             {
                 if (filename.Contains(testReplay.getTestType().ToString()))
                 {
-                    testDatesBox.Items.Add(getDisplayedDatetime(filename));
+                    testDatesBox.Items.Add(testReplay.getDisplayedDatetime(filename));
                 }
             }
         }
 
         async void loadTest()
         {
-            currentlySelectedDate = getDisplayedDatetime(testDatesBox.SelectedItem.ToString());
+            currentlySelectedDate = testReplay.getFilenameString(testDatesBox.SelectedItem.ToString());
             List<string> fileNames = passer.currentPatient.getTestFilenames();
             foreach (string name in fileNames)
             {

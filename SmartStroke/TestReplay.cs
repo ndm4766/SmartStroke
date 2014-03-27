@@ -405,5 +405,32 @@ namespace SmartStroke
                 line[2] + " " + line[3] + " " + line[4]);
             return new LineData(startTime, newLine);
         }
+
+        public string getDisplayedDatetime(string filename)
+        {
+            //3-25-2014_5;00;50_PM
+            int testTypeLen = testType.ToString().Length;
+            int idLen = 15;
+            int extensionLen = 4;
+
+            string datetime = filename.Substring(idLen + testTypeLen + 1, filename.Length - (idLen + testTypeLen + 1) - extensionLen);
+            return replaceWithPrettyChars(datetime);
+        }
+
+        public string replaceWithPrettyChars(string datetime)
+        {
+            datetime = datetime.Replace("-", "/");
+            datetime = datetime.Replace("_", " ");
+            datetime = datetime.Replace(";", ":");
+            return datetime;
+        }
+
+        public string getFilenameString(string date)
+        {
+            date = date.Replace("/", "-");
+            date = date.Replace(" ", "_");
+            date = date.Replace(":", ";");
+            return date;
+        }
     }
 }
