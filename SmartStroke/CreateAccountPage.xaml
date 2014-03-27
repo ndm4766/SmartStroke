@@ -46,9 +46,9 @@
             <TextBlock x:Name="pageTitle" Text="{StaticResource AppName}" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
                         IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,30,40" SelectionChanged="pageTitle_SelectionChanged"/>
         </Grid>
-        <TextBox x:Name="registerUsernameInputText" FontFamily="Segoe UI Light" FontSize="36" BorderThickness="1" BorderBrush="#000000" HorizontalAlignment="Center" Margin="390,103,334,0" Grid.Row="1"  Text="Username" VerticalAlignment="Top" Width="642" TextChanged="registerUsernameChanged" Height="70"/>
-        <TextBox x:Name="registerPasswordInputText" FontFamily="Segoe UI Light" FontSize="36" BorderThickness="1" BorderBrush="#000000" HorizontalAlignment="Center" Margin="390,208,334,0" Grid.Row="1"  Text="Password" VerticalAlignment="Top" Width="642" TextChanged="registerPasswordChanged" Height="71"/>
-        <TextBox x:Name="registerConfirmPasswordInputText" FontFamily="Segoe UI Light" FontSize="36" BorderThickness="1" BorderBrush="#000000" HorizontalAlignment="Center" Margin="390,312,334,0" Grid.Row="1"  Text="Confirm Password" VerticalAlignment="Top" Width="642" TextChanged="registerConfirmPasswordChanged" Height="70"/>
-        <Button x:Name="registerButton" Content="Create Account" Foreground="#FFFFFF" FontSize ="22" Background="#2F5597" HorizontalAlignment="Left" Margin="604,442,0,0" Grid.Row="1" VerticalAlignment="Top" IsEnabled="True" Click="registerButtonClicked" Height="61" Width="209" />
+        <TextBox x:Name="registerUsernameInputText" FontFamily="Segoe UI Light" FontSize="36" BorderThickness="1" BorderBrush="#000000" HorizontalAlignment="Center" Margin="374,123,350,0" Grid.Row="1"  Text="Username" VerticalAlignment="Top" Width="642" Height="70"/>
+        <PasswordBox x:Name="registerPasswordInputText" FontFamily="Segoe UI Light" FontSize="36" BorderThickness="1" BorderBrush="#000000" HorizontalAlignment="Center" Margin="374,228,350,0" Grid.Row="1" VerticalAlignment="Top" Width="642" Height="71"/>
+        <PasswordBox x:Name="registerConfirmPasswordInputText" FontFamily="Segoe UI Light" FontSize="36" BorderThickness="1" BorderBrush="#000000" HorizontalAlignment="Center" Margin="374,332,350,0" Grid.Row="1" VerticalAlignment="Top" Width="642" Height="70"/>
+        <Button x:Name="registerButton" Content="Create Account" Foreground="#FFFFFF" FontSize ="22" Background="#2F5597" HorizontalAlignment="Left" Margin="590,444,0,0" Grid.Row="1" VerticalAlignment="Top" IsEnabled="True" Click="registerButtonClicked" Height="61" Width="209" />
     </Grid>
 </Page>

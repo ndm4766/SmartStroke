@@ -21,15 +21,7 @@ namespace SmartStroke
     public sealed partial class CreateAccountPage : Page
     {
         private const string registeredUsersFile = "registeredUsers.txt";
-
         private Dictionary<string, string> usernameHashDictionary;
-        //private bool registerUsernameReady;
-        //private bool registerPasswordReady;
-        //private bool registerConfirmPasswordReady;
-        private string registerUsername;
-        private string registerPassword;
-        private string registerConfirmPassword;
-
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
 
@@ -86,6 +78,7 @@ namespace SmartStroke
         }
         async private void loadAccounts()
         {
+            usernameHashDictionary.Clear();
             await loadRegisteredUsersFile(registeredUsersFile);
         }
         private async Task loadRegisteredUsersFile(string testFilename)
@@ -140,34 +133,24 @@ namespace SmartStroke
         }
         private void registerButtonClicked(object sender, RoutedEventArgs e)
         {
-            if (registerPassword == null 
-                || registerUsername == null 
-                || registerConfirmPassword == null) return;
-            if (registerPassword != registerConfirmPassword) return;
+            if (registerPasswordInputText.Password == null
+                || registerUsernameInputText.Text == null
+                || registerConfirmPasswordInputText.Password == null) return;
+            if (registerPasswordInputText.Password != 
+                registerConfirmPasswordInputText.Password) return;
             bool usernameAlreadyExists = false;
             foreach (KeyValuePair<string, string> K in usernameHashDictionary)
             {
-                if (K.Key == registerUsername) usernameAlreadyExists = true;
+                if (K.Key == registerUsernameInputText.Text) 
+                    usernameAlreadyExists = true;
             }
             if (usernameAlreadyExists) return;
             usernameHashDictionary.Add(
-                registerUsername,registerPassword.GetHashCode().ToString());
+                registerUsernameInputText.Text, 
+                registerPasswordInputText.Password.GetHashCode().ToString());
             saveAccounts();
             InfoPasser passer = new InfoPasser(registerUsernameInputText.Text);
             this.Frame.Navigate(typeof(PatientSelection), passer);
-        }
-        private void registerUsernameChanged(object sender, RoutedEventArgs e)
-        {
-            registerUsername = registerUsernameInputText.Text;
-        }
-        private void registerPasswordChanged(object sender, RoutedEventArgs e)
-        {
-            registerPassword = registerPasswordInputText.Text;
-        }
-        private void registerConfirmPasswordChanged
-            (object sender, RoutedEventArgs e)
-        {
-            registerConfirmPassword = registerConfirmPasswordInputText.Text;
         }
         #endregion
 
