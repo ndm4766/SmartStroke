@@ -108,6 +108,12 @@
     <Compile Include="CreateAccountPage.xaml.cs">
       <DependentUpon>CreateAccountPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ReyoTest.xaml.cs">
+      <DependentUpon>ReyoTest.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ReyoTestReplay.xaml.cs">
+      <DependentUpon>ReyoTestReplay.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TrailsTestTimeViz.xaml.cs">
       <DependentUpon>TrailsTestTimeViz.xaml</DependentUpon>
     </Compile>
@@ -182,6 +188,14 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="CreateAccountPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ReyoTest.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ReyoTestReplay.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

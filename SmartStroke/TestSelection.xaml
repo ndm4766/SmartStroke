@@ -58,6 +58,12 @@
             <Button Content="Clock Test" HorizontalAlignment="Center" Margin="0,0,0,0" Grid.Row="1" VerticalAlignment="Top" Click="select_clock_test"/>
             <Button Name="viewClock" Content="View Old" IsEnabled="False" HorizontalAlignment="Center" Margin="0,0,0,0" Grid.Row="1" VerticalAlignment="Top" Click="view_old_clock_click"/>
         </StackPanel>
+
+        <StackPanel Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" x:Name="MiddleStackPanel" VerticalAlignment="Center" Margin="346,79,340,481" Width="680">
+            <Button Content="Rey-Osterrieth Test" HorizontalAlignment="Center" Margin="0,0,0,0" Grid.Row="1" VerticalAlignment="Top" Click="select_reyo_test"/>
+            <Button Content="View Old" Name="viewReyo" IsEnabled="False" HorizontalAlignment="Center" Margin="0,0,0,0" Grid.Row="1" VerticalAlignment="Top" Click="view_old_reyo_click"/>
+        </StackPanel>
+
         <Button Content="Compare to Norm" HorizontalAlignment="Left" Margin="1137,533,0,0" Grid.Row="1" VerticalAlignment="Top" Click="norm_button_click"/>
 
     </Grid>

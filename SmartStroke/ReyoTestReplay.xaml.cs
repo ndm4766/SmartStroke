@@ -23,7 +23,7 @@ namespace SmartStroke
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class ClockTestReplay : Page
+    public sealed partial class ReyoTestReplay : Page
     {
         InfoPasser passer = new InfoPasser();
 
@@ -43,7 +43,7 @@ namespace SmartStroke
         private const double ERASE_WIDTH = 30.0;
         private Color DRAW_COLOR = Color.FromArgb(255, 50, 50, 50);
 
-        public ClockTestReplay()
+        public ReyoTestReplay()
         {
             this.InitializeComponent();
 
@@ -173,18 +173,18 @@ namespace SmartStroke
                     stopwatch.Stop();
                     timer.Stop();
 
-                    granularReplayButton.IsEnabled = true;
+                    replayButton.IsEnabled = true;
                 }
             }
         }
 
-        private void renderGranularTestReplay(object sender, RoutedEventArgs e)
+        private void renderTestReplay(object sender, RoutedEventArgs e)
         {
             stopwatch.Reset();
             timer.Stop();
 
             loadTest();
-            granularReplayButton.IsEnabled = false;
+            replayButton.IsEnabled = false;
 
             //reset all the things
             foreach (var stroke in allLines)
@@ -211,7 +211,7 @@ namespace SmartStroke
             base.OnNavigatedTo(e);
 
             passer = e.Parameter as InfoPasser;
-            testReplay = new TestReplay(passer.currentPatient, TEST_TYPE.CLOCK);
+            testReplay = new TestReplay(passer.currentPatient, TEST_TYPE.REY_OSTERRIETH);
 
             if (passer.currentPatient.getTestFilenames().Count > 0)
             {
@@ -219,7 +219,7 @@ namespace SmartStroke
             }
             else
             {
-                granularReplayButton.IsEnabled = false;
+                replayButton.IsEnabled = false;
             }
 
             var stuff = passer.currentPatient.getTestFilenames();

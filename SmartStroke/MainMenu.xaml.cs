@@ -53,5 +53,10 @@ namespace SmartStroke
         {
             this.Frame.Navigate(typeof(ClockTest), passer);
         }
+
+        private void reyo_click(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(ReyoTest), passer);
+        }
     }
 }
