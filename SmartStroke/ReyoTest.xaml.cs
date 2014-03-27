@@ -35,16 +35,12 @@ namespace SmartStroke
     /// </summary>
     public sealed partial class ReyoTest : Page
     {
-        private NavigationHelper navigationHelper;
-        private ObservableDictionary defaultViewModel = new ObservableDictionary();
-
         InfoPasser passer = new InfoPasser();
 
         private TestReplay testReplay;
         bool testStarted;
 
         //general globals
-        private string testVersion;
         private const double DRAW_WIDTH = 4.0;
         private const double ERASE_WIDTH = 30.0;
         private Color DRAW_COLOR = Color.FromArgb(255, 50, 50, 50);
@@ -104,13 +100,7 @@ namespace SmartStroke
             drawingOrder = new List<InkStroke>();
 
             testStarted = false;
-            /*
-            quadWeights = new List<int>();
-            quadWeights.Add(0);
-            quadWeights.Add(0);
-            quadWeights.Add(0);
-            quadWeights.Add(0);
-            */
+   
             //add all the event handlers for touch/pen/mouse input (pointer handles all 3)
             MyCanvas.PointerPressed += new PointerEventHandler(MyCanvas_PointerPressed);
             MyCanvas.PointerMoved += new PointerEventHandler(MyCanvas_PointerMoved);
@@ -253,16 +243,6 @@ namespace SmartStroke
                                     MyCanvas.Children.Remove(line);
                                 }
 
-                                /*List<TestAction> actionsSoFar = testReplay.getTestActions();
-                                int eraseIndex = i;
-                                for (int j = 0; j < eraseIndex; j++)
-                                {
-                                    if(actionsSoFar[i].getActionType() != ACTION_TYPE.STROKE)
-                                    {
-                                        eraseIndex++;
-                                    }
-                                }*/
-
                                 testReplay.deleteStroke(drawingOrder.IndexOf(strokes[i]));
                             }
                         }
@@ -350,19 +330,6 @@ namespace SmartStroke
                 // Process touch input (from finger)
             }
         }
-
-        #endregion
-
-        #region NavigationHelper registration
-
-        /// The methods provided in this section are simply used to allow
-        /// NavigationHelper to respond to the page's navigation methods.
-        /// 
-        /// Page specific logic should be placed in event handlers for the  
-        /// <see cref="GridCS.Common.NavigationHelper.LoadState"/>
-        /// and <see cref="GridCS.Common.NavigationHelper.SaveState"/>.
-        /// The navigation parameter is available in the LoadState method 
-        /// in addition to page state preserved during an earlier session.
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {

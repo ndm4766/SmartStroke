@@ -33,7 +33,6 @@ namespace SmartStroke
         Stopwatch stopwatch;
         int actionIndex;
         int linesIndex;
-        //Dictionary<Stroke, List<Line>> allLines; //necessary bec the lines are already children of the other page
         List<List<Line>> allLines;
         List<Line> currentLine;
 
@@ -53,37 +52,10 @@ namespace SmartStroke
             stopwatch = new Stopwatch();
             actionIndex = 0;
             linesIndex = 0;
-            //allLines = new Dictionary<Stroke, List<Line>>();
             allLines = new List<List<Line>>();
             currentLine = new List<Line>();
         }
 
-        // Take a string in format d/m/y hh:mm PM
-        // Convert to format d-m-y_hh;mm_PM
-        /*
-        public string replaceDate(string d)
-        {
-            string date = "";
-            for (int i = 0; i < d.Length; i++)
-            {
-                if (d[i] == ' ')
-                {
-                    date += '_';
-                }
-                else if (d[i] == ':')
-                {
-                    date += ';';
-                }
-                else if (d[i] == '/')
-                {
-                    date += '-';
-                }
-                else
-                    date += d[i];
-            }
-            return date;
-        }
-        */
         // Load a previous clock test from a test replay object.
         // Need to create a new TestReplay object so that you do not add
         // more lines - test replay load will currently append information.
@@ -148,7 +120,6 @@ namespace SmartStroke
                     if (linesIndex >= lines.Count)
                     {
                         linesIndex = 0;
-                        //allLines.Add(stroke, currentLine);
                         allLines.Add(currentLine);
                         currentLine = new List<Line>();
                         actionIndex++;
@@ -158,11 +129,9 @@ namespace SmartStroke
                 else if (allActions[actionIndex].getActionType() == ACTION_TYPE.DEL_STROKE)
                 {
                     int strokeDeletedIndex = (allActions[actionIndex] as DeleteStroke).getIndex();
-                    //Stroke deletedStroke = allActions[strokeDeletedIndex] as Stroke;
 
                     foreach (Line line in allLines[strokeDeletedIndex])
                     {
-                        //MyCanvas.Children.Remove(line);
                         MyCanvas.Children[MyCanvas.Children.IndexOf(line)].Opacity = .2;
                     }
                     actionIndex++;
