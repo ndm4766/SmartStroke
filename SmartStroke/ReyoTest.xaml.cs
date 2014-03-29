@@ -21,6 +21,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Shapes;
 
+
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234237
 
 /*
@@ -35,6 +36,9 @@ namespace SmartStroke
     /// </summary>
     public sealed partial class ReyoTest : Page
     {
+        private NavigationHelper navigationHelper;
+        private ObservableDictionary defaultViewModel = new ObservableDictionary();
+
         InfoPasser passer = new InfoPasser();
 
         private TestReplay testReplay;
