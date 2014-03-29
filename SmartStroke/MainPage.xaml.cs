@@ -68,6 +68,13 @@ namespace SmartStroke
                 encoding);
         }
 
+        // Debug as WIPTTE clicked
+        private void WIPTTE_Click(object sender, RoutedEventArgs e)
+        {
+            InfoPasser passer = new InfoPasser("WIPPTE");
+            this.Frame.Navigate(typeof(PatientSelection), passer);
+        }
+
         // Log in button clicked.
         // Authenticate the doctor.
         private void Button_Click(object sender, RoutedEventArgs e)
