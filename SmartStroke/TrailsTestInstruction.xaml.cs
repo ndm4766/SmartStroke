@@ -148,8 +148,6 @@ namespace SmartStroke
                 nodes.Add(new TrailNode('D', new Point(311, 109), MyCanvas, false));
             }
 
-            //previousPoint = nodes[0].getLocation();
-            //currentPoint = nodes[0].getLocation();
             previousPoint = new Point(nodes[0].getLocation().X+15, nodes[0].getLocation().Y+15);
             currentPoint = new Point(nodes[0].getLocation().X + 15, nodes[0].getLocation().Y + 15);
             currentNode = 0;
@@ -179,9 +177,21 @@ namespace SmartStroke
         // restart tick. When the timer starts ticking, restart the animation
         private void restart_tick(object sender, object e)
         {
+            // Clear all items from the canvas that are not a TextBlock
+            MyCanvas.Children.Clear();
+
             disp.Tick -= restart_tick;
             disp.Stop();
-            this.Frame.Navigate(typeof(TrailsTestInstruction), passer);
+            disp.Interval = new TimeSpan(0, 0, 0, 0, 1);
+            disp.Tick += timer_tick;
+            populateNodes();
+            makeInstructions();
+
+            instructionNumber = 0;
+
+            instructionTimer.Tick += instruction_tick;
+            instructionTimer.Interval = new TimeSpan(0, 0, 3);
+            instructionTimer.Start();
         }
 
 
