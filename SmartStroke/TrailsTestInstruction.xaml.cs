@@ -342,5 +342,13 @@ namespace SmartStroke
             instructionTimer.Stop();
             this.Frame.Navigate(typeof(TrailsTest), passer);
         }
+
+        private void Button_Click_HZ(object sender, RoutedEventArgs e)
+        {
+            disp.Stop();
+            instructionTimer.Stop();
+            passer.trailsVertical = false;
+            this.Frame.Navigate(typeof(TrailsTest), passer);
+        }
     }
 }

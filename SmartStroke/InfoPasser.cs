@@ -10,6 +10,7 @@ namespace SmartStroke
     class InfoPasser
     {
         public char trailsTestVersion;
+        public bool trailsVertical;
         public Patient currentPatient;
         public String doctorId;
         public TestReplay testReplay;
@@ -18,6 +19,7 @@ namespace SmartStroke
         {
             doctorId = "0";
             trailsTestVersion = 'x';
+            trailsVertical = true;
             currentPatient = null;
         }
 
@@ -25,6 +27,7 @@ namespace SmartStroke
         {
             doctorId = docId;
             trailsTestVersion = 'x';
+            trailsVertical = true;
             currentPatient = null;
         }
 
