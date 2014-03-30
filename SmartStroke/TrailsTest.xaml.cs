@@ -119,6 +119,8 @@ namespace SmartStroke
             determineScreenSize();
         }
 
+        #region NodeCreation
+
         private void populateNodes(char kind, List<TrailNode> nodes)
         {
             if (kind == 'A')
@@ -215,6 +217,8 @@ namespace SmartStroke
                 MyCanvas.Children.Add(end);
             }
         }
+
+        #endregion
 
         /*
          * Perceptive Pixel - DPIX/DPIY = 40, DPILog = 96 Res=1920X1080 Scale = 100
@@ -478,29 +482,6 @@ namespace SmartStroke
             e.Handled = true;
         }
 
-        // Need to cancel the test for some reason
-        private void cancelTest(object sender, RoutedEventArgs e)
-        {
-            timer.Stop();
-            disp.Stop();
-            this.Frame.Navigate(typeof(MainMenu), passer);
-        }
-
-        // Test is finished.. take a picture of the screen.
-        private void SubmitButtonClicked(object sender, RoutedEventArgs e)
-        {
-            passer.currentPatient = null;
-            testReplay.saveTestReplay();
-            this.Frame.Navigate(typeof(MainPage), passer);
-
-        }
-        private void TimeButtonClicked(object sender, RoutedEventArgs e)
-        {
-            passer.addTestToPasser(testReplay);
-            this.Frame.Navigate(typeof(TrailsTestTimeViz), passer);
-
-        }
-
         private void MyCanvas_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
             // Get information about the pointer location.
@@ -524,6 +505,33 @@ namespace SmartStroke
             }
 
             pressed = true;
+        }
+
+        #endregion
+
+        #region ButtonClicks
+
+        // Need to cancel the test for some reason
+        private void cancelTest(object sender, RoutedEventArgs e)
+        {
+            timer.Stop();
+            disp.Stop();
+            this.Frame.Navigate(typeof(MainMenu), passer);
+        }
+
+        // Test is finished.. take a picture of the screen.
+        private void SubmitButtonClicked(object sender, RoutedEventArgs e)
+        {
+            passer.currentPatient = null;
+            testReplay.saveTestReplay();
+            this.Frame.Navigate(typeof(MainPage), passer);
+
+        }
+        private void TimeButtonClicked(object sender, RoutedEventArgs e)
+        {
+            passer.addTestToPasser(testReplay);
+            this.Frame.Navigate(typeof(TrailsTestTimeViz), passer);
+
         }
 
         private void viewColorTimeMode()
