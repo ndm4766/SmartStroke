@@ -185,7 +185,7 @@ namespace SmartStroke
 
         async private void viewColorTimeMode()
         {
-            //removeAllStrokes();
+            removeAllStrokes();
             await loadTest();
             var allActions = testReplay.getTestActions();
             var smartStrokes = allActions.OfType<SmartStroke.Stroke>();
@@ -270,6 +270,10 @@ namespace SmartStroke
                 strokeNum++;
             }
 
+        }
+        private void removeAllStrokes()
+        {
+            MyCanvas.Children.Clear();
         }
 
         private int getColorTimeInterval()
