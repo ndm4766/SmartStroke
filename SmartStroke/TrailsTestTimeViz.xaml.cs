@@ -299,6 +299,14 @@ namespace SmartStroke
             var strokes = inkManager.GetStrokes();
             int strokeNum = 0;
             int timeInterval = getColorTimeInterval();
+            if (timeInterval == 1)
+            {
+                timeIntervalBlock.Text = "Color changes every second";
+            }
+            else
+            {
+                timeIntervalBlock.Text = "Color changes every" + timeInterval.ToString() + " seconds";
+            }
             double msLineDuration = 0;
             SolidColorBrush color = new SolidColorBrush(Colors.Black);
             foreach (var stroke in smartStrokes)

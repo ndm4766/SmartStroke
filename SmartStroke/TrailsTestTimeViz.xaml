@@ -19,6 +19,7 @@
         </Viewbox>
         <ListBox Name="testDatesBox" HorizontalAlignment="Left" ScrollViewer.IsVerticalRailEnabled="True"  Height="229" Margin="1029,74,0,0" Grid.Row="1" VerticalAlignment="Top" Width="312" SelectionChanged="testSelected" />
         <Button Click="goToMenu" Content="Return to Menu" HorizontalAlignment="Left" Margin="1084,509,0,0" Grid.Row="1" VerticalAlignment="Top" Height="97" Width="216"/>
+        <TextBlock Name="timeIntervalBlock" HorizontalAlignment="Left" Margin="268,592,0,0" Grid.Row="1" TextWrapping="Wrap" Text=""  FontSize="30" FontFamily="Segoe UI Light" Foreground="#606060" VerticalAlignment="Top" Height="43" Width="428"/>
 
 
 
