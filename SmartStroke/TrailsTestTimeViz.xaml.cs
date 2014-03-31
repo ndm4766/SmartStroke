@@ -285,8 +285,15 @@ namespace SmartStroke
 
         }
 
+        private void removeAllStrokes()
+        {
+            MyCanvas.Children.Clear();
+            populateNodes(passer.trailsTestVersion, nodes);
+        }
+
         private void viewColorTimeMode()
         {
+            removeAllStrokes();
             var allActions = testReplay.getTestActions();
             var smartStrokes = allActions.OfType<SmartStroke.Stroke>();
             var strokes = inkManager.GetStrokes();
@@ -305,7 +312,7 @@ namespace SmartStroke
                 {
                     Line l = lineData.getLine();
                     //msLineDuration = (smartLines[lineNum].getDateTime()-prevTime).TotalMilliseconds;
-                    //MyCanvas.Children.Remove(l);
+                    MyCanvas.Children.Remove(l);
                     //l.StrokeThickness = msLineDuration * 1;//change one to a constant (less than 1) that makes it look okay
                     Line line = new Line();
                     line.X1 = l.X1;
@@ -343,7 +350,7 @@ namespace SmartStroke
                     else if ((secondsSinceStartOfTest / timeInterval + 1) % 8 == 6) { color = new SolidColorBrush(Color.FromArgb(255, 0, 112, 192)); }
                     else if ((secondsSinceStartOfTest / timeInterval + 1) % 8 == 7) { color = new SolidColorBrush(Color.FromArgb(255, 0, 32, 96)); }
                     else if ((secondsSinceStartOfTest / timeInterval + 1) % 8 == 0) { color = new SolidColorBrush(Color.FromArgb(255, 112, 48, 160)); }
-                    //MyCanvas.Children.Remove(l);
+                    MyCanvas.Children.Remove(l);
 
                     Line line = new Line();
                     line.X1 = l.X1;
