@@ -18,7 +18,7 @@
         <Button Content="Replay" Name="replayButton" Margin="1209,91,0,607" Height="70" Width="150" Click="renderTestReplay" />
         <Button Content="Button" Name="timeVizButton" Margin="1209,178,0,520" Height="70" Width="150" Click="showTimeViz" />
         
-        <ListBox Name="testDatesBox" HorizontalAlignment="Left" FontSize="14" BorderThickness="0" ScrollViewer.VerticalScrollMode="Enabled" Height="0" Margin="1207,308,0,0" VerticalAlignment="Top" Width="154" SelectionChanged="ListBox_SelectionChanged">
+        <ListBox Name="testDatesBox" HorizontalAlignment="Left" FontSize="14" BorderThickness="0" ScrollViewer.VerticalScrollMode="Enabled" Height="326" Margin="1207,308,0,0" VerticalAlignment="Top" Width="154" SelectionChanged="ListBox_SelectionChanged">
         </ListBox>
         <TextBlock Name="timeIntervalBlock" HorizontalAlignment="Left" Margin="268,592,0,0" Grid.Row="1" TextWrapping="Wrap" Text=""  FontSize="30" FontFamily="Segoe UI Light" Foreground="#606060" VerticalAlignment="Top" Height="43" Width="428"/>
 
