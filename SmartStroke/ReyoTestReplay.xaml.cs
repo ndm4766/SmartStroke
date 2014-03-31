@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI;
@@ -63,9 +64,9 @@ namespace SmartStroke
         // Load a previous clock test from a test replay object.
         // Need to create a new TestReplay object so that you do not add
         // more lines - test replay load will currently append information.
-        async private void loadTest()
+        async private Task loadTest()
         {
-            testReplay = new TestReplay();
+            //testReplay = new TestReplay();
             List<String> filenames = passer.currentPatient.getTestFilenames();
             foreach (String filename in filenames)
             {
@@ -151,12 +152,12 @@ namespace SmartStroke
             }
         }
 
-        private void renderTestReplay(object sender, RoutedEventArgs e)
+        async private void renderTestReplay(object sender, RoutedEventArgs e)
         {
             stopwatch.Reset();
             timer.Stop();
 
-            loadTest();
+            await loadTest();
             replayButton.IsEnabled = false;
 
             //reset all the things
@@ -182,10 +183,10 @@ namespace SmartStroke
             viewColorTimeMode();
         }
 
-        private void viewColorTimeMode()
+        async private void viewColorTimeMode()
         {
             //removeAllStrokes();
-            loadTest();
+            await loadTest();
             var allActions = testReplay.getTestActions();
             var smartStrokes = allActions.OfType<SmartStroke.Stroke>();
             //var strokes = inkManager.GetStrokes();
