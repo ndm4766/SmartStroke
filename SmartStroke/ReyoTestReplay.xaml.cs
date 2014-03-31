@@ -7,6 +7,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI;
+using Windows.UI.Input.Inking;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -35,6 +36,9 @@ namespace SmartStroke
         int linesIndex;
         List<List<Line>> allLines;
         List<Line> currentLine;
+
+        private InkManager inkManager;
+        private InkDrawingAttributes drawingAttributes;
 
         string currentlySelectedDate;
 
@@ -171,9 +175,111 @@ namespace SmartStroke
             timer.Start();
         }
 
-        
 
-        
+
+        private void showTimeViz(object sender, RoutedEventArgs e)
+        {
+            viewColorTimeMode();
+        }
+
+        private void viewColorTimeMode()
+        {
+            //removeAllStrokes();
+            loadTest();
+            var allActions = testReplay.getTestActions();
+            var smartStrokes = allActions.OfType<SmartStroke.Stroke>();
+            //var strokes = inkManager.GetStrokes();
+            int strokeNum = 0;
+            int timeInterval = getColorTimeInterval();
+            if (timeInterval == 1)
+            {
+                timeIntervalBlock.Text = "Color changes every second";
+            }
+            else
+            {
+                timeIntervalBlock.Text = "Color changes every" + timeInterval.ToString() + " seconds";
+            }
+            double msLineDuration = 0;
+            SolidColorBrush color = new SolidColorBrush(Colors.Black);
+            foreach (var stroke in smartStrokes)
+            {
+
+                var smartLines = smartStrokes.ElementAt(strokeNum).lines;
+                int lineNum = 0;
+                //DateTime prevTime = testReplay.getStartTime();
+
+                foreach (LineData lineData in smartLines)
+                {
+                    Line l = lineData.getLine();
+                    //msLineDuration = (smartLines[lineNum].getDateTime()-prevTime).TotalMilliseconds;
+                    MyCanvas.Children.Remove(l);
+                    //l.StrokeThickness = msLineDuration * 1;//change one to a constant (less than 1) that makes it look okay
+                    Line line = new Line();
+                    line.X1 = l.X1;
+                    line.Y1 = l.Y1;
+                    line.X2 = l.X2;
+                    line.Y2 = l.Y2;
+
+
+                    line.StrokeThickness = msLineDuration * 1;
+                    MyCanvas.Children.Add(line);
+                    lineNum++;
+                    //we probably want to render the line as a bezier curve. look at bezierCurveTo
+                }
+                strokeNum++;
+
+            }
+            DateTime prevTime = testReplay.getStartTime();
+            strokeNum = 0;
+            foreach (var stroke in smartStrokes)
+            {
+
+                var smartLines = smartStrokes.ElementAt(strokeNum).lines;
+                int lineNum = 0;
+                foreach (LineData lineData in smartLines)
+                {
+
+                    Line l = lineData.getLine();
+                    int secondsSinceStartOfTest = (int)Math.Floor((smartLines[lineNum].getDateTime() - testReplay.getStartTime()).TotalSeconds);
+                    //assign 1 of 8 colors
+                    if ((secondsSinceStartOfTest / timeInterval + 1) % 8 == 1) { color = new SolidColorBrush(Color.FromArgb(255, 255, 192, 0)); }
+                    else if ((secondsSinceStartOfTest / timeInterval + 1) % 8 == 2) { color = new SolidColorBrush(Color.FromArgb(255, 255, 255, 0)); }
+                    else if ((secondsSinceStartOfTest / timeInterval + 1) % 8 == 3) { color = new SolidColorBrush(Color.FromArgb(255, 146, 208, 80)); }
+                    else if ((secondsSinceStartOfTest / timeInterval + 1) % 8 == 4) { color = new SolidColorBrush(Color.FromArgb(255, 0, 176, 80)); }
+                    else if ((secondsSinceStartOfTest / timeInterval + 1) % 8 == 5) { color = new SolidColorBrush(Color.FromArgb(255, 0, 176, 240)); }
+                    else if ((secondsSinceStartOfTest / timeInterval + 1) % 8 == 6) { color = new SolidColorBrush(Color.FromArgb(255, 0, 112, 192)); }
+                    else if ((secondsSinceStartOfTest / timeInterval + 1) % 8 == 7) { color = new SolidColorBrush(Color.FromArgb(255, 0, 32, 96)); }
+                    else if ((secondsSinceStartOfTest / timeInterval + 1) % 8 == 0) { color = new SolidColorBrush(Color.FromArgb(255, 112, 48, 160)); }
+                    MyCanvas.Children.Remove(l);
+
+                    Line line = new Line();
+                    line.X1 = l.X1;
+                    line.Y1 = l.Y1;
+                    line.X2 = l.X2;
+                    line.Y2 = l.Y2;
+
+                    line.Stroke = color;
+                    msLineDuration = (smartLines[lineNum].getDateTime() - prevTime).TotalMilliseconds;
+                    prevTime = prevTime.AddMilliseconds(msLineDuration);
+                    line.StrokeThickness = 4;
+                    //line.StrokeThickness = msLineDuration * 1; //uncomment this to see unrefined thickness variation view
+                    MyCanvas.Children.Add(line);
+                    lineNum++;
+                }
+                strokeNum++;
+            }
+
+        }
+
+        private int getColorTimeInterval()
+        {
+            double testDuration = (testReplay.getEndTime() - testReplay.getStartTime()).TotalSeconds;
+            if (testDuration <= 8) { return 1; }
+            else if (testDuration <= 40) { return 5; }
+            else if (testDuration <= 120) { return 15; }
+            else { return 30; }
+
+        }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -208,6 +314,7 @@ namespace SmartStroke
             timer.Stop();
             stopwatch.Stop();
         }
+
 
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

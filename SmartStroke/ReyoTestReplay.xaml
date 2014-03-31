@@ -9,14 +9,18 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-        <Canvas Name="MyCanvas" Background="Transparent" Margin="-10,10,10,-10"/>
+        <Canvas Name="MyCanvas" Background="Transparent" Margin="-10,10,10,-10">
+            
+        </Canvas>
         <Rectangle Name="outline" Stroke="Black" StrokeThickness="10" Margin="10,10,159,10"/>
 
-        <Button Content="Menu" Margin="1209,7,0,691" Height="70" Width="150" Click="menuClicked" />
+        <Button Content="Return to Menu" Margin="1209,7,0,691" Height="70" Width="150" Click="menuClicked" />
         <Button Content="Replay" Name="replayButton" Margin="1209,91,0,607" Height="70" Width="150" Click="renderTestReplay" />
-
-        <ListBox Name="testDatesBox" HorizontalAlignment="Left" FontSize="14" BorderThickness="0" ScrollViewer.VerticalScrollMode="Enabled" Height="326" Margin="1212,190,0,0" VerticalAlignment="Top" Width="154" SelectionChanged="ListBox_SelectionChanged">
+        <Button Content="Button" Name="timeVizButton" Margin="1209,178,0,520" Height="70" Width="150" Click="showTimeViz" />
+        
+        <ListBox Name="testDatesBox" HorizontalAlignment="Left" FontSize="14" BorderThickness="0" ScrollViewer.VerticalScrollMode="Enabled" Height="326" Margin="1207,308,0,0" VerticalAlignment="Top" Width="154" SelectionChanged="ListBox_SelectionChanged">
         </ListBox>
+        <TextBlock Name="timeIntervalBlock" HorizontalAlignment="Left" Margin="268,592,0,0" Grid.Row="1" TextWrapping="Wrap" Text=""  FontSize="30" FontFamily="Segoe UI Light" Foreground="#606060" VerticalAlignment="Top" Height="43" Width="428"/>
 
     </Grid>
 </Page>
