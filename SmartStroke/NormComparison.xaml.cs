@@ -26,7 +26,6 @@ namespace SmartStroke
     /// </summary>
     public sealed partial class NormComparison : Page
     {
-
         const string filename = "userInfo.txt";
         InfoPasser passer = new InfoPasser();
         private NavigationHelper navigationHelper;
@@ -129,8 +128,7 @@ namespace SmartStroke
         private async void LoadChartContents()
         {
             await loadJson();
-            Random rand = new Random();
-            
+
             List<Performance> allResults = new List<Performance>();
 
             List<double> testTimes = new List<double>();
@@ -142,9 +140,9 @@ namespace SmartStroke
             {
                 testReplay = new TestReplay();
                 // Find the file that corresponds with this patient name and load it
-                foreach( string name in fileNames)
+                foreach (string name in fileNames)
                 {
-                    if(name.Contains(patientList[i].patientName))
+                    if (name.Contains(patientList[i].patientName))
                     {
                         await testReplay.loadTestReplay(name);
                         var actions = testReplay.getTestActions();
@@ -161,13 +159,60 @@ namespace SmartStroke
                         patientAges.Add(tempAge);
 
                         allResults.Add(new Performance() { Age = tempAge, Time = seconds });
-                        
+
                         break;
                     }
                 }
-                
             }
 
+            List<Performance> averages = new List<Performance>();
+            List<Performance> medians = new List<Performance>();
+
+            if (allResults.Count > 0)
+            {
+
+                List<Performance> sortPatientAge = new List<Performance>(allResults);
+
+                sortPatientAge.Sort(delegate(Performance arg1, Performance arg2)
+                {
+                    return arg1.Age.CompareTo(arg2.Age);
+                });
+
+
+                while (sortPatientAge.Count > 0)
+                {
+                    Performance reference = sortPatientAge[0];
+                    List<double> chunk = new List<double>();
+
+                    try
+                    {
+                        while (reference.Age == sortPatientAge[0].Age)
+                        {
+                            chunk.Add(sortPatientAge[0].Time);
+                            chunk.Sort();
+                            sortPatientAge.RemoveAt(0);
+                        }
+                        averages.Add(new Performance { Age = reference.Age, Time = chunk.Average() });
+
+                        if (chunk.Count % 2 == 0) {
+                            int spot = chunk.Count / 2;
+                            double tempMedian = (chunk[spot - 1] + chunk[spot + 1]) / 2;
+                            medians.Add(new Performance { Age = reference.Age, Time = tempMedian });
+                        }
+                        else
+                        {
+                            double tempMedian = chunk[chunk.Count / 2];
+                            medians.Add(new Performance { Age = reference.Age, Time = tempMedian });
+                        }
+                    }
+                    catch
+                    {
+                        //no more sortPatientAge, do nothing
+                    }
+                }
+            }
+
+            /*
             testTimes.Sort();
             patientAges.Sort();
 
@@ -222,11 +267,17 @@ namespace SmartStroke
             else
             {
                 //no data, do nothing
-            }
+            }*/
 
             //Plottting patients
             (ScatterChart.Series[0] as ScatterSeries).ItemsSource = allResults;
 
+            //Plot averages for individual ages
+            (ScatterChart.Series[1] as LineSeries).ItemsSource = averages;
+
+            //Plot medians for individual ages
+            (ScatterChart.Series[2] as LineSeries).ItemsSource = medians;
+            /*
             //Plotting average test time
             List<Performance> tempAvgTestTime = new List<Performance>();
             tempAvgTestTime.Add(new Performance() {Age = Convert.ToInt32(minAge), Time = avgTestTime});
@@ -250,9 +301,11 @@ namespace SmartStroke
             tempMedAge.Add(new Performance() { Age = Convert.ToInt32(medAge), Time = minTestTime });
             tempMedAge.Add(new Performance() { Age = Convert.ToInt32(medAge), Time = maxTestTime });
             (ScatterChart.Series[4] as LineSeries).ItemsSource = tempMedAge;
+             * */
 
         }
 
+        /*
         private void RecreateChart(string way)
         {
 
@@ -309,10 +362,10 @@ namespace SmartStroke
             //(ScatterChart.Series[1] as ScatterSeries).ItemsSource = highEducationResults;
             //(ScatterChart.Series[2] as ScatterSeries).ItemsSource = uniquePoints;
 
-        }
+        }*/
 
-        public class PatientPlot {
-
+        public class PatientPlot
+        {
             public string patientName;
             public string patientBirthday;
             public string patientAge;
@@ -321,15 +374,12 @@ namespace SmartStroke
 
             public PatientPlot(string name, string birthday, string age, string sex, string education)
             {
-
                 patientName = name;
                 patientBirthday = birthday;
                 patientAge = age;
                 patientSex = sex;
                 patientEducation = education;
-
             }
-
         };
 
         async Task loadJson()
@@ -339,10 +389,11 @@ namespace SmartStroke
                 // Clear all the fileNames in the directory
                 fileNames.Clear();
                 var names = await Windows.Storage.ApplicationData.Current.LocalFolder.GetFilesAsync();
-                foreach ( var name in names )
+
+                foreach (var name in names)
                 {
                     // The fileName starts with a number
-                    if(name.Name[0] >= 48 && name.Name[0] <= 58)
+                    if (name.Name[0] >= 48 && name.Name[0] <= 58)
                         fileNames.Add(name.Name);
                 }
 
@@ -360,6 +411,7 @@ namespace SmartStroke
                     string patientBday = patients.GetObjectAt(i).GetNamedValue("Birthday").GetString();
                     string patientSex = patients.GetObjectAt(i).GetNamedValue("Sex").GetString();
                     string patientEducation = patients.GetObjectAt(i).GetNamedValue("Education").GetString();
+                    string test;
 
                     DateTime today = DateTime.Today;
                     DateTime bday = Convert.ToDateTime(patientBday);
@@ -371,10 +423,9 @@ namespace SmartStroke
 
                     PatientPlot patient = new PatientPlot(patientName, patientBirthday, patientAge, patientSex, patientEducation);
                     patientList.Add(patient);
-                    
                 }
-
             }
+
             catch
             {
                 //json load failed
@@ -386,10 +437,8 @@ namespace SmartStroke
 
         private void chartOptions(object sender, RoutedEventArgs e)
         {
-
             var popup = new Windows.UI.Popups.PopupMenu();
-            popup.ShowAsync(new Point(0,0));
-        
+            popup.ShowAsync(new Point(0, 0));
         }
     }
 }
