@@ -74,7 +74,7 @@ namespace SmartStroke
         }
         async private void saveAccounts()
         {
-            saveToRegisteredUsersFile(registeredUsersFile);
+            await saveToRegisteredUsersFile(registeredUsersFile);
         }
         async private void loadAccounts()
         {

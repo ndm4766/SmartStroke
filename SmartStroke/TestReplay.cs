@@ -158,7 +158,7 @@ namespace SmartStroke
         }
     }
 
-    public enum TEST_TYPE { TRAILS_A, TRAILS_B, REY_OSTERRIETH, CLOCK }
+    public enum TEST_TYPE { TRAILS_A, TRAILS_A_H, TRAILS_B, TRAILS_B_H, REY_OSTERRIETH, CLOCK }
     public sealed class TestReplay
     {
         private const string fileExtension = ".txt";

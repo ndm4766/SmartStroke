@@ -678,10 +678,22 @@ namespace SmartStroke
 
             //TODO must have real patient info here
             TEST_TYPE type = TEST_TYPE.TRAILS_A;
-            if(passer.trailsTestVersion == 'A')
+            if (passer.trailsTestVersion == 'A')
+            {
                 type = TEST_TYPE.TRAILS_A;
-            else if(passer.trailsTestVersion == 'B')
+                if (!passer.trailsVertical)
+                {
+                    type = TEST_TYPE.TRAILS_A_H;
+                }
+            }
+            else if (passer.trailsTestVersion == 'B')
+            {
                 type = TEST_TYPE.TRAILS_B;
+                if(!passer.trailsVertical)
+                {
+                    type = TEST_TYPE.TRAILS_B_H;
+                }
+            }
             testReplay = new TestReplay(passer.currentPatient, type);
         }
 
