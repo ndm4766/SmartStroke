@@ -184,30 +184,28 @@ namespace SmartStroke
                     Performance reference = sortPatientAge[0];
                     List<double> chunk = new List<double>();
 
-                    try
+                    while (reference.Age == sortPatientAge[0].Age)
                     {
-                        while (reference.Age == sortPatientAge[0].Age)
+                        chunk.Add(sortPatientAge[0].Time);
+                        chunk.Sort();
+                        sortPatientAge.RemoveAt(0);
+                        if (sortPatientAge.Count == 0)
                         {
-                            chunk.Add(sortPatientAge[0].Time);
-                            chunk.Sort();
-                            sortPatientAge.RemoveAt(0);
-                        }
-                        averages.Add(new Performance { Age = reference.Age, Time = chunk.Average() });
-
-                        if (chunk.Count % 2 == 0) {
-                            int spot = chunk.Count / 2;
-                            double tempMedian = (chunk[spot - 1] + chunk[spot + 1]) / 2;
-                            medians.Add(new Performance { Age = reference.Age, Time = tempMedian });
-                        }
-                        else
-                        {
-                            double tempMedian = chunk[chunk.Count / 2];
-                            medians.Add(new Performance { Age = reference.Age, Time = tempMedian });
+                            break;
                         }
                     }
-                    catch
+                    averages.Add(new Performance { Age = reference.Age, Time = chunk.Average() });
+
+                    if (chunk.Count % 2 == 0)
                     {
-                        //no more sortPatientAge, do nothing
+                        int spot = chunk.Count / 2;
+                        double tempMedian = (chunk[spot - 1] + chunk[spot + 1]) / 2;
+                        medians.Add(new Performance { Age = reference.Age, Time = tempMedian });
+                    }
+                    else
+                    {
+                        double tempMedian = chunk[chunk.Count / 2];
+                        medians.Add(new Performance { Age = reference.Age, Time = tempMedian });
                     }
                 }
             }
