@@ -13,6 +13,6 @@
         <PasswordBox Name="userPassword" HorizontalAlignment="Left" Margin="489,427,0,0" PlaceholderText="Password" VerticalAlignment="Top" Height="50" Width="380"/>
         <Button FontSize="36" Content="Log In" HorizontalAlignment="Left" Margin="594,500,0,0" VerticalAlignment="Top" Click="Button_Click" />
         <Button Click="createAccount_Click" Name="createAccount" FontSize="18" HorizontalAlignment="Left" Margin="7,651,0,0" Content="Don't have an account? Create one!"  VerticalAlignment="Top" Height="110" Width="356"/>
-        <Button FontSize="24" Content="Debug as WIPPTE" HorizontalAlignment="Left" Margin="1049,715,0,0" VerticalAlignment="Top" Click="WIPTTE_Click" Width="310" />
+        <Button FontSize="24" Content="Debug as WIPTTE" HorizontalAlignment="Left" Margin="1049,715,0,0" VerticalAlignment="Top" Click="WIPTTE_Click" Width="310" />
     </Grid>
 </Page>

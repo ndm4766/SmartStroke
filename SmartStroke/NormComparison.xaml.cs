@@ -405,6 +405,8 @@ namespace SmartStroke
 
                 for (uint i = 0; i < patients.Count; i++)
                 {
+                    string doctorName = patients.GetObjectAt(i).GetNamedValue("Doctor").GetString();
+                    if (doctorName != passer.doctorId) continue;
 
                     string patientName = patients.GetObjectAt(i).GetNamedValue("Name").GetString();
                     string patientBirthday = patients.GetObjectAt(i).GetNamedValue("Birthday").GetString();

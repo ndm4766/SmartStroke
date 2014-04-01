@@ -539,9 +539,9 @@ namespace SmartStroke
         // Test is finished.. take a picture of the screen.
         private void SubmitButtonClicked(object sender, RoutedEventArgs e)
         {
-            passer.currentPatient = null;
+            //passer.currentPatient = null;
             testReplay.saveTestReplay();
-            this.Frame.Navigate(typeof(MainPage), passer);
+            this.Frame.Navigate(typeof(MainMenu), passer);
 
         }
         private void TimeButtonClicked(object sender, RoutedEventArgs e)
