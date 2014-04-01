@@ -270,6 +270,7 @@ namespace SmartStroke
             string testReplayString = "";
             testReplayString += (patient.convertToString() + "\n");
             testReplayString += (startTime.ToString() + "\n");
+            testReplayString += (endTime.ToString() + "\n");
             for (int i = 0; i < testActions.Count; i++)
             {
                 switch (testActions[i].getActionType())
@@ -342,10 +343,18 @@ namespace SmartStroke
 
             List<string> firstLineWords = testStrings[0].Split(' ').Cast<string>().ToList<string>();
 
-            string dateTimeString = testStrings[1];
-            startTime = Convert.ToDateTime(dateTimeString);
+            string startTimeString = testStrings[1];
+            startTime = Convert.ToDateTime(startTimeString);
 
-            for(int i = 2; i < testStrings.Count; i++)
+            int foundEndTestLine = 0;
+            List<string> LEGACY_endTestCheckLine = testStrings[2].Split(' ').Cast<string>().ToList<string>();
+            if (LEGACY_endTestCheckLine[0].Contains('/')) {
+                string endTimeString = testStrings[2];
+                endTime = Convert.ToDateTime(endTimeString);
+                foundEndTestLine = 1;
+            }
+
+            for(int i = 2 + foundEndTestLine; i < testStrings.Count; i++)
             {
                 if (inActionSection) {
                     List<string> lineWords = testStrings[i].Split(' ')
