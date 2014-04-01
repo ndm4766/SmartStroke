@@ -131,9 +131,6 @@ namespace SmartStroke
 
             List<Performance> allResults = new List<Performance>();
 
-            List<double> testTimes = new List<double>();
-            List<double> patientAges = new List<double>();
-
             // Go through all the patients and display the complete data.
             // Do not separate into different categories.
             for (int i = 0; i < patientList.Count; i++)
@@ -152,11 +149,17 @@ namespace SmartStroke
                         DateTime end = actions[actions.Count - 1].getEndTime();
                         TimeSpan TimeDifference = end - start;
 
+                        //Get name of test
+                        string testName = name.Trim(new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' });
+                        int j = 0;
+                        for (; !Char.IsNumber(testName[j]); j++)
+                        {
+                            //increase j
+                        }
+                        testName = testName.Substring(0, j);      
+
                         double seconds = TimeDifference.Minutes * 60 + TimeDifference.Seconds + TimeDifference.Milliseconds / 100;
                         int tempAge = Convert.ToInt32(patientList[i].patientAge);
-
-                        testTimes.Add(seconds);
-                        patientAges.Add(tempAge);
 
                         allResults.Add(new Performance() { Age = tempAge, Time = seconds });
 
