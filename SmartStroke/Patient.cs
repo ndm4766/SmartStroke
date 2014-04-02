@@ -13,11 +13,15 @@ namespace SmartStroke
         private string title;
         private string note;
         private DateTime time;
+
+        // Instantiates PatientNote and sets start to now
         public PatientNote(string Title, string Note) {
             title = Title;
             time = DateTime.Now;
             note = Note;
         }
+
+        // Instantiates PatientNote with predefined DateTime
         public PatientNote(string Title, string Note, DateTime Time)
         {
             title = Title;
@@ -33,6 +37,8 @@ namespace SmartStroke
         public string getNote() { return note; }
         public void changeTime(DateTime Time) { time = Time; }
         public DateTime getTime() { return time; }
+
+        // Converts PatientNote to string
         public string convertToString()
         {
             string stringNote = time.ToString() + '\t';
@@ -72,6 +78,8 @@ namespace SmartStroke
         public List<string> getTestFilenames() { return testFilenames; }
         public void addNote(PatientNote patNote) { notes.Add(patNote); }
         public void addFile(string testFile) { testFilenames.Add(testFile); }
+
+        // Converts patient to string for saving
         public string convertToString() {
             char genderChar = (gender == GENDER.MALE ? 'M' : 'F');
             return name + " - "

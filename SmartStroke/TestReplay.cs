@@ -286,6 +286,7 @@ namespace SmartStroke
             catch { return; }
             
         }
+        // Converts the TestReplay object into a string for saving
         public string convertToString()
         {
             string testReplayString = "";
@@ -341,6 +342,8 @@ namespace SmartStroke
             lineString += (" " + lineData.getDateTime().ToString());
             return lineString;
         }
+
+        // Reads a file and attempts to convert it to a TestReplay object
         public async Task loadTestReplay(string testFilename)
         {
             testActions.Clear();
@@ -358,6 +361,8 @@ namespace SmartStroke
             catch { return; }
             parseTestReplayFile(testReplayString);
         }
+
+        // Converts a string to a TestReplay object
         public void parseTestReplayFile(string testReplayString)
         {
             bool inActionSection = true;
@@ -409,6 +414,8 @@ namespace SmartStroke
                 }
             }
         }
+
+        // Converts a string into a Stroke object
         public Stroke parseLineStroke(List<string> line)
         {
             DateTime startTime = DateTime.Parse(
@@ -417,6 +424,8 @@ namespace SmartStroke
                 line[4] + " " + line[5] + " " + line[6]);
             return new Stroke(startTime, endTime);
         }
+        
+        // Converts a string into a DeleteStroke object
         public DeleteStroke parseLineDelPrevStroke(List<string> line)
         {
             DateTime occuranceTime = DateTime.Parse(
@@ -440,7 +449,6 @@ namespace SmartStroke
 
         public string getDisplayedDatetime(string filename)
         {
-            //3-25-2014_5;00;50_PM
             int testTypeLen = testType.ToString().Length;
             int idLen = 15;
             int extensionLen = 4;
