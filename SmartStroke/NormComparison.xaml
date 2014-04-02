@@ -62,9 +62,9 @@
             <Button Content="Options" HorizontalAlignment="Left" Margin="1270,0,0,0" VerticalAlignment="Top" Width="89" Click="chartOptions">
                 <Button.Flyout>
                     <Flyout>
-                        <Grid Height="300" Width="420">
+                        <Grid Height="300" Width="225" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
                             <TextBlock HorizontalAlignment="Left" Margin="60,0,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Time Range" VerticalAlignment="Top"/>
-                            <TextBox HorizontalAlignment="Left" Margin="10,15,0,0" TextWrapping="Wrap" Text="Min" VerticalAlignment="Top" Width="70"/>
+                            <TextBox HorizontalAlignment="Left" Margin="10,15,0,0" TextWrapping="Wrap" Text="Min" VerticalAlignment="Top" Width="70" PreventKeyboardDisplayOnProgrammaticFocus="True"/>
                             <TextBox HorizontalAlignment="Left" Margin="100,15,0,0" TextWrapping="Wrap" Text="Max" VerticalAlignment="Top" Width="70"/>
                             <TextBlock HorizontalAlignment="Left" Margin="175,25,0,0" Grid.Row="1" TextWrapping="Wrap" Text="seconds" VerticalAlignment="Top"/>
                             
