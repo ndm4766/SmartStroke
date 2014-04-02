@@ -49,27 +49,37 @@ Capture patient actions:
         but be sure to call endStroke() first.
 Save a current TestReplay:
     2)  Call saveTestReplay()
-Load a previous TestReplay:  WIP
+Load a TestReplay:
+    3)  Call loadTestReplay(string fileName)
 */
 
 namespace SmartStroke
 {
+    // Helps determine what kind of action something is
     public enum ACTION_TYPE { STROKE, DEL_STROKE, NONE }
     public abstract class TestAction
     {
+        // Time an action started and completed
         protected DateTime startTime;
         protected DateTime endTime;
+
+        // Indicates when an action is completed. 
+        // After this, it can no longer be edited.
         protected bool finished;
+        
+        // Create an unfinished TestAction with now as the start time
         public TestAction()
         {
             startTime = DateTime.Now;
             finished = false;
         }
+        // Create an unfinished TestAction with a predefined start time
         public TestAction(DateTime StartTime)
         {
             startTime = StartTime;
             finished = false;
         }
+        // Create a finished TestAction with a predefined start and end time
         public TestAction(DateTime StartTime, DateTime EndTime)
         {
             startTime = StartTime;
@@ -102,8 +112,13 @@ namespace SmartStroke
         public abstract ACTION_TYPE getActionType();
         public abstract string getActionTypeString();
     }
+
+    /*  Not a TestAction, a representation of a single line in the context of
+     *  a TestReplay.  A Stroke has many of these.
+     */
     public sealed class LineData
     {
+        // Lines are drawn instantaneously, therefore an end time is not needed
         private DateTime startTime;
         private Line line;
         public LineData(DateTime StartTime, Line _Line)
@@ -158,6 +173,7 @@ namespace SmartStroke
         }
     }
 
+    // Allows TestReplay objects to detail what test they were created for
     public enum TEST_TYPE { TRAILS_A, TRAILS_A_H, TRAILS_B, TRAILS_B_H, REY_OSTERRIETH, CLOCK }
     public sealed class TestReplay
     {
@@ -192,6 +208,8 @@ namespace SmartStroke
         {
             endTime = DateTime.Now;
         }
+        // Create an unfinished stroke and add to it as the current action
+        // First, test if there is not another current action
         public void beginStroke()
         {
             if (getCurrentTestAction() != null)
@@ -199,6 +217,7 @@ namespace SmartStroke
             currentStroke = new Stroke();
             testActions.Add(currentStroke);
         }
+        // Add a Line to a Stroke (must be unfinished and most recent action)
         public void addLine(Line line)
         {
             if (getCurrentTestAction() != null)
@@ -217,6 +236,7 @@ namespace SmartStroke
             }
             currentStroke.endAction();
         }
+        // Adds a delete stroke object
         public void deleteStroke(int index)
         {
             if (getCurrentTestAction() == null) return;
@@ -238,6 +258,7 @@ namespace SmartStroke
             if (testActions.Count == 0) return null;
             else return testActions[testActions.Count - 1];
         }
+        // Returns a filename to save the TestReplay object as
         public string getFileName()
         {
             string timeString = getStartTime().ToString().Replace("/", "-");
@@ -268,6 +289,7 @@ namespace SmartStroke
         public string convertToString()
         {
             string testReplayString = "";
+            // See Patient.convertToString() to see the intended format of the first line
             testReplayString += (patient.convertToString() + "\n");
             testReplayString += (startTime.ToString() + "\n");
             testReplayString += (endTime.ToString() + "\n");
@@ -307,6 +329,7 @@ namespace SmartStroke
             }
             return testReplayString;
         }
+        // Converts LineData to string for saving TestReplay objects
         public string formatLineDataAsString(LineData lineData)
         {
             string lineString = "";
