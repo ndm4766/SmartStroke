@@ -44,6 +44,7 @@ namespace SmartStroke
             this.navigationHelper.SaveState += navigationHelper_SaveState;
         }
         
+        // Converts username/pass dictionary to string
         private string convertRegisteredUsersToString()
         {
             string toReturn = "";
@@ -56,6 +57,8 @@ namespace SmartStroke
             }
             return toReturn;
         }
+
+        // Writes current username/pass dictionary to file
         private async Task saveToRegisteredUsersFile(string testFilename)
         {
             StorageFile testStorageFile;
@@ -76,11 +79,15 @@ namespace SmartStroke
         {
             await saveToRegisteredUsersFile(registeredUsersFile);
         }
+
+        // Clears username/password hash dictionary before loading users
         async private void loadAccounts()
         {
             usernameHashDictionary.Clear();
             await loadRegisteredUsersFile(registeredUsersFile);
         }
+
+        // Loads and parses user/password combination file
         private async Task loadRegisteredUsersFile(string testFilename)
         {
             StorageFile registeredUsersStorageFile;
@@ -98,6 +105,8 @@ namespace SmartStroke
             catch { return; }
             parseRegisteredUsersFile(registeredUsersString);
         }
+
+        // Loads user/password combinations from string
         private void parseRegisteredUsersFile(string registeredUsersText)
         {
             List<string> testStrings =
