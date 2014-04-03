@@ -361,7 +361,7 @@ namespace SmartStroke
             catch { return; }
             parseTestReplayFile(testReplayString);
         }
-
+        
         // Converts a string to a TestReplay object
         public void parseTestReplayFile(string testReplayString)
         {
@@ -370,6 +370,7 @@ namespace SmartStroke
                 testReplayString.Split('\n').Cast<string>().ToList<string>();
 
             List<string> firstLineWords = testStrings[0].Split(' ').Cast<string>().ToList<string>();
+            parsePatientInfo(firstLineWords);
 
             string startTimeString = testStrings[1];
             startTime = Convert.ToDateTime(startTimeString);
@@ -413,6 +414,18 @@ namespace SmartStroke
                     }
                 }
             }
+        }
+
+        // Populates the TestReplay patient using the split patient line
+        public void parsePatientInfo(List<string> patientString)
+        {
+            GENDER gender;
+            if (patientString[6] == "M") gender = GENDER.MALE;
+            else gender = GENDER.FEMALE;
+            EDU_LEVEL eduLevel = (EDU_LEVEL)Enum.Parse(typeof(EDU_LEVEL), patientString[8]);
+            DateTime birthdate = Convert.ToDateTime(patientString[2] + ' ' + patientString[3] + ' ' + patientString[4]);
+            string name = patientString[0];
+            patient = new Patient(name, "", birthdate, gender, eduLevel);
         }
 
         // Converts a string into a Stroke object
