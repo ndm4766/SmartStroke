@@ -125,10 +125,73 @@ namespace SmartStroke
             LoadChartContents();
         }
 
+        private string getB(string name)
+        {
+            string ret = "";
+            foreach(string files in fileNames)
+            {
+                if(files.Contains(name) && files.Contains(TEST_TYPE.TRAILS_B.ToString()))
+                {
+                    return files;
+                }
+            }
+            return ret;
+        }
+
+        private async Task chart()
+        {
+            for (int i = 0; i < patientList.Count; i++)
+            {
+                testReplay = new TestReplay();
+                // Find the file that corresponds with this patient name and load it
+                foreach (string name in fileNames)
+                {
+                    // Find the TrailsA score for the person
+                    if (name.Contains(patientList[i].patientName) && name.Contains(TEST_TYPE.TRAILS_A.ToString()))
+                    {
+                        await testReplay.loadTestReplay(name);
+                        var actions = testReplay.getTestActions();
+                        if (actions.Count < 1) continue;
+
+                        //Age.Items.Add(testReplay.getPatient().getBirthDate().ToString());
+                        DateTime start = actions[0].getStartTime();
+                        DateTime end = actions[actions.Count - 1].getEndTime();
+                        TimeSpan TimeDifference = end - start;
+
+                        double seconds = TimeDifference.Minutes * 60 + TimeDifference.Seconds + TimeDifference.Milliseconds / 100;
+                        
+                        TrailsA.Items.Add(seconds);
+
+
+                        // Find the TrailsB score for the person
+                        string fName = getB(patientList[i].patientName);
+                        if (fName == "") TrailsB.Items.Add("");
+                        else
+                        {
+                            testReplay = new TestReplay();
+                            await testReplay.loadTestReplay(fName);
+                            actions = testReplay.getTestActions();
+                            if (actions.Count < 1) continue;
+
+                            start = actions[0].getStartTime();
+                            end = actions[actions.Count - 1].getEndTime();
+                            TimeDifference = end - start;
+
+                            seconds = TimeDifference.Minutes * 60 + TimeDifference.Seconds + TimeDifference.Milliseconds / 100;
+
+                            TrailsB.Items.Add(seconds);
+                        }
+                    }
+                }
+            }
+        }
+
         private async void LoadChartContents()
         {
             await loadJson();
+            await chart();
 
+            /*
             List<Performance> allResults = new List<Performance>();
 
             List<double> testTimes = new List<double>();
@@ -270,13 +333,13 @@ namespace SmartStroke
             }*/
 
             //Plottting patients
-            (ScatterChart.Series[0] as ScatterSeries).ItemsSource = allResults;
+            //(ScatterChart.Series[0] as ScatterSeries).ItemsSource = allResults;
 
             //Plot averages for individual ages
-            (ScatterChart.Series[1] as LineSeries).ItemsSource = averages;
+            //(ScatterChart.Series[1] as LineSeries).ItemsSource = averages;
 
             //Plot medians for individual ages
-            (ScatterChart.Series[2] as LineSeries).ItemsSource = medians;
+            //(ScatterChart.Series[2] as LineSeries).ItemsSource = medians;
             /*
             //Plotting average test time
             List<Performance> tempAvgTestTime = new List<Performance>();
@@ -301,7 +364,7 @@ namespace SmartStroke
             tempMedAge.Add(new Performance() { Age = Convert.ToInt32(medAge), Time = minTestTime });
             tempMedAge.Add(new Performance() { Age = Convert.ToInt32(medAge), Time = maxTestTime });
             (ScatterChart.Series[4] as LineSeries).ItemsSource = tempMedAge;
-             * */
+             */
 
         }
 
