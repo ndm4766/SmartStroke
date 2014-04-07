@@ -125,11 +125,77 @@ namespace SmartStroke
             LoadChartContents();
         }
 
+        private string getB(string name)
+        {
+            string ret = "";
+            foreach(string files in fileNames)
+            {
+                if(files.Contains(name) && files.Contains(TEST_TYPE.TRAILS_B.ToString()))
+                {
+                    return files;
+                }
+            }
+            return ret;
+        }
+
+        private async Task chart()
+        {
+            for (int i = 0; i < patientList.Count; i++)
+            {
+                testReplay = new TestReplay();
+                // Find the file that corresponds with this patient name and load it
+                foreach (string name in fileNames)
+                {
+                    // Find the TrailsA score for the person
+                    if (name.Contains(patientList[i].patientName) && name.Contains(TEST_TYPE.TRAILS_A.ToString()))
+                    {
+                        await testReplay.loadTestReplay(name);
+                        var actions = testReplay.getTestActions();
+                        if (actions.Count < 1) continue;
+
+                        //Age.Items.Add(testReplay.getPatient().getBirthDate().ToString());
+                        DateTime start = actions[0].getStartTime();
+                        DateTime end = actions[actions.Count - 1].getEndTime();
+                        TimeSpan TimeDifference = end - start;
+
+                        double seconds = TimeDifference.Minutes * 60 + TimeDifference.Seconds + TimeDifference.Milliseconds / 100;
+                        
+                        TrailsA.Items.Add(seconds);
+
+
+                        // Find the TrailsB score for the person
+                        string fName = getB(patientList[i].patientName);
+                        if (fName == "") TrailsB.Items.Add("");
+                        else
+                        {
+                            testReplay = new TestReplay();
+                            await testReplay.loadTestReplay(fName);
+                            actions = testReplay.getTestActions();
+                            if (actions.Count < 1) continue;
+
+                            start = actions[0].getStartTime();
+                            end = actions[actions.Count - 1].getEndTime();
+                            TimeDifference = end - start;
+
+                            seconds = TimeDifference.Minutes * 60 + TimeDifference.Seconds + TimeDifference.Milliseconds / 100;
+
+                            TrailsB.Items.Add(seconds);
+                        }
+                    }
+                }
+            }
+        }
+
         private async void LoadChartContents()
         {
             await loadJson();
+            await chart();
 
+            /*
             List<Performance> allResults = new List<Performance>();
+
+            List<double> testTimes = new List<double>();
+            List<double> patientAges = new List<double>();
 
             // Go through all the patients and display the complete data.
             // Do not separate into different categories.
@@ -149,17 +215,11 @@ namespace SmartStroke
                         DateTime end = actions[actions.Count - 1].getEndTime();
                         TimeSpan TimeDifference = end - start;
 
-                        //Get name of test
-                        string testName = name.Trim(new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' });
-                        int j = 0;
-                        for (; !Char.IsNumber(testName[j]); j++)
-                        {
-                            //increase j
-                        }
-                        testName = testName.Substring(0, j);      
-
                         double seconds = TimeDifference.Minutes * 60 + TimeDifference.Seconds + TimeDifference.Milliseconds / 100;
                         int tempAge = Convert.ToInt32(patientList[i].patientAge);
+
+                        testTimes.Add(seconds);
+                        patientAges.Add(tempAge);
 
                         allResults.Add(new Performance() { Age = tempAge, Time = seconds });
 
@@ -187,41 +247,185 @@ namespace SmartStroke
                     Performance reference = sortPatientAge[0];
                     List<double> chunk = new List<double>();
 
-                    while (reference.Age == sortPatientAge[0].Age)
+                    try
                     {
-                        chunk.Add(sortPatientAge[0].Time);
-                        chunk.Sort();
-                        sortPatientAge.RemoveAt(0);
-                        if (sortPatientAge.Count == 0)
+                        while (reference.Age == sortPatientAge[0].Age)
                         {
-                            break;
+                            chunk.Add(sortPatientAge[0].Time);
+                            chunk.Sort();
+                            sortPatientAge.RemoveAt(0);
+                        }
+                        averages.Add(new Performance { Age = reference.Age, Time = chunk.Average() });
+
+                        if (chunk.Count % 2 == 0) {
+                            int spot = chunk.Count / 2;
+                            double tempMedian = (chunk[spot - 1] + chunk[spot + 1]) / 2;
+                            medians.Add(new Performance { Age = reference.Age, Time = tempMedian });
+                        }
+                        else
+                        {
+                            double tempMedian = chunk[chunk.Count / 2];
+                            medians.Add(new Performance { Age = reference.Age, Time = tempMedian });
                         }
                     }
-                    averages.Add(new Performance { Age = reference.Age, Time = chunk.Average() });
-
-                    if (chunk.Count % 2 == 0)
+                    catch
                     {
-                        int spot = chunk.Count / 2;
-                        double tempMedian = (chunk[spot - 1] + chunk[spot + 1]) / 2;
-                        medians.Add(new Performance { Age = reference.Age, Time = tempMedian });
-                    }
-                    else
-                    {
-                        double tempMedian = chunk[chunk.Count / 2];
-                        medians.Add(new Performance { Age = reference.Age, Time = tempMedian });
+                        //no more sortPatientAge, do nothing
                     }
                 }
             }
 
+            /*
+            testTimes.Sort();
+            patientAges.Sort();
+
+            double medTestTime = 0;
+            double medAge = 0;
+            
+            double avgTestTime = 0;
+            double avgAge = 0;
+
+            double minTestTime = 0;
+            double minAge = 0;
+
+            double maxTestTime = 0;
+            double maxAge = 0;
+
+            if (testTimes.Count > 0)
+            {
+
+                if (testTimes.Count % 2 == 0)
+                {
+                    double tempDouble = Convert.ToDouble(testTimes.Count);
+                    int topIndex = Convert.ToInt32(Math.Floor(tempDouble) / 2);
+                    medTestTime = ((testTimes[topIndex - 1] + testTimes[topIndex]) / 2.0);
+                }
+                else
+                {
+                    medTestTime = testTimes[testTimes.Count / 2];
+                }
+
+                if (patientAges.Count % 2 == 0)
+                {
+                    double tempDouble = Convert.ToDouble(patientAges.Count);
+                    int topIndex = Convert.ToInt32(Math.Floor(tempDouble) / 2);
+                    medAge = ((patientAges[topIndex - 1] + patientAges[topIndex]) / 2.0);
+                }
+                else
+                {
+                    medAge = Convert.ToDouble(patientAges[patientAges.Count / 2]);
+                }
+
+                avgTestTime = testTimes.Average();
+                avgAge = patientAges.Average();
+
+                minTestTime = testTimes[0];
+                minAge = patientAges[0];
+
+                maxTestTime = testTimes[testTimes.Count - 1];
+                maxAge = patientAges[patientAges.Count - 1];
+
+            }
+
+            else
+            {
+                //no data, do nothing
+            }*/
+
             //Plottting patients
-            (ScatterChart.Series[0] as ScatterSeries).ItemsSource = allResults;
+            //(ScatterChart.Series[0] as ScatterSeries).ItemsSource = allResults;
 
             //Plot averages for individual ages
-            (ScatterChart.Series[1] as LineSeries).ItemsSource = averages;
+            //(ScatterChart.Series[1] as LineSeries).ItemsSource = averages;
 
             //Plot medians for individual ages
-            (ScatterChart.Series[2] as LineSeries).ItemsSource = medians;
+            //(ScatterChart.Series[2] as LineSeries).ItemsSource = medians;
+            /*
+            //Plotting average test time
+            List<Performance> tempAvgTestTime = new List<Performance>();
+            tempAvgTestTime.Add(new Performance() {Age = Convert.ToInt32(minAge), Time = avgTestTime});
+            tempAvgTestTime.Add(new Performance() { Age = Convert.ToInt32(maxAge), Time = avgTestTime });
+            (ScatterChart.Series[1] as LineSeries).ItemsSource = tempAvgTestTime;
+
+            //Plotting average age
+            List<Performance> tempAvgAge = new List<Performance>();
+            tempAvgAge.Add(new Performance() { Age = Convert.ToInt32(avgAge), Time = minTestTime });
+            tempAvgAge.Add(new Performance() { Age = Convert.ToInt32(avgAge), Time = maxTestTime });
+            (ScatterChart.Series[2] as LineSeries).ItemsSource = tempAvgAge;
+
+            //Plotting median test time
+            List<Performance> tempMedTestTime = new List<Performance>();
+            tempMedTestTime.Add(new Performance() { Age = Convert.ToInt32(minAge), Time = medTestTime });
+            tempMedTestTime.Add(new Performance() { Age = Convert.ToInt32(maxAge), Time = medTestTime });
+            (ScatterChart.Series[3] as LineSeries).ItemsSource = tempMedTestTime;
+
+            //Plotting median age
+            List<Performance> tempMedAge = new List<Performance>();
+            tempMedAge.Add(new Performance() { Age = Convert.ToInt32(medAge), Time = minTestTime });
+            tempMedAge.Add(new Performance() { Age = Convert.ToInt32(medAge), Time = maxTestTime });
+            (ScatterChart.Series[4] as LineSeries).ItemsSource = tempMedAge;
+             */
+
         }
+
+        /*
+        private void RecreateChart(string way)
+        {
+
+            Random rand = new Random();
+
+            List<Performance> lowEducationResults = new List<Performance>();
+            List<Performance> highEducationResults = new List<Performance>();
+            List<Performance> uniquePoints = new List<Performance>();
+
+            // Go through all the patients and display the complete data.
+            // Do not separate into different categories.
+            for (int i = 0; i < patientList.Count; i++)
+            {
+
+                int tempAge = Convert.ToInt32(patientList[i].patientAge);
+
+                if (patientList[i].patientEducation == "Highschool Diploma")
+                {
+
+                    int j = rand.Next(tempAge - 5, tempAge + 5);
+                    double y = j * 0.82 + 200;
+                    lowEducationResults.Add(new Performance() { Age = tempAge, Time = rand.NextDouble() * 14 + y });
+
+                }
+                else
+                {
+
+                    int j = rand.Next(tempAge - 5, tempAge + 5);
+                    double y = j * 0.98 + 204;
+                    highEducationResults.Add(new Performance() { Age = tempAge, Time = rand.NextDouble() * 11 + y });
+
+                }
+
+            }
+
+
+            for (int i = 0; i < 100; i++)
+            {
+                int j = rand.Next(15, 90);
+                double y = j * 0.98 + 204;
+                lowEducationResults.Add(new Performance() { Age = j, Time = rand.NextDouble() * 14 + y });
+            }
+
+            for (int i = 0; i < 100; i++)
+            {
+                int j = rand.Next(15, 90);
+                double y = j * 0.82 + 200;
+                highEducationResults.Add(new Performance() { Age = j, Time = rand.NextDouble() * 11 + y });
+            }
+
+            //uniquePoints.Add(new Performance() { Age = 55, Time = 260 });
+
+            //(ScatterChart.Series[0] as ScatterSeries).ItemsSource = lowEducationResults;
+            //(ScatterChart.Series[1] as ScatterSeries).ItemsSource = highEducationResults;
+            //(ScatterChart.Series[2] as ScatterSeries).ItemsSource = uniquePoints;
+
+        }*/
 
         public class PatientPlot
         {

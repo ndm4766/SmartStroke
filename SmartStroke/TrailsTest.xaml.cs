@@ -256,7 +256,7 @@ namespace SmartStroke
             {
                 MyCanvas.Height = 768;
                 MyCanvas.Width = 1366;
-                timer_box.Text = "PIXEL";
+                //timer_box.Text = "PIXEL";
             }
             else
             {
@@ -296,10 +296,12 @@ namespace SmartStroke
         private void timer_tick(object sender, object e)
         {
             //update the textbox with the current time in the stopwatch
+            /*
             timer_box.Text = String.Format("{0}:{1}:{2}",
                 timer.Elapsed.Minutes.ToString(),
                 timer.Elapsed.Seconds.ToString("D2"),
                 (timer.Elapsed.Milliseconds / 10).ToString("D2"));
+             */
         }
 
         //distance between two points: used to determine if a line drawn is long enough to draw
