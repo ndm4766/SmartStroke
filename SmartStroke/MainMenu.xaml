@@ -8,11 +8,31 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Button Content="Take Trail-Making Test" HorizontalAlignment="Left" FontSize="40" Margin="132,78,0,0" VerticalAlignment="Top" Height="151" Width="442" Click="trails_click"/>
-        <Button Content="View Past Tests" HorizontalAlignment="Left" FontSize="50" Margin="362,504,0,0" VerticalAlignment="Top" Height="201" Width="586" Click="test_selection_click"/>
-        <Button Content="Take Clock Test" HorizontalAlignment="Left" FontSize="40" Margin="814,78,0,0" VerticalAlignment="Top" Height="151" Width="442" Click="clock_click"/>
-        <Button Content="Logout" HorizontalAlignment="Left" FontSize="30" Margin="19.731,651.726,0,0" VerticalAlignment="Top" Height="92.44" Width="189.609" Click="logout" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto">
+        <Button HorizontalAlignment="Left" FontSize="36" FontFamily="Segoe UI Light"  Margin="87,78,0,0" VerticalAlignment="Top" Height="151" Width="228" Background="#203864" Foreground="#FFFFFF" Click="trailsA_click">
+            <TextBlock Text="Trails A" TextWrapping="Wrap" TextAlignment="Center"/>
         </Button>
-        <Button Content="Rey-Osterrieth" HorizontalAlignment="Left" FontSize="40" Margin="462,249,0,0" VerticalAlignment="Top" Height="151" Width="442" Click="reyo_click" />
+        <Button Content="Start Clock Drawing Test" HorizontalAlignment="Left" FontSize="36" FontFamily="Segoe UI Light" Margin="87,260,0,0" VerticalAlignment="Top" Background="#203864" Foreground="#FFFFFF" Click="clock_click" Width="499" Height="151"/>
+        <Button Content="Logout" HorizontalAlignment="Left" FontSize="24" FontFamily="Segoe UI Light" Margin="19.731,651.726,0,0" VerticalAlignment="Top" Height="92.44" Width="189.609" Background="#203864" Foreground="#FFFFFF" Click="logout" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto">
+        </Button>
+        <Button Content="Start Rey-Osterrieth Test" HorizontalAlignment="Left" FontSize="36" FontFamily="Segoe UI Light" Margin="87,448,0,0" VerticalAlignment="Top" Height="151" Width="499" Background="#203864" Foreground="#FFFFFF" Click="reyo_click" />
+        <Button HorizontalAlignment="Left" FontSize="36" FontFamily="Segoe UI Light" Margin="358,78,0,0" VerticalAlignment="Top" Height="151" Width="228" Background="#203864" Foreground="#FFFFFF" Click="trailsB_click">
+            <TextBlock Text="Trails B" TextWrapping="Wrap" TextAlignment="Center"/>
+        </Button>
+        <Button Name="viewTrailsA" IsEnabled="False" HorizontalAlignment="Center" FontSize="36" FontFamily="Segoe UI Light" Margin="741,78,397,0" VerticalAlignment="Top" Height="151" Width="228" Background="#203864" Foreground="#FFFFFF" Click="trailsAOld">
+            <TextBlock Text="Finished Trails A" TextWrapping="Wrap" TextAlignment="Center"/>
+        </Button>
+        <Button Name="viewTrailsB"  IsEnabled="False" HorizontalAlignment="Center" FontSize="36" FontFamily="Segoe UI Light" Margin="1012,78,120,0" VerticalAlignment="Top" Height="151" Width="228" Background="#203864" Foreground="#FFFFFF" Click="trailsBOld">
+            <TextBlock Text="Finished Trails B" TextWrapping="Wrap" TextAlignment="Center"/>
+        </Button>
+        <Button Name="viewClock" Content="Finished Clock Drawing Test" IsEnabled="False" HorizontalAlignment="Center" FontSize="36" FontFamily="Segoe UI Light" Margin="741,260,123,0" VerticalAlignment="Top" Height="151" Width="502" Background="#203864" Foreground="#FFFFFF" Click="view_old_clock_click" RenderTransformOrigin="0.5,0.5"/>
+        <Button Name="viewReyo" Content="Finished Rey-Osterrieth Tests" IsEnabled="False" HorizontalAlignment="Center" FontSize="36" FontFamily="Segoe UI Light" Margin="741,448,123,0" VerticalAlignment="Top" Height="151" Width="502" Background="#203864" Foreground="#FFFFFF" Click="view_old_reyo_click"/>
+        <Rectangle HorizontalAlignment="Left" Height="577" Margin="45,54,0,0" Stroke="#203864" StrokeThickness="4.5" VerticalAlignment="Top" Width="583"/>
+        <Rectangle HorizontalAlignment="Left" Height="577" Margin="697,54,0,0" Stroke="#203864" StrokeThickness="4.5" VerticalAlignment="Top" Width="583"/>
+        <Rectangle HorizontalAlignment="Left" Height="38" Margin="65,38,0,0" Fill="#FFFFFF" VerticalAlignment="Top" Width="75"/>
+        <TextBlock HorizontalAlignment="Left" Margin="65,35,0,0" TextWrapping="Wrap" Text="Take" FontSize="36" FontFamily="Segoe UI Light"  VerticalAlignment="Top"/>
+        <Rectangle HorizontalAlignment="Left" Height="38" Margin="718,38,0,0" Fill="#FFFFFF" VerticalAlignment="Top" Width="117"/>
+        <TextBlock HorizontalAlignment="Left" Margin="720,35,0,0" TextWrapping="Wrap" Text="Review" FontSize="36" FontFamily="Segoe UI Light"  VerticalAlignment="Top"/>
+
+
     </Grid>
 </Page>

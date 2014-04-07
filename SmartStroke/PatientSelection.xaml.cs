@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -83,10 +84,9 @@ namespace SmartStroke
             greeting.Text = "Howdy, " + docName;
         }
 
-        // If you click on a patient, send his/her ID and the doctor's name to the testing screen
-        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async Task selectionChangedTask()
         {
-            if(MedicalID.SelectedItem != null)
+            if (MedicalID.SelectedItem != null)
             {
                 MedicalID.SelectionChanged -= ListBox_SelectionChanged;
                 search.TextChanged -= searchPatients;
@@ -123,15 +123,22 @@ namespace SmartStroke
                             edu = EDU_LEVEL.PHD;
                         else
                             edu = EDU_LEVEL.OTHER;
-                        
+
 
                         passer.currentPatient = new Patient(name, docName, birthday, gender, edu);
-                        passer.currentPatient.loadFiles();
+                        await passer.currentPatient.loadFiles();
                         this.Frame.Navigate(typeof(MainMenu), passer);
                         return;
                     }
                 }
             }
+            
+        }
+
+        // If you click on a patient, send his/her ID and the doctor's name to the testing screen
+        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            selectionChangedTask();
         }
 
         // Load the file with all the patients and display them for a doctor to pick
