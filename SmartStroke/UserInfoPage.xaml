@@ -56,7 +56,7 @@
             <x:String>PHD</x:String>
             <x:String>Other</x:String>
         </ComboBox>
-        <Button Name="SubmitButton" Content="Submit" Foreground="#FFFFFF" Background="#203864" HorizontalAlignment="Left" Margin="1089,266,0,0" Grid.Row="1" VerticalAlignment="Top" IsEnabled="False" Click="SubmitButtonClicked" />
+        <Button Name="SubmitButton" Content="Submit" Foreground="#FFFFFF" FontFamily="Segoe UI Light" Background="#203864" HorizontalAlignment="Left" Margin="1089,266,0,0" Grid.Row="1" VerticalAlignment="Top" IsEnabled="False" Click="SubmitButtonClicked" />
         <TextBlock HorizontalAlignment="Left" Margin="262,225,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Sex" FontSize="30" FontFamily="Segoe UI Light" Foreground="#606060" VerticalAlignment="Top" Height="44" Width="57"/>
         <TextBlock HorizontalAlignment="Left" Margin="389,225,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Birthday" FontSize="30" FontFamily="Segoe UI Light" Foreground="#606060" VerticalAlignment="Top" Height="44" Width="240"/>
 

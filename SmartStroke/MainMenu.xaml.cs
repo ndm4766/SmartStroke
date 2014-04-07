@@ -90,7 +90,7 @@ namespace SmartStroke
 
         private void reyo_click(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(ReyoTest), passer);
+            this.Frame.Navigate(typeof(ReyOInstruction), passer);
         }
 
         private void trailsAOld(object sender, RoutedEventArgs e)

@@ -305,7 +305,7 @@ namespace SmartStroke
             }
             else
             {
-                timeIntervalBlock.Text = "Color changes every" + timeInterval.ToString() + " seconds";
+                timeIntervalBlock.Text = "Color changes every " + timeInterval.ToString() + " seconds";
             }
             double msLineDuration = 0;
             SolidColorBrush color = new SolidColorBrush(Colors.Black);
