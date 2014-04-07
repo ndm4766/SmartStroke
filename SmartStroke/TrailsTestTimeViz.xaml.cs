@@ -240,7 +240,7 @@ namespace SmartStroke
             {
                 MyCanvas.Height = 768;
                 MyCanvas.Width = 1366;
-                timer_box.Text = "PIXEL";
+                //timer_box.Text = "PIXEL";
             }
             else
             {
@@ -434,7 +434,7 @@ namespace SmartStroke
             loadTest();
         }
 
-        private void goToMenu(object sender, RoutedEventArgs e)
+        private void gotoMenu(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(MainMenu), passer);
         }

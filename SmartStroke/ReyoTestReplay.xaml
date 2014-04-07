@@ -24,6 +24,6 @@
             <Button Content="Time Elapsed" Name="timeVizButton" Margin="16,187,0,511" Height="70" Width="150" Click="showTimeViz" />
             <ListBox Name="testDatesBox" HorizontalAlignment="Left" FontSize="15" BorderThickness="2" BorderBrush="Black" ScrollViewer.VerticalScrollMode="Enabled" Height="271" Margin="10,300,0,0" VerticalAlignment="Top" Width="180" SelectionChanged="ListBox_SelectionChanged" />
         </Grid>
-
+        <TextBlock Name="timeIntervalBlock" HorizontalAlignment="Left" Margin="268,625,0,0" Grid.Row="1" TextWrapping="Wrap" Text=""  FontSize="30" FontFamily="Segoe UI Light" Foreground="#606060" VerticalAlignment="Top" Height="43" Width="428"/>
     </Grid>
 </Page>
