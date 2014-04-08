@@ -15,12 +15,8 @@
         </Grid.ColumnDefinitions>
         
         <Grid Name="canvasGrid" Grid.Column="0">
-            <Viewbox>
-                <Grid>
                     <Canvas Name="MyCanvas" Background="Transparent" Margin="10"/>
                     <Rectangle Name="outline" Stroke="Black" StrokeThickness="10" Margin="10"/>
-                </Grid>
-            </Viewbox>
         </Grid>
         
         <Grid Name="optionsGrid" Grid.Column="1">

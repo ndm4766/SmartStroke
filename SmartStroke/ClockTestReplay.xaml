@@ -21,7 +21,7 @@
             <Viewbox>
                 <Grid>
                     <Button Content="Menu" Name="menuButton" Click="menuClicked" Margin="24,24,0,676" Height="68" Width="159" FontSize="23" FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF" />
-                    <Button Content="Replay Test" Name="granularReplayButton" Click="renderGranularTestReplay" Margin="24,130,0,570" FontSize="23" Height="68" Width="159" FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF"  />
+                    <Button Content="Replay Test" Name="granularReplayButton" Click="renderGranularTestReplay" Margin="24,130,0,570" Height="68" Width="159" FontSize="23" FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF"  />
                     <ListBox Name="testDatesBox" HorizontalAlignment="Left" FontSize="15" BorderThickness="2" BorderBrush="Black" ScrollViewer.VerticalScrollMode="Enabled" Height="271" Margin="10,247,0,0" VerticalAlignment="Top" Width="180" SelectionChanged="ListBox_SelectionChanged" />
                 </Grid>
             </Viewbox>
