@@ -32,6 +32,7 @@ namespace SmartStroke
         {
             this.InitializeComponent();
             usernameHashDictionary = new Dictionary<string, string>();
+            loadAccounts();
         }
         // Debug as WIPTTE clicked
         private void WIPTTE_Click(object sender, RoutedEventArgs e)
@@ -45,7 +46,7 @@ namespace SmartStroke
         {
             string user = userId.Text;
             string pass = userPassword.Password;
-            if (user == "User Id" || pass == userId.PlaceholderText) return;
+            if (user == "" || pass == "") return;
             loadAccounts();
             foreach (KeyValuePair<string, string> K in usernameHashDictionary)
             {
