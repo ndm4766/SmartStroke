@@ -82,15 +82,11 @@ namespace SmartStroke
 
             inkManager = new Windows.UI.Input.Inking.InkManager();
 
-
-
             // Create the trails test background. The test image is 117X917 px but to fit on a screen (surface) it is 686 X 939
             nodes = new List<TrailNode>();
             //populateNodes(testVersion, nodes);
             currentLine = new List<Line>();
             allLines = new Dictionary<InkStroke, List<Line>>();
-
-
 
             nextIndex = 0;
             currentIndex = 0;
@@ -106,8 +102,6 @@ namespace SmartStroke
             // True is the Default value for fitToCurve.
             drawingAttributes.FitToCurve = false;
             inkManager.SetDefaultDrawingAttributes(drawingAttributes);
-
-            determineScreenSize();
         }
 
         private void populateNodes(char kind, List<TrailNode> nodes)
@@ -221,33 +215,6 @@ namespace SmartStroke
             }
         }
 
-        /*
-         * Perceptive Pixel - DPIX/DPIY = 40, DPILog = 96 Res=1920X1080 Scale = 100
-         * Slate            - DPIX/DPIY = 135,DPILog = 96 Res=1920X1080 Scale = 100
-         * Surface          - DPIX/DPIY = 120.DPILog = 207Res=1920X1080 Scale = 140
-         */
-        private void determineScreenSize()
-        {
-            DisplayInformation display = DisplayInformation.GetForCurrentView();
-            float dpi = display.LogicalDpi;
-            float xdpi = display.RawDpiX;
-            float ydpi = display.RawDpiY;
-            double dots = xdpi * Window.Current.Bounds.Width;
-            ResolutionScale scale = display.ResolutionScale;
-
-            //if large screen
-            if (xdpi < 50)
-            {
-                MyCanvas.Height = 768;
-                MyCanvas.Width = 1366;
-                timer_box.Text = "PIXEL";
-            }
-            else
-            {
-                MyCanvas.Height = 768;
-                MyCanvas.Width = 1366;
-            }
-        }
 
         // Return which index of node the user has hit
         private int stylusHitTest(double x, double y)
@@ -305,7 +272,7 @@ namespace SmartStroke
             }
             else
             {
-                timeIntervalBlock.Text = "Color changes every" + timeInterval.ToString() + " seconds";
+                timeIntervalBlock.Text = "Color changes every " + timeInterval.ToString() + " seconds";
             }
             double msLineDuration = 0;
             SolidColorBrush color = new SolidColorBrush(Colors.Black);
@@ -424,9 +391,9 @@ namespace SmartStroke
                     break;
                 }
             }
-            testDatesBox.SelectionChanged -= testSelected;
-            viewColorTimeMode();
-            testDatesBox.SelectionChanged += testSelected;
+            //testDatesBox.SelectionChanged -= testSelected;
+            //viewColorTimeMode();
+            //testDatesBox.SelectionChanged += testSelected;
         }
 
         void testSelected(object sender, SelectionChangedEventArgs e)
@@ -434,9 +401,14 @@ namespace SmartStroke
             loadTest();
         }
 
-        private void goToMenu(object sender, RoutedEventArgs e)
+        private void gotoMenu(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(MainMenu), passer);
+        }
+
+        private void displayTimeElapsed(object sender, RoutedEventArgs e)
+        {
+            viewColorTimeMode();
         }
     }
 }

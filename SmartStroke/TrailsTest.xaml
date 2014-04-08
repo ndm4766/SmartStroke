@@ -8,29 +8,37 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="55*"/>
-            <RowDefinition Height="329*"/>
-        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="200"/>
+        </Grid.ColumnDefinitions>
 
-        <TextBlock Name="timer_box" Foreground="Black" Text="" FontSize="50" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="0" />
-        <Viewbox HorizontalAlignment="Left" VerticalAlignment="Top" Grid.RowSpan="2">
-            <Canvas Name="MyCanvas" Background="Transparent" />
-        </Viewbox>
-        <Button Name="saveButton" Content="Save" Margin="1250,193,0,415" Width="100" Height="50" Visibility="Collapsed" Click="btnScreenshot_Click" Grid.Row="1" IsHitTestVisible="False" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto">
-            <Button.RenderTransform>
-                <CompositeTransform Rotation="90"/>
-            </Button.RenderTransform>
-        </Button>
-        <Button Name="submitButton" Content="Submit" Margin="1252,327,0,281" Width="100" Height="50" Visibility="Collapsed" Click="SubmitButtonClicked" Grid.Row="1" IsHitTestVisible="False" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto">
-            <Button.RenderTransform>
-                <CompositeTransform Rotation="90"/>
-            </Button.RenderTransform>
-        </Button>
-        <Button x:Name="cancel" Content="Cancel Test" Margin="1239.791,3.209,0,604.791" Width="116.418" Height="50" Visibility="Visible" Click="cancelTest" Grid.Row="1" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto">
-            <Button.RenderTransform>
-                <CompositeTransform Rotation="90"/>
-            </Button.RenderTransform>
-        </Button>
+        <!--TextBlock Name="timer_box" Foreground="Black" Text="" FontSize="50" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="0" /-->
+        <Grid Name="canvasGrid" Grid.Column="0" >
+                    <Canvas Name="MyCanvas" Background="Transparent" Margin="10"/>
+        </Grid>
+
+        <Grid Name="optionsGrid" Grid.Column="1" >
+            <Viewbox>
+                <Grid>
+                    <Button Name="saveButton" Content="Save" Margin="35,285,0,435" Width="160" Height="80" Click="btnScreenshot_Click" IsEnabled="False" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto"  FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF" >
+                        <Button.RenderTransform>
+                            <CompositeTransform Rotation="90"/>
+                        </Button.RenderTransform>
+                    </Button>
+                    <Button Name="submitButton" Content="Submit" Margin="35,85,0,600" Width="160" Height="80" Click="SubmitButtonClicked" IsEnabled="False" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto" FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF" >
+                        <Button.RenderTransform>
+                            <CompositeTransform Rotation="90"/>
+                        </Button.RenderTransform>
+                    </Button>
+                    <Button x:Name="cancelButton" Content="Cancel Test" Margin="35,465,0,250" Width="160" Height="80" Click="cancelTest" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto" FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF" >
+                        <Button.RenderTransform>
+                            <CompositeTransform Rotation="90"/>
+                        </Button.RenderTransform>
+                    </Button>
+                </Grid>
+            </Viewbox>
+        </Grid>
+
     </Grid>
 </Page>

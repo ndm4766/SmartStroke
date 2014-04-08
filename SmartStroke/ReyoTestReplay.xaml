@@ -9,18 +9,27 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-        <Canvas Name="MyCanvas" Background="Transparent" Margin="-10,10,10,-10">
-            
-        </Canvas>
-        <Rectangle Name="outline" Stroke="Black" StrokeThickness="10" Margin="10,10,159,10"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="200"/>
+        </Grid.ColumnDefinitions>
 
-        <Button Content="Return to Menu" Margin="1209,7,0,691" Height="70" Width="150" Click="menuClicked" />
-        <Button Content="Replay" Name="replayButton" Margin="1209,91,0,607" Height="70" Width="150" Click="renderTestReplay" />
-        <Button Content="Time Elapsed" Name="timeVizButton" Margin="1209,175,0,520" Height="70" Width="150" Click="showTimeViz" />
-        
-        <ListBox Name="testDatesBox" HorizontalAlignment="Left" FontSize="14" BorderThickness="0" ScrollViewer.VerticalScrollMode="Enabled" Height="326" Margin="1207,308,0,0" VerticalAlignment="Top" Width="154" SelectionChanged="ListBox_SelectionChanged">
-        </ListBox>
-        <TextBlock Name="timeIntervalBlock" HorizontalAlignment="Left" Margin="268,625,0,0" Grid.Row="1" TextWrapping="Wrap" Text=""  FontSize="30" FontFamily="Segoe UI Light" Foreground="#606060" VerticalAlignment="Top" Height="43" Width="428"/>
+        <Grid Name="canvasGrid" Grid.Column="0">
+            <Canvas Name="MyCanvas" Background="Transparent" Margin="10"/>
+            <Rectangle Name="outline" Stroke="Black" StrokeThickness="10" Margin="10"/>
+        </Grid>
+
+        <Grid Name="optionsGrid" Grid.Column="1">
+            <Viewbox>
+                <Grid>
+                    <Button Content="Return to Menu" Margin="16,13,0,685" Height="70" Width="150" Click="menuClicked" FontSize="17" FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF"  />
+                    <Button Content="Replay" Name="replayButton" Margin="16,97,0,601" Height="70" Width="150" Click="renderTestReplay" FontSize="17" FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF"  />
+                    <Button Content="Time Elapsed" Name="timeVizButton" Margin="16,187,0,511" Height="70" Width="150" Click="showTimeViz" FontSize="17" FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF"  />
+                    <ListBox Name="testDatesBox" HorizontalAlignment="Left" FontSize="15" BorderThickness="2" BorderBrush="Black" ScrollViewer.VerticalScrollMode="Enabled" Height="261" Margin="10,300,0,0" VerticalAlignment="Top" Width="180" SelectionChanged="ListBox_SelectionChanged" />
+                    <TextBlock Name="timeIntervalBlock" HorizontalAlignment="Left" Margin="10,582,0,0" TextWrapping="Wrap" Text=""  FontSize="30" FontFamily="Segoe UI Light" Foreground="#606060" VerticalAlignment="Top" Height="164" Width="180"/>
+                </Grid>
+            </Viewbox>
+        </Grid>
 
     </Grid>
 </Page>

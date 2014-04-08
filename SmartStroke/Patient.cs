@@ -88,7 +88,7 @@ namespace SmartStroke
                 + eduLevel.ToString();
         }
 
-        async public void loadFiles()
+        async public Task loadFiles()
         {
             var filenames = await Windows.Storage.ApplicationData.Current.LocalFolder.GetFilesAsync();
             foreach (var filename in filenames)

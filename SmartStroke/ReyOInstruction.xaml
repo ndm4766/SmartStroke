@@ -1,0 +1,36 @@
+﻿<Page
+    x:Name="pageRoot"
+    x:Class="SmartStroke.ReyOInstruction"
+    DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SmartStroke"
+    xmlns:common="using:SmartStroke.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <!-- TODO: Delete this line if the key AppName is declared in App.xaml -->
+        <x:String x:Key="AppName">My Application</x:String>
+    </Page.Resources>
+
+    <!--
+        This grid acts as a root panel for the page that defines two rows:
+        * Row 0 contains the back button and page title
+        * Row 1 contains the rest of the page layout
+    -->
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="140"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock x:Name="pageTitle" Text="Rey-Osterrieth Test Instructions" Style="{StaticResource HeaderTextBlockStyle}" 
+                        IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="101,0,217,47"/>
+        <TextBlock HorizontalAlignment="Left" Margin="101,90,0,0" Grid.Row="1" TextWrapping="Wrap" Foreground="#454545" FontFamily="Segoe UI Ligjht" FontSize="34" Text="Make a copy of the design as best as possible. The copy can be an approximation as far as the proportions are concerned, but care should be taken not to forget any detail. There is no time limit." VerticalAlignment="Top" Height="294" Width="813"/>
+        <Button Name="BeginButton" Content="Begin" Foreground="#FFFFFF" FontFamily="Segoe UI Light" Background="#203864" HorizontalAlignment="Left" Margin="1066,80,0,0" Grid.Row="1" VerticalAlignment="Top" Click="beginTest" Height="72" Width="154" />
+        <Button x:Name="backButton" Content="Back to Menu" Foreground="#FFFFFF" FontFamily="Segoe UI Light" Background="#203864" HorizontalAlignment="Left" Margin="1066,188,0,0" Grid.Row="1" VerticalAlignment="Top" Click="backButtonClick" Height="72" Width="154" />
+    </Grid>
+</Page>

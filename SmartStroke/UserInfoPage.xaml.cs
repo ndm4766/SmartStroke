@@ -136,7 +136,7 @@ namespace SmartStroke
             try
             {
                 //get file
-                Windows.Storage.StorageFile myFile = await Windows.Storage.ApplicationData.Current.LocalFolder.GetFileAsync(filename);
+                Windows.Storage.StorageFile myFile = await Windows.Storage.ApplicationData.Current.LocalFolder.CreateFileAsync(filename, Windows.Storage.CreationCollisionOption.OpenIfExists);
                 //read
                 String data = await Windows.Storage.FileIO.ReadTextAsync(myFile);
 
@@ -213,7 +213,11 @@ namespace SmartStroke
             }
             catch (FileNotFoundException)
             {
-                //file did not exist so create it
+                //file did not exist so create it - SHOULD NEVER HAPPEN because of "openIfExists"
+                Popup p = new Popup();
+                TextBlock t = new TextBlock();
+                t.Text = "Error: file could not be opened";
+                p.Child = t;
                 create_file();
             }
         }

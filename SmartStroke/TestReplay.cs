@@ -11,6 +11,7 @@ using Windows.Data;
 using Windows.Storage;
 using Windows.UI.Input.Inking;
 using Windows.UI.Xaml.Shapes;
+using Windows.Foundation;
 
 /*  
   /===========================================================================/
@@ -173,6 +174,78 @@ namespace SmartStroke
         }
     }
 
+    // Class for test errors in trailsA and trailsB test
+    // Allow user to see which line was an error - from and to
+    public sealed class TestError
+    {
+        private TrailNode begin;
+        private TrailNode expectedEnd;
+        private TrailNode actualEnd;
+        private DateTime time;
+
+        public TestError() { }
+
+        // Test error on trails was from a beginning node to an expected incremental
+        // node. Instead, the user went to the actual node. Could come in handy for
+        // analysis purposes.
+        public TestError(TrailNode bgn, TrailNode expected, TrailNode actual)
+        {
+            begin = bgn;
+            expectedEnd = expected;
+            actualEnd = actual;
+            time = DateTime.Now;
+        }
+
+        // Return the node the user started from which resulted in an error
+        public TrailNode getBegin() { return begin; }
+
+        // Return the expected next node. The user did not come to this node.
+        public TrailNode getExpectedEnd() { return expectedEnd; }
+
+        // Return which node the user actually went to. This will be useful
+        // for analysis purposes of left-right impairment, etc.
+        public TrailNode getActualEnd() { return actualEnd; }
+
+        // Return the time of the error. This may not be useful information.
+        public DateTime getTime() { return time; }
+
+        public void setTime(DateTime t) { time = t; }
+        public void setBegin(TrailNode node) { begin = node; }
+        public void setExpected(TrailNode node) { expectedEnd = node; }
+        public void setActual(TrailNode node) { actualEnd = node; }
+
+        // Overload the operator == on two TestErrors. Useful to count how
+        // many times the user made the same error in a test.
+        public static bool operator ==(TestError te1, TestError te2)
+        {
+            return te1.getBegin() == te2.getBegin();
+        }
+        public static bool operator !=(TestError te1, TestError te2)
+        {
+            return te1.getBegin() != te2.getBegin();
+        }
+
+        // Convert the TestError object to a string to actually save it into
+        // The TestReplay Object
+
+        // Should be: 
+        // beginning node
+        // expected end node
+        // actual end node
+        // time of error
+        public string convertToString()
+        {
+            string convert = "";
+            convert += begin.convertToString();
+            convert += expectedEnd.convertToString();
+            convert += actualEnd.convertToString();
+            convert += time.ToString();
+            convert += "\n";
+
+            return convert;
+        }
+    }
+
     // Allows TestReplay objects to detail what test they were created for
     public enum TEST_TYPE { TRAILS_A, TRAILS_A_H, TRAILS_B, TRAILS_B_H, REY_OSTERRIETH, CLOCK }
     public sealed class TestReplay
@@ -183,18 +256,21 @@ namespace SmartStroke
         private DateTime startTime;
         private DateTime endTime;
         private List<TestAction> testActions;
+        private List<TestError> testErrors;
         private List<PatientNote> testNotes;
         private Stroke currentStroke;
         public TestReplay()
         {
             testActions = new List<TestAction>();
             testNotes = new List<PatientNote>();
+            testErrors = new List<TestError>();
         }
         public TestReplay(Patient _patient, TEST_TYPE TestType)
         {
             patient = _patient;
             testActions = new List<TestAction>();
             testNotes = new List<PatientNote>();
+            testErrors = new List<TestError>();
             testType = TestType;
         }
         public TEST_TYPE getTestType() { return testType; }
@@ -203,7 +279,14 @@ namespace SmartStroke
         public DateTime getEndTime() { return endTime; }
         public List<TestAction> getTestActions() { return testActions; }
         public List<PatientNote> getPatientNotes() { return testNotes; }
+        public List<TestError> getErrors() { return testErrors; }
         public void startTest() { startTime = DateTime.Now; }
+        
+        // Add a TestError to the list of errors in the TestReplay class
+        public void addError(TestError e)
+        {
+            testErrors.Add(e);
+        }
         public void endTest()
         {
             endTime = DateTime.Now;
@@ -323,6 +406,14 @@ namespace SmartStroke
                     default: { break; }
                 }
             }
+            
+            // Write out all the test errors on trails a into the file
+            testReplayString += "=====ERRORS====\n";
+            for (int i = 0; i < testErrors.Count; i++ )
+            {
+                testReplayString += testErrors[i].convertToString();
+            }
+
             testReplayString += "=====NOTES=====\n";
             for (int i = 0; i < testNotes.Count; i++ )
             {
@@ -359,9 +450,20 @@ namespace SmartStroke
                 testReplayString = await FileIO.ReadTextAsync(testStorageFile);
             }
             catch { return; }
+            if (testFilename.Contains("_H"))
+            {
+                if (this.testType == TEST_TYPE.TRAILS_A)
+                {
+                    this.testType = TEST_TYPE.TRAILS_A_H;
+                }
+                else
+                {
+                    this.testType = TEST_TYPE.TRAILS_B_H;
+                }
+            }
             parseTestReplayFile(testReplayString);
         }
-
+        
         // Converts a string to a TestReplay object
         public void parseTestReplayFile(string testReplayString)
         {
@@ -370,6 +472,7 @@ namespace SmartStroke
                 testReplayString.Split('\n').Cast<string>().ToList<string>();
 
             List<string> firstLineWords = testStrings[0].Split(' ').Cast<string>().ToList<string>();
+            parsePatientInfo(firstLineWords);
 
             string startTimeString = testStrings[1];
             startTime = Convert.ToDateTime(startTimeString);
@@ -394,14 +497,57 @@ namespace SmartStroke
                         testActions.Add(parseLineStroke(lineWords));
                     else if (lineWords[0] == "DeleteStroke")
                         testActions.Add(parseLineDelPrevStroke(lineWords));
-                    else if (lineWords[0] == "=====NOTES=====") { 
+                    else if (lineWords[0] == "=====ERRORS====")
+                    {
+                        inActionSection = false;
+                    }     
+                    else if (lineWords[0] == "=====NOTES=====") 
+                    { 
                         inActionSection = false;
                     }     
                 } else {
-                    
+                    // Parse all the error objects. Each one should be three nodes plus a Date
                     List<string> lineWords = testStrings[i]
                         .Split('\t').Cast<string>().ToList<string>();
-                    if (lineWords.Count >= 5)
+                    
+                    // This is an error object.
+                    // Should be read as:
+                    //begin   node '\t' point
+                    //exp end node '\t' point
+                    //act end node '\t' point
+                    //DateTime
+
+                    if(lineWords.Count == 10)
+                    {
+                        TestError error = new TestError();
+                        // Get each of the node strings and points from the line
+                        for(int j = 0; j < 9; j += 3)
+                        {
+                            string beginText = lineWords[j];
+                            Point point;
+                            point.X = Convert.ToDouble(lineWords[j + 1]);
+                            point.Y = Convert.ToDouble(lineWords[j + 2]);
+                            bool flip = true;
+                            if(testType.ToString().Contains("_H"))
+                                flip = false;
+                            TrailNode node = new TrailNode(beginText, point, flip);
+                            
+                            if(j == 0)
+                                error.setBegin(node);
+                            if (j == 3)
+                                error.setExpected(node);
+                            if (j == 6)
+                                error.setActual(node);
+                        }
+                        
+                        DateTime date = new DateTime();
+                        date = Convert.ToDateTime(lineWords[9]);
+                        error.setTime(date);
+
+                        testErrors.Add(error);
+                    }
+
+                    else if (lineWords.Count >= 5)
                     {
                         DateTime date = new DateTime();
                         date = DateTime.Parse(lineWords[0] + " " + 
@@ -413,6 +559,18 @@ namespace SmartStroke
                     }
                 }
             }
+        }
+
+        // Populates the TestReplay patient using the split patient line
+        public void parsePatientInfo(List<string> patientString)
+        {
+            GENDER gender;
+            if (patientString[6] == "M") gender = GENDER.MALE;
+            else gender = GENDER.FEMALE;
+            EDU_LEVEL eduLevel = (EDU_LEVEL)Enum.Parse(typeof(EDU_LEVEL), patientString[8]);
+            DateTime birthdate = Convert.ToDateTime(patientString[2] + ' ' + patientString[3] + ' ' + patientString[4]);
+            string name = patientString[0];
+            patient = new Patient(name, "", birthdate, gender, eduLevel);
         }
 
         // Converts a string into a Stroke object
@@ -450,6 +608,11 @@ namespace SmartStroke
         public string getDisplayedDatetime(string filename)
         {
             int testTypeLen = testType.ToString().Length;
+            if(filename.Contains("_H"))
+            {
+                testTypeLen += 2;
+            }
+            
             int idLen = 15;
             int extensionLen = 4;
 
