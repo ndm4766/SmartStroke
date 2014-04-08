@@ -450,6 +450,17 @@ namespace SmartStroke
                 testReplayString = await FileIO.ReadTextAsync(testStorageFile);
             }
             catch { return; }
+            if (testFilename.Contains("_H"))
+            {
+                if (this.testType == TEST_TYPE.TRAILS_A)
+                {
+                    this.testType = TEST_TYPE.TRAILS_A_H;
+                }
+                else
+                {
+                    this.testType = TEST_TYPE.TRAILS_B_H;
+                }
+            }
             parseTestReplayFile(testReplayString);
         }
         
@@ -597,6 +608,11 @@ namespace SmartStroke
         public string getDisplayedDatetime(string filename)
         {
             int testTypeLen = testType.ToString().Length;
+            if(filename.Contains("_H"))
+            {
+                testTypeLen += 2;
+            }
+            
             int idLen = 15;
             int extensionLen = 4;
 
