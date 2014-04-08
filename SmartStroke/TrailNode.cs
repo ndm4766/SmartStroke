@@ -35,7 +35,7 @@ namespace SmartStroke
         TextBlock text;
 
         // Constant width of 50 pixels for each node
-        const int size = 50;
+        const int size = 60;
 
         // Whether the node has been connected correctly or not
         bool completed = false;
@@ -143,7 +143,7 @@ namespace SmartStroke
             }
 
             // Set the font size, width, and height of the TextBlock
-            text.FontSize = 25;
+            text.FontSize = 30;
             text.Width = size;
             text.Height = size;
 
