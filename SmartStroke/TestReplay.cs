@@ -173,6 +173,71 @@ namespace SmartStroke
         }
     }
 
+    // Class for test errors in trailsA and trailsB test
+    // Allow user to see which line was an error - from and to
+    public sealed class TestError
+    {
+        private TrailNode begin;
+        private TrailNode expectedEnd;
+        private TrailNode actualEnd;
+        private DateTime time;
+
+        // Test error on trails was from a beginning node to an expected incremental
+        // node. Instead, the user went to the actual node. Could come in handy for
+        // analysis purposes.
+        public TestError(TrailNode bgn, TrailNode expected, TrailNode actual)
+        {
+            begin = bgn;
+            expectedEnd = expected;
+            actualEnd = actual;
+            time = DateTime.Now;
+        }
+
+        // Return the node the user started from which resulted in an error
+        public TrailNode getBegin() { return begin; }
+
+        // Return the expected next node. The user did not come to this node.
+        public TrailNode getExpectedEnd() { return expectedEnd; }
+
+        // Return which node the user actually went to. This will be useful
+        // for analysis purposes of left-right impairment, etc.
+        public TrailNode getActualEnd() { return actualEnd; }
+
+        // Return the time of the error. This may not be useful information.
+        public DateTime getTime() { return time; }
+
+        // Overload the operator == on two TestErrors. Useful to count how
+        // many times the user made the same error in a test.
+        public static bool operator ==(TestError te1, TestError te2)
+        {
+            return te1.getBegin() == te2.getBegin();
+        }
+        public static bool operator !=(TestError te1, TestError te2)
+        {
+            return te1.getBegin() != te2.getBegin();
+        }
+
+        // Convert the TestError object to a string to actually save it into
+        // The TestReplay Object
+
+        // Should be: 
+        // beginning node
+        // expected end node
+        // actual end node
+        // time of error
+        public string convertToString()
+        {
+            string convert = "";
+            convert += begin.convertToString();
+            convert += expectedEnd.convertToString();
+            convert += actualEnd.convertToString();
+            convert += time.ToString();
+            convert += "\n";
+
+            return convert;
+        }
+    }
+
     // Allows TestReplay objects to detail what test they were created for
     public enum TEST_TYPE { TRAILS_A, TRAILS_A_H, TRAILS_B, TRAILS_B_H, REY_OSTERRIETH, CLOCK }
     public sealed class TestReplay
@@ -183,18 +248,21 @@ namespace SmartStroke
         private DateTime startTime;
         private DateTime endTime;
         private List<TestAction> testActions;
+        private List<TestError> testErrors;
         private List<PatientNote> testNotes;
         private Stroke currentStroke;
         public TestReplay()
         {
             testActions = new List<TestAction>();
             testNotes = new List<PatientNote>();
+            testErrors = new List<TestError>();
         }
         public TestReplay(Patient _patient, TEST_TYPE TestType)
         {
             patient = _patient;
             testActions = new List<TestAction>();
             testNotes = new List<PatientNote>();
+            testErrors = new List<TestError>();
             testType = TestType;
         }
         public TEST_TYPE getTestType() { return testType; }
@@ -203,7 +271,14 @@ namespace SmartStroke
         public DateTime getEndTime() { return endTime; }
         public List<TestAction> getTestActions() { return testActions; }
         public List<PatientNote> getPatientNotes() { return testNotes; }
+        public List<TestError> getErrors() { return testErrors; }
         public void startTest() { startTime = DateTime.Now; }
+        
+        // Add a TestError to the list of errors in the TestReplay class
+        public void addError(TestError e)
+        {
+            testErrors.Add(e);
+        }
         public void endTest()
         {
             endTime = DateTime.Now;
@@ -323,6 +398,14 @@ namespace SmartStroke
                     default: { break; }
                 }
             }
+            
+            // Write out all the test errors on trails a into the file
+            testReplayString += "=====ERRORS====\n";
+            for (int i = 0; i < testErrors.Count; i++ )
+            {
+                testReplayString += testErrors[i].convertToString();
+            }
+
             testReplayString += "=====NOTES=====\n";
             for (int i = 0; i < testNotes.Count; i++ )
             {
@@ -395,12 +478,17 @@ namespace SmartStroke
                         testActions.Add(parseLineStroke(lineWords));
                     else if (lineWords[0] == "DeleteStroke")
                         testActions.Add(parseLineDelPrevStroke(lineWords));
-                    else if (lineWords[0] == "=====NOTES=====") { 
+                    else if (lineWords[0] == "=====ERRORS====")
+                    {
+                        inActionSection = false;
+                    }     
+                    else if (lineWords[0] == "=====NOTES=====") 
+                    { 
                         inActionSection = false;
                     }     
                 } else {
-                    
-                    List<string> lineWords = testStrings[i]
+                    // Parse all the error objects. Each one should be three lines
+                    /*List<string> lineWords = testStrings[i]
                         .Split('\t').Cast<string>().ToList<string>();
                     if (lineWords.Count >= 5)
                     {
@@ -411,7 +499,7 @@ namespace SmartStroke
                         lineWords[4] = lineWords[4].Replace("[SPC]", "");
                         testNotes.Add(
                             new PatientNote(lineWords[3], lineWords[4], date));
-                    }
+                    }*/
                 }
             }
         }

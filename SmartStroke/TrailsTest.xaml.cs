@@ -438,20 +438,31 @@ namespace SmartStroke
                     }
                     // Stylus did not contact the next node in the correct order.
                     // Need to change the color of the corrected node to Yellow and the
-                        // incorrect node hit to red to notify the user this is not correct.
+                    // incorrect node hit to red to notify the user this is not correct.
                     else if ((indexHit >= 0) && indexHit > currentIndex)
                     {
                         // If the user ran over a node that was already completed, ignore executing
-                            // this code
+                        // this code
                         //if (!nodes[indexHit].getCompleted() && nodes[indexHit].getEllipse().Fill != null)
                         //{
 
-                        //TODO: need to take out the successive red nodes(only the first err should be red)
                         //TODO: after an err, no lines should be able to be drawn if they are still holding down the pen (when you collide with ANOTHER node after the first wrong one, it continues drawing)
 
                         //set error colors
-                        if(incorrectNodes.Count < 1)
+                        if (incorrectNodes.Count < 1)
+                        {
                             nodes[indexHit].setFillColor(new SolidColorBrush(Colors.Red));
+                            // Create a TestError object.
+                            // Begin node   = nodes[currentIndex]
+                            // end node     = nodes[indexHit]
+                            // expected end = nodes[currentIndex + 1]
+
+                            TestError err = new TestError(nodes[currentIndex],
+                                                          nodes[currentIndex + 1],
+                                                          nodes[indexHit]);
+
+                            testReplay.addError(err);
+                        }
                         nodes[currentIndex].setFillColor(new SolidColorBrush(Colors.Yellow));
 
                         //reset the index back 1
