@@ -55,6 +55,13 @@ namespace SmartStroke
         {
             public int Age { get; set; }
             public double Time { get; set; }
+            public string Test { get; set; }
+        }
+
+        public class PlotPoint
+        {
+            public string Age { get; set; }
+            public double Time { get; set; }
         }
 
         public Windows.Data.Json.JsonArray patients = new Windows.Data.Json.JsonArray();
@@ -68,6 +75,231 @@ namespace SmartStroke
             this.Loaded += NormComparisonPage_Loaded;
 
             fileNames = new List<string>();
+        }
+
+        public string ageRange(Performance data)
+        {
+            string range = "";
+
+            if (data.Age > 17 && data.Age <= 24)
+            {
+                range = "18-24";
+            }
+            else if (data.Age > 24 && data.Age <= 34)
+            {
+                range = "25-34";
+            }
+            else if (data.Age > 34 && data.Age <= 44)
+            {
+                range = "35-44";
+            }
+            else if (data.Age > 44 && data.Age <= 54)
+            {
+                range = "45-54";
+            }
+            else if (data.Age > 54 && data.Age <= 59)
+            {
+                range = "55-59";
+            }
+            else if (data.Age > 59 && data.Age <= 64)
+            {
+                range = "60-64";
+            }
+            else if (data.Age > 64 && data.Age <= 69)
+            {
+                range = "65-69";
+            }
+            else if (data.Age > 69 && data.Age <= 74)
+            {
+                range = "70-74";
+            }
+            else if (data.Age > 74 && data.Age <= 79)
+            {
+                range = "75-79";
+            }
+            else if (data.Age > 79 && data.Age <= 84)
+            {
+                range = "80-84";
+            }
+            else if (data.Age > 84 && data.Age <= 89)
+            {
+                range = "85-89";
+            }
+            else if (data.Age > 89)
+            {
+                range = "90+";
+            }
+            return range;
+        }
+
+        public double returnAverage(List<Performance> data)
+        {
+            List<double> times = new List<double>();
+
+            for (int i = 0; i < data.Count; i++)
+            {
+                times.Add(data[i].Time);
+            }
+            return times.Average();
+        }
+
+        public List<PlotPoint> averagize(List<Performance> data)
+        {
+            List<PlotPoint> output = new List<PlotPoint>();
+
+            List<Performance> first = new List<Performance>();
+            List<Performance> second = new List<Performance>();
+            List<Performance> third = new List<Performance>();
+            List<Performance> fourth = new List<Performance>();
+            List<Performance> fifth = new List<Performance>();
+            List<Performance> sixth = new List<Performance>();
+            List<Performance> seventh = new List<Performance>();
+            List<Performance> eighth = new List<Performance>();
+            List<Performance> ninth = new List<Performance>();
+            List<Performance> tenth = new List<Performance>();
+            List<Performance> eleventh = new List<Performance>();
+            
+            first = data.FindAll(delegate(Performance s) { return (s.Age > 17 && s.Age <= 24); } );
+            second = data.FindAll(delegate(Performance s) { return (s.Age > 24 && s.Age <= 34); });
+            third = data.FindAll(delegate(Performance s) { return (s.Age > 34 && s.Age <= 44); });
+            fourth = data.FindAll(delegate(Performance s) { return (s.Age > 44 && s.Age <= 54); });
+            fifth = data.FindAll(delegate(Performance s) { return (s.Age > 54 && s.Age <= 59); });
+            sixth = data.FindAll(delegate(Performance s) { return (s.Age > 59 && s.Age <= 64); });
+            seventh = data.FindAll(delegate(Performance s) { return (s.Age > 64 && s.Age <= 74); } );
+            eighth = data.FindAll(delegate(Performance s) { return (s.Age > 74 && s.Age <= 79); });
+            ninth = data.FindAll(delegate(Performance s) { return (s.Age > 79 && s.Age <= 84); });
+            tenth = data.FindAll(delegate(Performance s) { return (s.Age > 84 && s.Age <= 89); });
+            eleventh = data.FindAll(delegate(Performance s) { return (s.Age > 89); });
+
+            List<String> ageStrings = new List<string>();
+            ageStrings.Add("18-24");
+            ageStrings.Add("25-34");
+            ageStrings.Add("35-44");
+            ageStrings.Add("45-54");
+            ageStrings.Add("55-59");
+            ageStrings.Add("60-64");
+            ageStrings.Add("65-74");
+            ageStrings.Add("75-79");
+            ageStrings.Add("80-84");
+            ageStrings.Add("85-89");
+            ageStrings.Add("90+");
+
+            List<List<Performance>> allAgeGroups = new List<List<Performance>>();
+            allAgeGroups.Add(first);
+            allAgeGroups.Add(second);
+            allAgeGroups.Add(third);
+            allAgeGroups.Add(fourth);
+            allAgeGroups.Add(fifth);
+            allAgeGroups.Add(sixth);
+            allAgeGroups.Add(seventh);
+            allAgeGroups.Add(eighth);
+            allAgeGroups.Add(ninth);
+            allAgeGroups.Add(tenth);
+            allAgeGroups.Add(eleventh);
+
+            for (int i = 0; i < allAgeGroups.Count; i++)
+            {
+                try {
+                    output.Add(new PlotPoint {Age = ageStrings[i], Time = returnAverage(allAgeGroups[i])} );
+                } 
+                catch {
+                    //do nothing
+                }
+                
+            }
+            return output;
+        }
+
+        public double returnMedian(List<Performance> data)
+        {
+            List<Performance> sortedData = new List<Performance>();
+            sortedData = data;
+
+            sortedData.Sort(delegate(Performance A, Performance B) { return A.Time.CompareTo(B.Time); });
+
+            double output = -1.0;
+
+            if (sortedData.Count % 2 == 0)
+            {
+                int pivot = sortedData.Count / 2;
+                output = (sortedData[pivot].Time + sortedData[pivot - 1].Time) / 2;
+            }
+            else
+            {
+                int pivot = Convert.ToInt16(Math.Floor(sortedData.Count / 2.0));
+                output = sortedData[pivot].Time;
+            }
+
+            return output;
+        }
+
+        public List<PlotPoint> medianize(List<Performance> data)
+        {
+            List<PlotPoint> output = new List<PlotPoint>();
+
+            List<Performance> first = new List<Performance>();
+            List<Performance> second = new List<Performance>();
+            List<Performance> third = new List<Performance>();
+            List<Performance> fourth = new List<Performance>();
+            List<Performance> fifth = new List<Performance>();
+            List<Performance> sixth = new List<Performance>();
+            List<Performance> seventh = new List<Performance>();
+            List<Performance> eighth = new List<Performance>();
+            List<Performance> ninth = new List<Performance>();
+            List<Performance> tenth = new List<Performance>();
+            List<Performance> eleventh = new List<Performance>();
+
+            first = data.FindAll(delegate(Performance s) { return (s.Age > 17 && s.Age <= 24); });
+            second = data.FindAll(delegate(Performance s) { return (s.Age > 24 && s.Age <= 34); });
+            third = data.FindAll(delegate(Performance s) { return (s.Age > 34 && s.Age <= 44); });
+            fourth = data.FindAll(delegate(Performance s) { return (s.Age > 44 && s.Age <= 54); });
+            fifth = data.FindAll(delegate(Performance s) { return (s.Age > 54 && s.Age <= 59); });
+            sixth = data.FindAll(delegate(Performance s) { return (s.Age > 59 && s.Age <= 64); });
+            seventh = data.FindAll(delegate(Performance s) { return (s.Age > 64 && s.Age <= 74); });
+            eighth = data.FindAll(delegate(Performance s) { return (s.Age > 74 && s.Age <= 79); });
+            ninth = data.FindAll(delegate(Performance s) { return (s.Age > 79 && s.Age <= 84); });
+            tenth = data.FindAll(delegate(Performance s) { return (s.Age > 84 && s.Age <= 89); });
+            eleventh = data.FindAll(delegate(Performance s) { return (s.Age > 89); });
+
+            List<String> ageStrings = new List<string>();
+            ageStrings.Add("18-24");
+            ageStrings.Add("25-34");
+            ageStrings.Add("35-44");
+            ageStrings.Add("45-54");
+            ageStrings.Add("55-59");
+            ageStrings.Add("60-64");
+            ageStrings.Add("65-74");
+            ageStrings.Add("75-79");
+            ageStrings.Add("80-84");
+            ageStrings.Add("85-89");
+            ageStrings.Add("90+");
+
+            List<List<Performance>> allAgeGroups = new List<List<Performance>>();
+            allAgeGroups.Add(first);
+            allAgeGroups.Add(second);
+            allAgeGroups.Add(third);
+            allAgeGroups.Add(fourth);
+            allAgeGroups.Add(fifth);
+            allAgeGroups.Add(sixth);
+            allAgeGroups.Add(seventh);
+            allAgeGroups.Add(eighth);
+            allAgeGroups.Add(ninth);
+            allAgeGroups.Add(tenth);
+            allAgeGroups.Add(eleventh);
+
+            for (int i = 0; i < allAgeGroups.Count; i++)
+            {
+                try
+                {
+                    output.Add(new PlotPoint { Age = ageStrings[i], Time = returnMedian(allAgeGroups[i]) } );
+                }
+                catch
+                {
+                    //do nothing
+                }
+            }
+
+                return output;
         }
 
         /// <summary>
@@ -156,71 +388,109 @@ namespace SmartStroke
                         {
                             //increase j
                         }
-                        testName = testName.Substring(0, j);      
+                        testName = testName.Substring(0, j);
 
                         double seconds = TimeDifference.Minutes * 60 + TimeDifference.Seconds + TimeDifference.Milliseconds / 100;
                         int tempAge = Convert.ToInt32(patientList[i].patientAge);
 
-                        allResults.Add(new Performance() { Age = tempAge, Time = seconds });
+                        allResults.Add(new Performance() { Age = tempAge, Time = seconds, Test = testName });
 
                         break;
                     }
                 }
             }
 
-            List<Performance> averages = new List<Performance>();
-            List<Performance> medians = new List<Performance>();
+            List<Performance> TrailsA = new List<Performance>();
+            List<Performance> TrailsB = new List<Performance>();
+            List<Performance> TrailsA_H = new List<Performance>();
+            List<Performance> TrailsB_H = new List<Performance>();
 
+            List<PlotPoint> TrailsAGroup = new List<PlotPoint>();
+            List<PlotPoint> TrailsBGroup = new List<PlotPoint>();
+            List<PlotPoint> TrailsA_HGroup = new List<PlotPoint>();
+            List<PlotPoint> TrailsB_HGroup = new List<PlotPoint>();
+
+            List<PlotPoint> avgTrailsAGrouped = new List<PlotPoint>();
+            List<PlotPoint> medTrailsAGrouped = new List<PlotPoint>();
+
+            List<PlotPoint> avgTrailsBGrouped = new List<PlotPoint>();
+            List<PlotPoint> medTrailsBGrouped = new List<PlotPoint>();
+
+            List<PlotPoint> avgTrailsA_HGrouped = new List<PlotPoint>();
+            List<PlotPoint> medTrailsA_HGrouped = new List<PlotPoint>();
+
+            List<PlotPoint> avgTrailsB_HGrouped = new List<PlotPoint>();
+            List<PlotPoint> medTrailsB_HGrouped = new List<PlotPoint>();
+
+            List<Performance> sortPatientAge = new List<Performance>(allResults);
             if (allResults.Count > 0)
             {
-
-                List<Performance> sortPatientAge = new List<Performance>(allResults);
-
                 sortPatientAge.Sort(delegate(Performance arg1, Performance arg2)
                 {
                     return arg1.Age.CompareTo(arg2.Age);
                 });
+            }
 
-
-                while (sortPatientAge.Count > 0)
+            for (int i = 0; i < sortPatientAge.Count; i++)
+            {
+                switch (sortPatientAge[i].Test)
                 {
-                    Performance reference = sortPatientAge[0];
-                    List<double> chunk = new List<double>();
-
-                    while (reference.Age == sortPatientAge[0].Age)
-                    {
-                        chunk.Add(sortPatientAge[0].Time);
-                        chunk.Sort();
-                        sortPatientAge.RemoveAt(0);
-                        if (sortPatientAge.Count == 0)
-                        {
-                            break;
-                        }
-                    }
-                    averages.Add(new Performance { Age = reference.Age, Time = chunk.Average() });
-
-                    if (chunk.Count % 2 == 0)
-                    {
-                        int spot = chunk.Count / 2;
-                        double tempMedian = (chunk[spot - 1] + chunk[spot + 1]) / 2;
-                        medians.Add(new Performance { Age = reference.Age, Time = tempMedian });
-                    }
-                    else
-                    {
-                        double tempMedian = chunk[chunk.Count / 2];
-                        medians.Add(new Performance { Age = reference.Age, Time = tempMedian });
-                    }
+                    case "TRAILS_A":
+                        TrailsA.Add(sortPatientAge[i]);
+                        break;
+                    case "TRAILS_B":
+                        TrailsB.Add(sortPatientAge[i]);
+                        break;
+                    case "TRAILS_A_H":
+                        TrailsA_H.Add(sortPatientAge[i]);
+                        break;
+                    case "TRAILS_B_H":
+                        TrailsB_H.Add(sortPatientAge[i]);
+                        break;
+                    default:
+                        //error
+                        break;
                 }
             }
 
-            //Plottting patients
-            (ScatterChart.Series[0] as ScatterSeries).ItemsSource = allResults;
+            for (int i = 0; i < TrailsA.Count; i++)
+            {
+                TrailsAGroup.Add(new PlotPoint { Age = ageRange(TrailsA[i]), Time = TrailsA[i].Time });
+            }
 
-            //Plot averages for individual ages
-            (ScatterChart.Series[1] as LineSeries).ItemsSource = averages;
+            for (int i = 0; i < TrailsB.Count; i++)
+            {
+                TrailsBGroup.Add(new PlotPoint { Age = ageRange(TrailsB[i]), Time = TrailsB[i].Time });
+            }
 
-            //Plot medians for individual ages
-            (ScatterChart.Series[2] as LineSeries).ItemsSource = medians;
+            for (int i = 0; i < TrailsA_H.Count; i++)
+            {
+                TrailsA_HGroup.Add(new PlotPoint { Age = ageRange(TrailsA_H[i]), Time = TrailsA_H[i].Time });
+            }
+
+            for (int i = 0; i < TrailsB_H.Count; i++)
+            {
+                TrailsB_HGroup.Add(new PlotPoint { Age = ageRange(TrailsB_H[i]), Time = TrailsB_H[i].Time });
+            }
+
+            avgTrailsAGrouped = averagize(TrailsA);
+            avgTrailsA_HGrouped = averagize(TrailsA_H);
+            avgTrailsBGrouped = averagize(TrailsB);
+            avgTrailsB_HGrouped = averagize(TrailsB_H);
+
+            medTrailsAGrouped = medianize(TrailsA);
+            medTrailsA_HGrouped = medianize(TrailsA_H);
+            medTrailsBGrouped = medianize(TrailsB);
+            medTrailsB_HGrouped = medianize(TrailsB_H);
+
+            //Plottting patient points for age groups of Trails A 
+            (ScatterChart.Series[0] as ScatterSeries).ItemsSource = TrailsAGroup;
+
+            //Plot averages for age groups of Trails A
+            (ScatterChart.Series[1] as LineSeries).ItemsSource = avgTrailsAGrouped;
+
+            //Plot medians for individual age groups of Trails A
+            (ScatterChart.Series[2] as LineSeries).ItemsSource = medTrailsAGrouped;
         }
 
         public class PatientPlot
