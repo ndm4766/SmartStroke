@@ -11,6 +11,7 @@ using Windows.Data;
 using Windows.Storage;
 using Windows.UI.Input.Inking;
 using Windows.UI.Xaml.Shapes;
+using Windows.Foundation;
 
 /*  
   /===========================================================================/
@@ -182,6 +183,8 @@ namespace SmartStroke
         private TrailNode actualEnd;
         private DateTime time;
 
+        public TestError() { }
+
         // Test error on trails was from a beginning node to an expected incremental
         // node. Instead, the user went to the actual node. Could come in handy for
         // analysis purposes.
@@ -205,6 +208,11 @@ namespace SmartStroke
 
         // Return the time of the error. This may not be useful information.
         public DateTime getTime() { return time; }
+
+        public void setTime(DateTime t) { time = t; }
+        public void setBegin(TrailNode node) { begin = node; }
+        public void setExpected(TrailNode node) { expectedEnd = node; }
+        public void setActual(TrailNode node) { actualEnd = node; }
 
         // Overload the operator == on two TestErrors. Useful to count how
         // many times the user made the same error in a test.
@@ -487,10 +495,48 @@ namespace SmartStroke
                         inActionSection = false;
                     }     
                 } else {
-                    // Parse all the error objects. Each one should be three lines
-                    /*List<string> lineWords = testStrings[i]
+                    // Parse all the error objects. Each one should be three nodes plus a Date
+                    List<string> lineWords = testStrings[i]
                         .Split('\t').Cast<string>().ToList<string>();
-                    if (lineWords.Count >= 5)
+                    
+                    // This is an error object.
+                    // Should be read as:
+                    //begin   node '\t' point
+                    //exp end node '\t' point
+                    //act end node '\t' point
+                    //DateTime
+
+                    if(lineWords.Count == 10)
+                    {
+                        TestError error = new TestError();
+                        // Get each of the node strings and points from the line
+                        for(int j = 0; j < 9; j += 3)
+                        {
+                            string beginText = lineWords[j];
+                            Point point;
+                            point.X = Convert.ToDouble(lineWords[j + 1]);
+                            point.Y = Convert.ToDouble(lineWords[j + 2]);
+                            bool flip = true;
+                            if(testType.ToString().Contains("_H"))
+                                flip = false;
+                            TrailNode node = new TrailNode(beginText, point, flip);
+                            
+                            if(j == 0)
+                                error.setBegin(node);
+                            if (j == 3)
+                                error.setExpected(node);
+                            if (j == 6)
+                                error.setActual(node);
+                        }
+                        
+                        DateTime date = new DateTime();
+                        date = Convert.ToDateTime(lineWords[9]);
+                        error.setTime(date);
+
+                        testErrors.Add(error);
+                    }
+
+                    else if (lineWords.Count >= 5)
                     {
                         DateTime date = new DateTime();
                         date = DateTime.Parse(lineWords[0] + " " + 
@@ -499,7 +545,7 @@ namespace SmartStroke
                         lineWords[4] = lineWords[4].Replace("[SPC]", "");
                         testNotes.Add(
                             new PatientNote(lineWords[3], lineWords[4], date));
-                    }*/
+                    }
                 }
             }
         }

@@ -66,6 +66,21 @@ namespace SmartStroke
             createShapes(letter.ToString(), position, c);
         }
 
+        public TrailNode(string s, Point p, bool r = true) // Create a node from the replay file
+        {
+            number = 0;
+            letter = '0';
+            int n = 0;
+            bool res = Int32.TryParse(s, out n);
+            // Is a number
+            if (res)
+                number = n;
+            else
+                letter = Convert.ToChar(s);
+            position = p;
+            rotate = r;
+        }
+
         // Return whether or not the node has been completed.
         // Useful for determining if the user has collided with
         // a new node or an old node. If old, the color should
