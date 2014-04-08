@@ -144,7 +144,10 @@ namespace SmartStroke
         {
             if (registerPasswordInputText.Password == null
                 || registerUsernameInputText.Text == null
-                || registerConfirmPasswordInputText.Password == null) return;
+                || registerConfirmPasswordInputText.Password == null
+                || registerPasswordInputText.Password == ""
+                || registerUsernameInputText.Text == ""
+                || registerConfirmPasswordInputText.Password == "") return;
             if (registerPasswordInputText.Password != 
                 registerConfirmPasswordInputText.Password) return;
             bool usernameAlreadyExists = false;
