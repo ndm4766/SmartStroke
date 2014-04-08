@@ -15,24 +15,34 @@
 
         <!--TextBlock Name="timer_box" Foreground="Black" Text="" FontSize="50" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="0" /-->
         <Grid Name="canvasGrid" Grid.Column="0" >
-            <Canvas Name="MyCanvas" Background="Transparent" Margin="10"/>
+            <Viewbox>
+                <Grid>
+                    <Canvas Name="MyCanvas" Background="Transparent" Margin="10"/>
+                </Grid>
+            </Viewbox>
         </Grid>
+        
         <Grid Name="optionsGrid" Grid.Column="1" >
-            <Button Name="saveButton" Content="Save" Margin="78.135,191.835,0,526.165" Width="100" Height="50" Visibility="Visible" Click="btnScreenshot_Click" IsHitTestVisible="False" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto">
-                <Button.RenderTransform>
-                    <CompositeTransform Rotation="90"/>
-                </Button.RenderTransform>
-            </Button>
-            <Button Name="submitButton" Content="Submit" Margin="78.135,69.447,0,648.553" Width="100" Height="50" Visibility="Visible" Click="SubmitButtonClicked" IsHitTestVisible="False" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto">
-                <Button.RenderTransform>
-                    <CompositeTransform Rotation="90"/>
-                </Button.RenderTransform>
-            </Button>
-            <Button x:Name="cancel" Content="Cancel Test" Margin="72.164,329.148,0,388.852" Width="116.418" Height="50" Visibility="Visible" Click="cancelTest" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto">
-                <Button.RenderTransform>
-                    <CompositeTransform Rotation="90"/>
-                </Button.RenderTransform>
-            </Button>
+            <Viewbox>
+                <Grid>
+                    <Button Name="saveButton" Content="Save" Margin="78.135,191.835,0,526.165" Width="100" Height="50" Visibility="Visible" Click="btnScreenshot_Click" IsHitTestVisible="False" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto">
+                        <Button.RenderTransform>
+                            <CompositeTransform Rotation="90"/>
+                        </Button.RenderTransform>
+                    </Button>
+                    <Button Name="submitButton" Content="Submit" Margin="78.135,69.447,0,648.553" Width="100" Height="50" Visibility="Visible" Click="SubmitButtonClicked" IsHitTestVisible="False" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto">
+                        <Button.RenderTransform>
+                            <CompositeTransform Rotation="90"/>
+                        </Button.RenderTransform>
+                    </Button>
+                    <Button x:Name="cancel" Content="Cancel Test" Margin="72.164,329.148,0,388.852" Width="116.418" Height="50" Visibility="Visible" Click="cancelTest" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto">
+                        <Button.RenderTransform>
+                            <CompositeTransform Rotation="90"/>
+                        </Button.RenderTransform>
+                    </Button>
+                </Grid>
+            </Viewbox>
         </Grid>
+        
     </Grid>
 </Page>

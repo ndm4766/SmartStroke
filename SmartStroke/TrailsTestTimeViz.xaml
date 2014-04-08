@@ -14,8 +14,13 @@
         </Grid.ColumnDefinitions>
 
         <Grid Name="canvasGrid" Grid.Column="0" >
-            <Canvas Name="MyCanvas" Background="Transparent" Margin="10"/>
+            <Viewbox>
+                <Grid>
+                    <Canvas Name="MyCanvas" Background="Transparent" Margin="10"/>
+                </Grid>
+            </Viewbox>
         </Grid>
+        
         <Grid Name="optionsGrid" Grid.Column="1" >
             <Button Name="goToMenu" Content="Return to Menu" Margin="29,33,0,670" Width="137" Height="65" Visibility="Visible" Click="gotoMenu" RenderTransformOrigin="0.5,0.5" />
             <ListBox Name="testDatesBox" HorizontalAlignment="Left" FontSize="15" BorderThickness="2" BorderBrush="Black" ScrollViewer.VerticalScrollMode="Enabled" Height="271" Margin="10,158,0,0" VerticalAlignment="Top" Width="180" SelectionChanged="testSelected" />

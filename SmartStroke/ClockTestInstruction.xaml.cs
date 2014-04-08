@@ -1,5 +1,4 @@
-﻿using SmartStroke.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,18 +13,18 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234237
+// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace SmartStroke
 {
     /// <summary>
-    /// A basic page that provides characteristics common to most applications.
+    /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class ReyOInstruction : Page
+    public sealed partial class ClockTestInstruction : Page
     {
         InfoPasser passer;
 
-        public ReyOInstruction()
+        public ClockTestInstruction()
         {
             this.InitializeComponent();
         }
@@ -44,7 +43,7 @@ namespace SmartStroke
 
         private void beginTest(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(ReyoTest), passer);
+            this.Frame.Navigate(typeof(ClockTest), passer);
         }
 
         private void backButtonClick(object sender, RoutedEventArgs e)
