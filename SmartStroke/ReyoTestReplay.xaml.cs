@@ -154,6 +154,7 @@ namespace SmartStroke
 
         async private void renderTestReplay(object sender, RoutedEventArgs e)
         {
+            removeAllStrokes();
             stopwatch.Reset();
             timer.Stop();
 
