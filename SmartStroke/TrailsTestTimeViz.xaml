@@ -22,7 +22,7 @@
         </Grid>
         
         <Grid Name="optionsGrid" Grid.Column="1" >
-            <Button Name="goToMenu" Content="Return to Menu" Margin="29,33,0,670" Width="137" Height="65" Visibility="Visible" Click="gotoMenu" RenderTransformOrigin="0.5,0.5" />
+            <Button Name="goToMenu" Content="Return to Menu" Margin="24,33,0,670" Width="150" Height="65" Visibility="Visible" Click="gotoMenu" RenderTransformOrigin="0.5,0.5" FontSize="17" FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF"  />
             <ListBox Name="testDatesBox" HorizontalAlignment="Left" FontSize="15" BorderThickness="2" BorderBrush="Black" ScrollViewer.VerticalScrollMode="Enabled" Height="271" Margin="10,158,0,0" VerticalAlignment="Top" Width="180" SelectionChanged="testSelected" />
         </Grid>
         <TextBlock Name="timeIntervalBlock" HorizontalAlignment="Left" Margin="268,592,0,0" Grid.Row="1" TextWrapping="Wrap" Text=""  FontSize="30" FontFamily="Segoe UI Light" Foreground="#606060" VerticalAlignment="Top" Height="43" Width="428"/>
