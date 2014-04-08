@@ -546,13 +546,13 @@ namespace SmartStroke
         {
             timer.Stop();
             disp.Stop();
+            passer.trailsVertical = true;
             this.Frame.Navigate(typeof(MainMenu), passer);
         }
 
         // Test is finished.. take a picture of the screen.
         private void SubmitButtonClicked(object sender, RoutedEventArgs e)
         {
-            //passer.currentPatient = null;
             testReplay.saveTestReplay();
             this.Frame.Navigate(typeof(MainMenu), passer);
 
