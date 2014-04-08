@@ -35,9 +35,6 @@ namespace SmartStroke
     /// </summary>
     public sealed partial class ClockTest : Page
     {
-        private NavigationHelper navigationHelper;
-        private ObservableDictionary defaultViewModel = new ObservableDictionary();
-
         InfoPasser passer = new InfoPasser();
 
         private TestReplay testReplay;
@@ -74,30 +71,9 @@ namespace SmartStroke
         double screenWidth;
         double screenHeight;
 
-        /// <summary>
-        /// This can be changed to a strongly typed view model.
-        /// </summary>
-        public ObservableDictionary DefaultViewModel
-        {
-            get { return this.defaultViewModel; }
-        }
-
-        /// <summary>
-        /// NavigationHelper is used on each page to aid in navigation and 
-        /// process lifetime management
-        /// </summary>
-        public NavigationHelper NavigationHelper
-        {
-            get { return this.navigationHelper; }
-        }
-
-
         public ClockTest()
         {
             this.InitializeComponent();
-            this.navigationHelper = new NavigationHelper(this);
-            this.navigationHelper.LoadState += navigationHelper_LoadState;
-            this.navigationHelper.SaveState += navigationHelper_SaveState;
 
             inkManager = new Windows.UI.Input.Inking.InkManager();
 
@@ -325,7 +301,11 @@ namespace SmartStroke
             return Math.Sqrt(Math.Pow((x2 - x1), 2) + Math.Pow((y2 - y1), 2));
         }
 
-        
+        private void CancelButtonClicked(object sender, RoutedEventArgs e)
+        {
+            testReplay.endTest();
+            this.Frame.Navigate(typeof(MainMenu), passer);
+        }
 
         #region PointerEvents
 
@@ -508,47 +488,9 @@ namespace SmartStroke
 
         #region navigation events
 
-        /// <summary>
-        /// Populates the page with content passed during navigation. Any saved state is also
-        /// provided when recreating a page from a prior session.
-        /// </summary>
-        /// <param name="sender">
-        /// The source of the event; typically <see cref="NavigationHelper"/>
-        /// </param>
-        /// <param name="e">Event data that provides both the navigation parameter passed to
-        /// <see cref="Frame.Navigate(Type, Object)"/> when this page was initially requested and
-        /// a dictionary of state preserved by this page during an earlier
-        /// session. The state will be null the first time a page is visited.</param>
-        private void navigationHelper_LoadState(object sender, LoadStateEventArgs e)
-        {
-        }
-
-        /// <summary>
-        /// Preserves state associated with this page in case the application is suspended or the
-        /// page is discarded from the navigation cache.  Values must conform to the serialization
-        /// requirements of <see cref="SuspensionManager.SessionState"/>.
-        /// </summary>
-        /// <param name="sender">The source of the event; typically <see cref="NavigationHelper"/></param>
-        /// <param name="e">Event data that provides an empty dictionary to be populated with
-        /// serializable state.</param>
-        private void navigationHelper_SaveState(object sender, SaveStateEventArgs e)
-        {
-        }
-
-        #region NavigationHelper registration
-
-        /// The methods provided in this section are simply used to allow
-        /// NavigationHelper to respond to the page's navigation methods.
-        /// 
-        /// Page specific logic should be placed in event handlers for the  
-        /// <see cref="GridCS.Common.NavigationHelper.LoadState"/>
-        /// and <see cref="GridCS.Common.NavigationHelper.SaveState"/>.
-        /// The navigation parameter is available in the LoadState method 
-        /// in addition to page state preserved during an earlier session.
-
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            navigationHelper.OnNavigatedTo(e);
+            base.OnNavigatedTo(e);
 
             passer = e.Parameter as InfoPasser;
             testReplay = new TestReplay(passer.currentPatient, TEST_TYPE.CLOCK);
@@ -556,15 +498,7 @@ namespace SmartStroke
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            navigationHelper.OnNavigatedFrom(e);
-        }
-
-        #endregion
-
-        private void CancelButtonClicked(object sender, RoutedEventArgs e)
-        {
-            testReplay.endTest();
-            this.Frame.Navigate(typeof(MainMenu), passer);
+            base.OnNavigatedFrom(e);
         }
 
         #endregion

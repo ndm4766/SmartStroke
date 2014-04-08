@@ -15,12 +15,22 @@
         </Grid.ColumnDefinitions>
         
         <Grid Name="canvasGrid" Grid.Column="0">
-            <Canvas Name="MyCanvas" Background="Transparent" Margin="10"/>
-            <Rectangle Name="outline" Stroke="Black" StrokeThickness="10" Margin="10"/>
+            <Viewbox>
+                <Grid>
+                    <Canvas Name="MyCanvas" Background="Transparent" Margin="10"/>
+                    <Rectangle Name="outline" Stroke="Black" StrokeThickness="10" Margin="10"/>
+                </Grid>
+            </Viewbox>
         </Grid>
+        
         <Grid Name="optionsGrid" Grid.Column="1">
-            <Button Content="Submit" Margin="16,13,0,685" Height="70" Width="150" Click="SubmitButtonClicked" />
-            <Button Content="Cancel Test" Margin="16,97,0,601" Height="70" Width="150" Click="CancelButtonClicked" />
+            <Viewbox>
+                <Grid>
+                    <Button Content="Submit" Margin="16,13,0,685" Height="70" Width="150" Click="SubmitButtonClicked" />
+                    <Button Content="Cancel Test" Margin="16,97,0,601" Height="70" Width="150" Click="CancelButtonClicked" />
+                </Grid>
+            </Viewbox>
         </Grid>
+        
     </Grid>
 </Page>
