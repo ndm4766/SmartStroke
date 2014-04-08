@@ -393,12 +393,10 @@ namespace SmartStroke
 
                             testReplay.endStroke();
                             testReplay.endTest();
-                            
-                            submitButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
-                            submitButton.IsHitTestVisible = true;
 
-                            saveButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
-                            saveButton.IsHitTestVisible = true;
+                            submitButton.IsEnabled = true;
+
+                            saveButton.IsEnabled = true;
                             
                             allLines.Add(inkManager.GetStrokes()[inkManager.GetStrokes().Count - 1], currentLine);
                             currentLine = new List<Line>();
@@ -672,6 +670,9 @@ namespace SmartStroke
                     saveButton.RenderTransform = r;
                     submitButton.RenderTransform = r;
                     cancelButton.RenderTransform = r;
+                    saveButton.Margin = new Thickness(35, 210, 0, 510);
+                    submitButton.Margin = new Thickness(35, 85, 0, 600);
+                    cancelButton.Margin = new Thickness(35, 320, 0, 400);
                 }
             }
             else if (passer.trailsTestVersion == 'B')
@@ -685,6 +686,9 @@ namespace SmartStroke
                     saveButton.RenderTransform = r;
                     submitButton.RenderTransform = r;
                     cancelButton.RenderTransform = r;
+                    saveButton.Margin = new Thickness(35, 210, 0, 510);
+                    submitButton.Margin = new Thickness(35, 85, 0, 600);
+                    cancelButton.Margin = new Thickness(35, 320, 0, 400);
                 }
             }
             testReplay = new TestReplay(passer.currentPatient, type);
