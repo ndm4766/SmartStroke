@@ -21,17 +21,17 @@
         <Grid Name="optionsGrid" Grid.Column="1" >
             <Viewbox>
                 <Grid>
-                    <Button Name="saveButton" Content="Save" Margin="35,285,0,435" Width="160" Height="80" Visibility="Visible" Click="btnScreenshot_Click" IsHitTestVisible="False" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto"  FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF" >
+                    <Button Name="saveButton" Content="Save" Margin="35,285,0,435" Width="160" Height="80" Click="btnScreenshot_Click" IsEnabled="False" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto"  FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF" >
                         <Button.RenderTransform>
                             <CompositeTransform Rotation="90"/>
                         </Button.RenderTransform>
                     </Button>
-                    <Button Name="submitButton" Content="Submit" Margin="35,85,0,600" Width="160" Height="80" Visibility="Visible" Click="SubmitButtonClicked" IsHitTestVisible="False" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto" FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF" >
+                    <Button Name="submitButton" Content="Submit" Margin="35,85,0,600" Width="160" Height="80" Click="SubmitButtonClicked" IsEnabled="False" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto" FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF" >
                         <Button.RenderTransform>
                             <CompositeTransform Rotation="90"/>
                         </Button.RenderTransform>
                     </Button>
-                    <Button x:Name="cancelButton" Content="Cancel Test" Margin="35,465,0,250" Width="160" Height="80" Visibility="Visible" Click="cancelTest" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto" FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF" >
+                    <Button x:Name="cancelButton" Content="Cancel Test" Margin="35,465,0,250" Width="160" Height="80" Click="cancelTest" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto" FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF" >
                         <Button.RenderTransform>
                             <CompositeTransform Rotation="90"/>
                         </Button.RenderTransform>

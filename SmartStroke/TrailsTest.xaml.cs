@@ -393,12 +393,10 @@ namespace SmartStroke
 
                             testReplay.endStroke();
                             testReplay.endTest();
-                            
-                            submitButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
-                            submitButton.IsHitTestVisible = true;
 
-                            saveButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
-                            saveButton.IsHitTestVisible = true;
+                            submitButton.IsEnabled = true;
+
+                            saveButton.IsEnabled = true;
                             
                             allLines.Add(inkManager.GetStrokes()[inkManager.GetStrokes().Count - 1], currentLine);
                             currentLine = new List<Line>();
