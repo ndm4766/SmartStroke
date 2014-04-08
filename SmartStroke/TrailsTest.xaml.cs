@@ -115,8 +115,6 @@ namespace SmartStroke
             // True is the Default value for fitToCurve.
             drawingAttributes.FitToCurve = false;
             inkManager.SetDefaultDrawingAttributes(drawingAttributes);
-
-            determineScreenSize();
         }
 
         #region NodeCreation
@@ -236,34 +234,6 @@ namespace SmartStroke
         }
 
         #endregion
-
-        /*
-         * Perceptive Pixel - DPIX/DPIY = 40, DPILog = 96 Res=1920X1080 Scale = 100
-         * Slate            - DPIX/DPIY = 135,DPILog = 96 Res=1920X1080 Scale = 100
-         * Surface          - DPIX/DPIY = 120.DPILog = 207Res=1920X1080 Scale = 140
-         */
-        private void determineScreenSize()
-        {
-            DisplayInformation display = DisplayInformation.GetForCurrentView();
-            float dpi = display.LogicalDpi;
-            float xdpi = display.RawDpiX;
-            float ydpi = display.RawDpiY;
-            double dots = xdpi * Window.Current.Bounds.Width;
-            ResolutionScale scale = display.ResolutionScale;
-
-            //if large screen
-            if(xdpi < 50)
-            {
-                MyCanvas.Height = 768;
-                MyCanvas.Width = 1366;
-                //timer_box.Text = "PIXEL";
-            }
-            else
-            {
-                MyCanvas.Height = 768;
-                MyCanvas.Width = 1366;
-            }
-        }
 
         // Return which index of node the user has hit
         private int stylusHitTest(double x, double y)
@@ -697,6 +667,11 @@ namespace SmartStroke
                 if (!passer.trailsVertical)
                 {
                     type = TEST_TYPE.TRAILS_A_H;
+                    RotateTransform r = new RotateTransform();
+                    r.Angle = 0;
+                    saveButton.RenderTransform = r;
+                    submitButton.RenderTransform = r;
+                    cancelButton.RenderTransform = r;
                 }
             }
             else if (passer.trailsTestVersion == 'B')
@@ -705,6 +680,11 @@ namespace SmartStroke
                 if(!passer.trailsVertical)
                 {
                     type = TEST_TYPE.TRAILS_B_H;
+                    RotateTransform r = new RotateTransform();
+                    r.Angle = 0;
+                    saveButton.RenderTransform = r;
+                    submitButton.RenderTransform = r;
+                    cancelButton.RenderTransform = r;
                 }
             }
             testReplay = new TestReplay(passer.currentPatient, type);

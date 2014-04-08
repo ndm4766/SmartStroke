@@ -17,14 +17,14 @@
         </Grid.ColumnDefinitions>
 
         <Grid Name="canvasGrid" Grid.Column="0" >
-                    <Canvas Name="MyCanvas" Background="Transparent" />
+            <Canvas Name="MyCanvas" Background="Transparent" />
             <Ellipse Stroke="Black" StrokeThickness="10" Height="600" Width="600"/>
         </Grid>
         <Grid Name="optionsGrid" Grid.Column="1" >
             <Viewbox>
                 <Grid>
-                    <Button Content="Submit" Margin="16,28,0,670" Height="70" Width="150" Click="SubmitButtonClicked" FontSize="23" FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF"  />
-                    <Button Content="Cancel Test" Margin="16,134,0,564" Height="70" Width="150" Click="CancelButtonClicked" FontSize="23" FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF"  />
+                    <Button Content="Submit" Margin="9,28,0,670" Height="70" Width="150" Click="SubmitButtonClicked" FontSize="23" FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF"  />
+                    <Button Content="Cancel Test" Margin="9,134,0,564" Height="70" Width="150" Click="CancelButtonClicked" FontSize="23" FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF"  />
                 </Grid>
             </Viewbox>
         </Grid>
