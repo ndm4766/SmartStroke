@@ -33,6 +33,7 @@ namespace SmartStroke
         List<PatientPlot> patientList = new List<PatientPlot>();
         List<string> fileNames;
         private TestReplay testReplay;
+        int chartChoice = -1;
 
         /// <summary>
         /// This can be changed to a strongly typed view model.
@@ -483,6 +484,34 @@ namespace SmartStroke
             medTrailsBGrouped = medianize(TrailsB);
             medTrailsB_HGrouped = medianize(TrailsB_H);
 
+            switch (chartChoice)
+            {
+                case 0:
+                    (ScatterChart.Series[0] as ScatterSeries).ItemsSource = TrailsAGroup;
+                    (ScatterChart.Series[1] as LineSeries).ItemsSource = avgTrailsAGrouped;
+                    (ScatterChart.Series[2] as LineSeries).ItemsSource = medTrailsAGrouped;
+                    break;
+                case 1:
+                    (ScatterChart.Series[0] as ScatterSeries).ItemsSource = TrailsBGroup;
+                    (ScatterChart.Series[1] as LineSeries).ItemsSource = avgTrailsBGrouped;
+                    (ScatterChart.Series[2] as LineSeries).ItemsSource = medTrailsBGrouped;
+                    break;
+                case 2:
+                    (ScatterChart.Series[0] as ScatterSeries).ItemsSource = TrailsA_HGroup;
+                    (ScatterChart.Series[1] as LineSeries).ItemsSource = avgTrailsA_HGrouped;
+                    (ScatterChart.Series[2] as LineSeries).ItemsSource = medTrailsA_HGrouped;
+                    break;
+                case 3:
+                    (ScatterChart.Series[0] as ScatterSeries).ItemsSource = TrailsB_HGroup;
+                    (ScatterChart.Series[1] as LineSeries).ItemsSource = avgTrailsB_HGrouped;
+                    (ScatterChart.Series[2] as LineSeries).ItemsSource = medTrailsB_HGrouped;
+                    break;
+                default:
+                    //do nothing
+                    break;
+            }
+
+            /*
             //Plottting patient points for age groups of Trails A 
             (ScatterChart.Series[0] as ScatterSeries).ItemsSource = TrailsAGroup;
 
@@ -490,7 +519,7 @@ namespace SmartStroke
             (ScatterChart.Series[1] as LineSeries).ItemsSource = avgTrailsAGrouped;
 
             //Plot medians for individual age groups of Trails A
-            (ScatterChart.Series[2] as LineSeries).ItemsSource = medTrailsAGrouped;
+            (ScatterChart.Series[2] as LineSeries).ItemsSource = medTrailsAGrouped;*/
         }
 
         public class PatientPlot
@@ -570,6 +599,12 @@ namespace SmartStroke
         {
             var popup = new Windows.UI.Popups.PopupMenu();
             popup.ShowAsync(new Point(0, 0));
+        }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            chartChoice = dataSelection.SelectedIndex;
+            LoadChartContents();
         }
     }
 }

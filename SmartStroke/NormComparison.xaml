@@ -53,7 +53,7 @@
 
                 <Charting:LineSeries Title="Average Test Time" Margin="0" IndependentValuePath="Age" DependentValuePath="Time" IsSelectionEnabled="True"/>
                 <!--<Charting:LineSeries Title="Average Age" Margin="0" IndependentValuePath="Age" DependentValuePath="Time" IsSelectionEnabled="True"/>-->
-                
+
                 <Charting:LineSeries Title="Median Test Time" Margin="0" IndependentValuePath="Age" DependentValuePath="Time" IsSelectionEnabled="True"/>
                 <!--<Charting:LineSeries Title="Median Age" Margin="0" IndependentValuePath="Age" DependentValuePath="Time" IsSelectionEnabled="True"/>-->
             </Charting:Chart>
@@ -67,7 +67,7 @@
                             <TextBox HorizontalAlignment="Left" Margin="10,15,0,0" TextWrapping="Wrap" Text="Min" VerticalAlignment="Top" Width="70" PreventKeyboardDisplayOnProgrammaticFocus="True"/>
                             <TextBox HorizontalAlignment="Left" Margin="100,15,0,0" TextWrapping="Wrap" Text="Max" VerticalAlignment="Top" Width="70"/>
                             <TextBlock HorizontalAlignment="Left" Margin="175,25,0,0" Grid.Row="1" TextWrapping="Wrap" Text="seconds" VerticalAlignment="Top"/>
-                            
+
                             <TextBlock HorizontalAlignment="Left" Margin="60,55,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Age Range" VerticalAlignment="Top"/>
                             <TextBox HorizontalAlignment="Left" Margin="10,70,0,0" TextWrapping="Wrap" Text="Min" VerticalAlignment="Top" Width="70"/>
                             <TextBox HorizontalAlignment="Left" Margin="100,70,0,0" TextWrapping="Wrap" Text="Max" VerticalAlignment="Top" Width="70"/>
@@ -82,12 +82,17 @@
                             <CheckBox Content="Female" HorizontalAlignment="Left" Margin="7,190,0,0" VerticalAlignment="Top"/>
                             <CheckBox Content="Graph Average Line" HorizontalAlignment="Left" Margin="7,215,0,0" VerticalAlignment="Top"/>
                             <CheckBox Content="Graph Median Line" HorizontalAlignment="Left" Margin="7,240,0,0" VerticalAlignment="Top"/>
-                          
+
                         </Grid>
                     </Flyout>
                 </Button.Flyout>
             </Button>
-
+            <ComboBox x:Name="dataSelection" HorizontalAlignment="Left" Margin="1186,49,0,0" VerticalAlignment="Top" Width="170" SelectionChanged="ComboBox_SelectionChanged">
+                <x:String>Trails A Vertical</x:String>
+                <x:String>Trails B Vertical</x:String>
+                <x:String>Trails A Horizontal</x:String>
+                <x:String>Trails B Horizontal</x:String>
+            </ComboBox>
         </Grid>
     </Grid>
 </Page>
