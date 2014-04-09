@@ -153,10 +153,14 @@ namespace SmartStroke
                         var actions = testReplay.getTestActions();
                         if (actions.Count < 1) continue;
 
-                        //Age.Items.Add(testReplay.getPatient().getBirthDate().ToString());
+                        DateTime birth = testReplay.getPatient().getBirthDate();
+                        DateTime now = DateTime.Now;
+                        TimeSpan TimeDifference = birth - now;
+                        Age.Items.Add(TimeDifference.Days/365);
+
                         DateTime start = actions[0].getStartTime();
                         DateTime end = actions[actions.Count - 1].getEndTime();
-                        TimeSpan TimeDifference = end - start;
+                        TimeDifference = end - start;
 
                         double seconds = TimeDifference.Minutes * 60 + TimeDifference.Seconds + TimeDifference.Milliseconds / 100;
                         
