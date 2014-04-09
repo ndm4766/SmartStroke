@@ -85,7 +85,7 @@ namespace SmartStroke
         }
         private void clock_click(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(ClockTest), passer);
+            this.Frame.Navigate(typeof(ClockTestInstruction), passer);
         }
 
         private void reyo_click(object sender, RoutedEventArgs e)
@@ -115,6 +115,14 @@ namespace SmartStroke
             this.Frame.Navigate(typeof(ReyoTestReplay), passer);
         }
 
+        private void goToPatientScreen(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(PatientSelection), passer);
+        }
 
+        private void goToNorms(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(NormComparison), passer);
+        }
     }
 }

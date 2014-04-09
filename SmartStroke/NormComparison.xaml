@@ -48,6 +48,15 @@
 				IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,30,40"/>
         </Grid>
         <Grid Grid.Row="1">
+            <Charting:Chart x:Name="ScatterChart" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="100,0,0,0" Width="1200" Height="500">
+                <Charting:ScatterSeries Title="Patient Points" Margin="0" IndependentValuePath="Age" DependentValuePath="Time"  IsSelectionEnabled="True"/>
+
+                <Charting:LineSeries Title="Average Test Time" Margin="0" IndependentValuePath="Age" DependentValuePath="Time" IsSelectionEnabled="True"/>
+                <!--<Charting:LineSeries Title="Average Age" Margin="0" IndependentValuePath="Age" DependentValuePath="Time" IsSelectionEnabled="True"/>-->
+
+                <Charting:LineSeries Title="Median Test Time" Margin="0" IndependentValuePath="Age" DependentValuePath="Time" IsSelectionEnabled="True"/>
+                <!--<Charting:LineSeries Title="Median Age" Margin="0" IndependentValuePath="Age" DependentValuePath="Time" IsSelectionEnabled="True"/>-->
+            </Charting:Chart>
             <Charting:AxisLabel DataContext="Age" HorizontalAlignment="Center" Height="100" Margin="0,0,0,0" VerticalAlignment="Bottom" Width="100"/>
             <Charting:AxisLabel DataContext="Time (seconds)" HorizontalAlignment="Left" Height="100" Margin="20,-70,0,0" VerticalAlignment="Center" Width="100"/>
             <Button Content="Options" HorizontalAlignment="Left" Margin="1270,0,0,0" VerticalAlignment="Top" Width="89" Click="chartOptions">
@@ -78,10 +87,12 @@
                     </Flyout>
                 </Button.Flyout>
             </Button>
-            <ListBox Name="TrailsA" ScrollViewer.IsVerticalRailEnabled="True" HorizontalAlignment="Left" Height="467" Margin="529,115,0,0" VerticalAlignment="Top" Width="285"/>
-            <ListBox Name="TrailsB" ScrollViewer.IsVerticalRailEnabled="True" HorizontalAlignment="Left" Height="467" Margin="968,115,0,0" VerticalAlignment="Top" Width="325"/>
-            <ListBox x:Name="Age" ScrollViewer.IsVerticalRailEnabled="True" HorizontalAlignment="Left" Height="467" Margin="58,115,0,0" VerticalAlignment="Top" Width="406"/>
-
+            <ComboBox x:Name="dataSelection" HorizontalAlignment="Left" Margin="1186,49,0,0" VerticalAlignment="Top" Width="170" SelectionChanged="ComboBox_SelectionChanged">
+                <x:String>Trails A Vertical</x:String>
+                <x:String>Trails B Vertical</x:String>
+                <x:String>Trails A Horizontal</x:String>
+                <x:String>Trails B Horizontal</x:String>
+            </ComboBox>
         </Grid>
     </Grid>
 </Page>
