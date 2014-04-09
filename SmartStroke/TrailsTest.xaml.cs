@@ -189,14 +189,15 @@ namespace SmartStroke
                 TextBlock begin = new TextBlock()
                 {
                     Text = "Begin",
-                    Margin = new Thickness(600, 360, 0, 0),
+                    Margin = new Thickness(607, 339, 0, 0),
                     Foreground = new SolidColorBrush(Colors.Black),
-                    FontSize = 15
+                    FontSize = 25
                 };
                 RotateTransform r = new RotateTransform();
                 r.Angle = 90;
                 if (passer.trailsVertical)
                 {
+                    begin.Margin = new Thickness(697, 369, 0, 0);
                     begin.RenderTransform = r;
                 }
                 MyCanvas.Children.Add(begin);
@@ -217,22 +218,28 @@ namespace SmartStroke
                 nodes.Add(new TrailNode('H', new Point(547, 149), MyCanvas, passer.trailsVertical));
                 nodes.Add(new TrailNode(9, new Point(919, 231), MyCanvas, passer.trailsVertical));
                 nodes.Add(new TrailNode('I', new Point(927, 479), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(10, new Point(979, 661), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(10, new Point(1059, 661), MyCanvas, passer.trailsVertical));
                 nodes.Add(new TrailNode('J', new Point(325, 607), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(11, new Point(113, 649), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode('K', new Point(115, 69), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(11, new Point(63, 649), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode('K', new Point(65, 69), MyCanvas, passer.trailsVertical));
                 nodes.Add(new TrailNode(12, new Point(459, 69), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(13, new Point(977, 63), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode('L', new Point(219, 101), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(13, new Point(1057, 63), MyCanvas, passer.trailsVertical));
                 TextBlock end = new TextBlock()
                 {
                     Text = "End",
-                    Margin = new Thickness(550, 55, 0, 0),
+                    Margin = new Thickness(nodes[nodes.Count-1].getLocation().X+10,
+                        nodes[nodes.Count - 1].getLocation().Y - 30, 0, 0),
                     Foreground = new SolidColorBrush(Colors.Black),
-                    FontSize = 15
+                    FontSize = 25
                 };
 
-                if(passer.trailsVertical)
+                if (passer.trailsVertical)
+                {
+                    end.Margin = new Thickness(nodes[nodes.Count-1].getLocation().X+80,
+                        nodes[nodes.Count - 1].getLocation().Y, 0, 0);
                     end.RenderTransform = r;
+                }
 
                 MyCanvas.Children.Add(end);
             }
