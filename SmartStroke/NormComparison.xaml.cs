@@ -510,6 +510,14 @@ namespace SmartStroke
             (ScatterChart.Series[1] as LineSeries).ItemsSource = avgTrailsAGrouped;
             (ScatterChart.Series[2] as LineSeries).ItemsSource = medTrailsAGrouped;
 
+            ScatterChart.Opacity = 100;
+            ageAxis.Opacity = 100;
+            timeAxis.Opacity = 100;
+
+            progressNorm.IsActive = false;
+
+            dataSelection.SelectedIndex = 0;
+
         }
 
         public class PatientPlot
