@@ -148,9 +148,9 @@ namespace SmartStroke
                 nodes.Add(new TrailNode(5, new Point(677, 287), MyCanvas, passer.trailsVertical));
                 nodes.Add(new TrailNode(6, new Point(589, 423), MyCanvas, passer.trailsVertical));
                 nodes.Add(new TrailNode(7, new Point(495, 273), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(8, new Point(301, 151), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(9, new Point(111, 187), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(10, new Point(343, 251), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(8, new Point(320, 141), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(9, new Point(125, 187), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(10, new Point(343, 241), MyCanvas, passer.trailsVertical));
                 nodes.Add(new TrailNode(11, new Point(81, 447), MyCanvas, passer.trailsVertical));
                 nodes.Add(new TrailNode(12, new Point(47, 65), MyCanvas, passer.trailsVertical));
                 nodes.Add(new TrailNode(13, new Point(593, 151), MyCanvas, passer.trailsVertical));
@@ -164,7 +164,7 @@ namespace SmartStroke
                 nodes.Add(new TrailNode(21, new Point(1087, 673), MyCanvas, passer.trailsVertical));
                 nodes.Add(new TrailNode(22, new Point(697, 675), MyCanvas, passer.trailsVertical));
                 nodes.Add(new TrailNode(23, new Point(47, 685), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(24, new Point(503, 603), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(24, new Point(503, 613), MyCanvas, passer.trailsVertical));
                 nodes.Add(new TrailNode(25, new Point(79, 573), MyCanvas, passer.trailsVertical));
                 TextBlock end = new TextBlock()
                 {
@@ -202,28 +202,28 @@ namespace SmartStroke
                 }
                 MyCanvas.Children.Add(begin);
                 nodes.Add(new TrailNode('A', new Point(333, 509), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(2, new Point(251, 195), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode('B', new Point(859, 317), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(2, new Point(251, 205), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode('B', new Point(879, 317), MyCanvas, passer.trailsVertical));
                 nodes.Add(new TrailNode(3, new Point(717, 331), MyCanvas, passer.trailsVertical));
                 nodes.Add(new TrailNode('C', new Point(501, 491), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(4, new Point(881, 401), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode('D', new Point(905, 587), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(4, new Point(901, 401), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode('D', new Point(945, 587), MyCanvas, passer.trailsVertical));
                 nodes.Add(new TrailNode(5, new Point(571, 575), MyCanvas, passer.trailsVertical));
                 nodes.Add(new TrailNode('E', new Point(181, 571), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(6, new Point(243, 317), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode('F', new Point(153, 137), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(6, new Point(243, 327), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode('F', new Point(148, 137), MyCanvas, passer.trailsVertical));
                 nodes.Add(new TrailNode(7, new Point(625, 223), MyCanvas, passer.trailsVertical));
                 nodes.Add(new TrailNode('G', new Point(419, 135), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(8, new Point(917, 109), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(8, new Point(957, 109), MyCanvas, passer.trailsVertical));
                 nodes.Add(new TrailNode('H', new Point(547, 149), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(9, new Point(919, 231), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode('I', new Point(927, 479), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(9, new Point(959, 231), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode('I', new Point(967, 479), MyCanvas, passer.trailsVertical));
                 nodes.Add(new TrailNode(10, new Point(1059, 661), MyCanvas, passer.trailsVertical));
                 nodes.Add(new TrailNode('J', new Point(325, 607), MyCanvas, passer.trailsVertical));
                 nodes.Add(new TrailNode(11, new Point(63, 649), MyCanvas, passer.trailsVertical));
                 nodes.Add(new TrailNode('K', new Point(65, 69), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(12, new Point(459, 69), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode('L', new Point(219, 101), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(12, new Point(459, 55), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode('L', new Point(229, 101), MyCanvas, passer.trailsVertical));
                 nodes.Add(new TrailNode(13, new Point(1057, 63), MyCanvas, passer.trailsVertical));
                 TextBlock end = new TextBlock()
                 {
