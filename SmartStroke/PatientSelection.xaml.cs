@@ -164,5 +164,12 @@ namespace SmartStroke
             search.Text = "";
         }
 
+        private void logout(object sender, RoutedEventArgs e)
+        {
+            passer = new InfoPasser();
+            passer.currentPatient = null;
+            this.Frame.Navigate(typeof(MainPage), passer);
+        }
+
     }
 }
