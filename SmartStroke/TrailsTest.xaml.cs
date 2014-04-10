@@ -115,8 +115,6 @@ namespace SmartStroke
             // True is the Default value for fitToCurve.
             drawingAttributes.FitToCurve = false;
             inkManager.SetDefaultDrawingAttributes(drawingAttributes);
-
-            determineScreenSize();
         }
 
         #region NodeCreation
@@ -237,34 +235,6 @@ namespace SmartStroke
 
         #endregion
 
-        /*
-         * Perceptive Pixel - DPIX/DPIY = 40, DPILog = 96 Res=1920X1080 Scale = 100
-         * Slate            - DPIX/DPIY = 135,DPILog = 96 Res=1920X1080 Scale = 100
-         * Surface          - DPIX/DPIY = 120.DPILog = 207Res=1920X1080 Scale = 140
-         */
-        private void determineScreenSize()
-        {
-            DisplayInformation display = DisplayInformation.GetForCurrentView();
-            float dpi = display.LogicalDpi;
-            float xdpi = display.RawDpiX;
-            float ydpi = display.RawDpiY;
-            double dots = xdpi * Window.Current.Bounds.Width;
-            ResolutionScale scale = display.ResolutionScale;
-
-            //if large screen
-            if(xdpi < 50)
-            {
-                MyCanvas.Height = 768;
-                MyCanvas.Width = 1366;
-                timer_box.Text = "PIXEL";
-            }
-            else
-            {
-                MyCanvas.Height = 768;
-                MyCanvas.Width = 1366;
-            }
-        }
-
         // Return which index of node the user has hit
         private int stylusHitTest(double x, double y)
         {
@@ -296,10 +266,12 @@ namespace SmartStroke
         private void timer_tick(object sender, object e)
         {
             //update the textbox with the current time in the stopwatch
+            /*
             timer_box.Text = String.Format("{0}:{1}:{2}",
                 timer.Elapsed.Minutes.ToString(),
                 timer.Elapsed.Seconds.ToString("D2"),
                 (timer.Elapsed.Milliseconds / 10).ToString("D2"));
+             */
         }
 
         //distance between two points: used to determine if a line drawn is long enough to draw
@@ -421,12 +393,10 @@ namespace SmartStroke
 
                             testReplay.endStroke();
                             testReplay.endTest();
-                            
-                            submitButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
-                            submitButton.IsHitTestVisible = true;
 
-                            saveButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
-                            saveButton.IsHitTestVisible = true;
+                            submitButton.IsEnabled = true;
+
+                            saveButton.IsEnabled = true;
                             
                             allLines.Add(inkManager.GetStrokes()[inkManager.GetStrokes().Count - 1], currentLine);
                             currentLine = new List<Line>();
@@ -436,20 +406,31 @@ namespace SmartStroke
                     }
                     // Stylus did not contact the next node in the correct order.
                     // Need to change the color of the corrected node to Yellow and the
-                        // incorrect node hit to red to notify the user this is not correct.
+                    // incorrect node hit to red to notify the user this is not correct.
                     else if ((indexHit >= 0) && indexHit > currentIndex)
                     {
                         // If the user ran over a node that was already completed, ignore executing
-                            // this code
+                        // this code
                         //if (!nodes[indexHit].getCompleted() && nodes[indexHit].getEllipse().Fill != null)
                         //{
 
-                        //TODO: need to take out the successive red nodes(only the first err should be red)
                         //TODO: after an err, no lines should be able to be drawn if they are still holding down the pen (when you collide with ANOTHER node after the first wrong one, it continues drawing)
 
                         //set error colors
-                        if(incorrectNodes.Count < 1)
+                        if (incorrectNodes.Count < 1)
+                        {
                             nodes[indexHit].setFillColor(new SolidColorBrush(Colors.Red));
+                            // Create a TestError object.
+                            // Begin node   = nodes[currentIndex]
+                            // end node     = nodes[indexHit]
+                            // expected end = nodes[currentIndex + 1]
+
+                            TestError err = new TestError(nodes[currentIndex],
+                                                          nodes[currentIndex + 1],
+                                                          nodes[indexHit]);
+
+                            testReplay.addError(err);
+                        }
                         nodes[currentIndex].setFillColor(new SolidColorBrush(Colors.Yellow));
 
                         //reset the index back 1
@@ -533,13 +514,13 @@ namespace SmartStroke
         {
             timer.Stop();
             disp.Stop();
+            passer.trailsVertical = true;
             this.Frame.Navigate(typeof(MainMenu), passer);
         }
 
         // Test is finished.. take a picture of the screen.
         private void SubmitButtonClicked(object sender, RoutedEventArgs e)
         {
-            //passer.currentPatient = null;
             testReplay.saveTestReplay();
             this.Frame.Navigate(typeof(MainMenu), passer);
 
@@ -684,6 +665,14 @@ namespace SmartStroke
                 if (!passer.trailsVertical)
                 {
                     type = TEST_TYPE.TRAILS_A_H;
+                    RotateTransform r = new RotateTransform();
+                    r.Angle = 0;
+                    saveButton.RenderTransform = r;
+                    submitButton.RenderTransform = r;
+                    cancelButton.RenderTransform = r;
+                    saveButton.Margin = new Thickness(35, 210, 0, 510);
+                    submitButton.Margin = new Thickness(35, 85, 0, 600);
+                    cancelButton.Margin = new Thickness(35, 320, 0, 400);
                 }
             }
             else if (passer.trailsTestVersion == 'B')
@@ -692,6 +681,14 @@ namespace SmartStroke
                 if(!passer.trailsVertical)
                 {
                     type = TEST_TYPE.TRAILS_B_H;
+                    RotateTransform r = new RotateTransform();
+                    r.Angle = 0;
+                    saveButton.RenderTransform = r;
+                    submitButton.RenderTransform = r;
+                    cancelButton.RenderTransform = r;
+                    saveButton.Margin = new Thickness(35, 210, 0, 510);
+                    submitButton.Margin = new Thickness(35, 85, 0, 600);
+                    cancelButton.Margin = new Thickness(35, 320, 0, 400);
                 }
             }
             testReplay = new TestReplay(passer.currentPatient, type);
