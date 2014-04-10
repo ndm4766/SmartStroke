@@ -35,6 +35,25 @@ namespace SmartStroke
         private TestReplay testReplay;
         int chartChoice = -1;
 
+        //............................................
+        List<PlotPoint> TrailsAGroup = new List<PlotPoint>();
+        List<PlotPoint> TrailsBGroup = new List<PlotPoint>();
+        List<PlotPoint> TrailsA_HGroup = new List<PlotPoint>();
+        List<PlotPoint> TrailsB_HGroup = new List<PlotPoint>();
+
+        List<PlotPoint> avgTrailsAGrouped = new List<PlotPoint>();
+        List<PlotPoint> medTrailsAGrouped = new List<PlotPoint>();
+
+        List<PlotPoint> avgTrailsBGrouped = new List<PlotPoint>();
+        List<PlotPoint> medTrailsBGrouped = new List<PlotPoint>();
+
+        List<PlotPoint> avgTrailsA_HGrouped = new List<PlotPoint>();
+        List<PlotPoint> medTrailsA_HGrouped = new List<PlotPoint>();
+
+        List<PlotPoint> avgTrailsB_HGrouped = new List<PlotPoint>();
+        List<PlotPoint> medTrailsB_HGrouped = new List<PlotPoint>();
+        //..............................................
+
         /// <summary>
         /// This can be changed to a strongly typed view model.
         /// </summary>
@@ -406,6 +425,8 @@ namespace SmartStroke
             List<Performance> TrailsA_H = new List<Performance>();
             List<Performance> TrailsB_H = new List<Performance>();
 
+            /*
+
             List<PlotPoint> TrailsAGroup = new List<PlotPoint>();
             List<PlotPoint> TrailsBGroup = new List<PlotPoint>();
             List<PlotPoint> TrailsA_HGroup = new List<PlotPoint>();
@@ -422,6 +443,7 @@ namespace SmartStroke
 
             List<PlotPoint> avgTrailsB_HGrouped = new List<PlotPoint>();
             List<PlotPoint> medTrailsB_HGrouped = new List<PlotPoint>();
+             */
 
             List<Performance> sortPatientAge = new List<Performance>(allResults);
             if (allResults.Count > 0)
@@ -594,7 +616,35 @@ namespace SmartStroke
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             chartChoice = dataSelection.SelectedIndex;
-            LoadChartContents();
+            //LoadChartContents();
+
+            switch (chartChoice)
+            {
+                case 0:
+                    (ScatterChart.Series[0] as ScatterSeries).ItemsSource = TrailsAGroup;
+                    (ScatterChart.Series[1] as LineSeries).ItemsSource = avgTrailsAGrouped;
+                    (ScatterChart.Series[2] as LineSeries).ItemsSource = medTrailsAGrouped;
+                    break;
+                case 1:
+                    (ScatterChart.Series[0] as ScatterSeries).ItemsSource = TrailsBGroup;
+                    (ScatterChart.Series[1] as LineSeries).ItemsSource = avgTrailsBGrouped;
+                    (ScatterChart.Series[2] as LineSeries).ItemsSource = medTrailsBGrouped;
+                    break;
+                case 2:
+                    (ScatterChart.Series[0] as ScatterSeries).ItemsSource = TrailsA_HGroup;
+                    (ScatterChart.Series[1] as LineSeries).ItemsSource = avgTrailsA_HGrouped;
+                    (ScatterChart.Series[2] as LineSeries).ItemsSource = medTrailsA_HGrouped;
+                    break;
+                case 3:
+                    (ScatterChart.Series[0] as ScatterSeries).ItemsSource = TrailsB_HGroup;
+                    (ScatterChart.Series[1] as LineSeries).ItemsSource = avgTrailsB_HGrouped;
+                    (ScatterChart.Series[2] as LineSeries).ItemsSource = medTrailsB_HGrouped;
+                    break;
+                default:
+                    //do nothing
+                    break;
+            }
+
         }
     }
 }
