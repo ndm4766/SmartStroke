@@ -35,7 +35,7 @@ namespace SmartStroke
         TextBlock text;
 
         // Constant width of 60 pixels for each node
-        int size;
+        const int size = 54;
 
         // Whether the node has been connected correctly or not
         bool completed = false;
@@ -47,10 +47,9 @@ namespace SmartStroke
         // versions of the test)
         private bool rotate;
 
-        public TrailNode() { size = 60; }                           // Default constructor. Should not use
+        public TrailNode() {}                           // Default constructor. Should not use
         public TrailNode(int n, Point p, Canvas c, bool r = true)   // Create a node for trails test A
         {
-            size = 60;
             number = n;
             letter = '0';
             position = p;
@@ -60,7 +59,6 @@ namespace SmartStroke
 
         public TrailNode(char l, Point p, Canvas c, bool r = true) // Create a node for trails test B
         {
-            size = 60;
             number = 0;
             letter = l;
             position = p;
@@ -101,6 +99,9 @@ namespace SmartStroke
 
         // Return the actual Ellipse.
         public Ellipse getEllipse() { return e; }
+
+        // Return the size to use for buffer zone
+        public int getNodeSize() { return size/2; }
 
         // Create the Ellipse, the TextBox, and display it on the Canvas.
         private void createShapes(string display, Point p, Canvas c)

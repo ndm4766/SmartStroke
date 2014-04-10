@@ -9,8 +9,9 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <TextBlock Name="greeting" FontSize="36" HorizontalAlignment="Left" Margin="130,30,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="148" Width="1190"/>
-        <Button FontSize="36" Content="Add new Patient" HorizontalAlignment="Left" Margin="127,350,0,0" VerticalAlignment="Top" Height="108" Width="343" Click="newPatient" FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF"/>
-        <Button FontSize="36" Content="View Norms" HorizontalAlignment="Left" Margin="127,500,0,0" VerticalAlignment="Top" Height="108" Width="343" Click="viewNorms" FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF"/>
+        <Button FontSize="36" Content="Add new Patient" HorizontalAlignment="Left" Margin="127,300,0,0" VerticalAlignment="Top" Height="108" Width="343" Click="newPatient" FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF"/>
+        <Button FontSize="36" Content="View Norms" HorizontalAlignment="Left" Margin="127, 445,0,0" VerticalAlignment="Top" Height="108" Width="343" Click="viewNorms" FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF"/>
+        <Button Content="Logout" HorizontalAlignment="Left" FontSize="36" FontFamily="Segoe UI Light" Margin="127,590,0,0" VerticalAlignment="Top" Height="108" Width="343" Background="#203864" Foreground="#FFFFFF" Click="logout" />
         <TextBox Name="search" FontSize="36" HorizontalAlignment="Left" Margin="750,178,0,0" TextWrapping="Wrap" Text="Search for a Patient" VerticalAlignment="Top" Height="87" Width="530" TextChanged="searchPatients" GotFocus="clearText"/>
         <ListBox Name="MedicalID" HorizontalAlignment="Left" FontSize="24" BorderThickness="0" ScrollViewer.VerticalScrollMode="Enabled" Height="340" Margin="750,265,0,0" VerticalAlignment="Top" Width="530" SelectionChanged="ListBox_SelectionChanged">
         </ListBox>
