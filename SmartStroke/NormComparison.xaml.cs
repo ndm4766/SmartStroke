@@ -511,15 +511,6 @@ namespace SmartStroke
                     break;
             }
 
-            /*
-            //Plottting patient points for age groups of Trails A 
-            (ScatterChart.Series[0] as ScatterSeries).ItemsSource = TrailsAGroup;
-
-            //Plot averages for age groups of Trails A
-            (ScatterChart.Series[1] as LineSeries).ItemsSource = avgTrailsAGrouped;
-
-            //Plot medians for individual age groups of Trails A
-            (ScatterChart.Series[2] as LineSeries).ItemsSource = medTrailsAGrouped;*/
         }
 
         public class PatientPlot
@@ -571,7 +562,6 @@ namespace SmartStroke
                     string patientBday = patients.GetObjectAt(i).GetNamedValue("Birthday").GetString();
                     string patientSex = patients.GetObjectAt(i).GetNamedValue("Sex").GetString();
                     string patientEducation = patients.GetObjectAt(i).GetNamedValue("Education").GetString();
-                    string test;
 
                     DateTime today = DateTime.Today;
                     DateTime bday = Convert.ToDateTime(patientBday);
