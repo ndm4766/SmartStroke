@@ -115,6 +115,8 @@ namespace SmartStroke
             // True is the Default value for fitToCurve.
             drawingAttributes.FitToCurve = false;
             inkManager.SetDefaultDrawingAttributes(drawingAttributes);
+
+            determineScreenSize();
         }
 
         #region NodeCreation
@@ -124,54 +126,57 @@ namespace SmartStroke
             #region TrailsA
             if (kind == 'A')
             {
-                nodes.Add(new TrailNode(1, new Point(257, 421), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(1, new Point(485, 503), MyCanvas, passer.trailsVertical));
                 TextBlock begin = new TextBlock()
                 {
                     Text = "Begin",
-                    Margin = new Thickness(330, 425, 0, 0),
+                    Margin = new Thickness(485, 473, 0, 0),
                     Foreground = new SolidColorBrush(Colors.Black),
-                    FontSize = 15
+                    FontSize = 25
                 };
                 RotateTransform r = new RotateTransform();
                 r.Angle = 90;
                 if (passer.trailsVertical)
                 {
+                    begin.Margin = new Thickness(575, 503, 0, 0);
                     begin.RenderTransform = r;
                 }
                 MyCanvas.Children.Add(begin);
-                nodes.Add(new TrailNode(2, new Point(150, 322), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(3, new Point(150, 491), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(4, new Point(584, 501), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(5, new Point(480, 312), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(6, new Point(382, 402), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(7, new Point(320, 279), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(8, new Point(163, 127), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(9, new Point(76, 155), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(10, new Point(163, 241), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(11, new Point(52, 317), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(12, new Point(42, 48), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(13, new Point(446, 97), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(14, new Point(358, 44), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(15, new Point(829, 43), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(16, new Point(671, 109), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(17, new Point(890, 227), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(18, new Point(670, 273), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(19, new Point(745, 434), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(20, new Point(754, 316), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(21, new Point(900, 363), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(22, new Point(798, 618), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(23, new Point(79, 643), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(24, new Point(452, 565), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(2, new Point(375, 341), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(3, new Point(277, 549), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(4, new Point(693, 547), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(5, new Point(677, 287), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(6, new Point(589, 423), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(7, new Point(495, 273), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(8, new Point(301, 151), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(9, new Point(111, 187), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(10, new Point(343, 251), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(11, new Point(81, 447), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(12, new Point(47, 65), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(13, new Point(593, 151), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(14, new Point(455, 61), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(15, new Point(1085, 55), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(16, new Point(861, 157), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(17, new Point(1089, 383), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(18, new Point(813, 343), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(19, new Point(955, 581), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(20, new Point(967, 455), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(21, new Point(1087, 673), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(22, new Point(697, 675), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(23, new Point(47, 685), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(24, new Point(503, 603), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(25, new Point(79, 573), MyCanvas, passer.trailsVertical));
                 TextBlock end = new TextBlock()
                 {
                     Text = "End",
-                    Margin = new Thickness(520, 575, 0, 0),
+                    Margin = new Thickness(79, 543, 0, 0),
                     Foreground = new SolidColorBrush(Colors.Black),
-                    FontSize = 15
+                    FontSize = 25
                 };
                 if(passer.trailsVertical)
                 {
                     end.RenderTransform = r;
+                    end.Margin = new Thickness(169, 573, 0, 0);
                 }
                 
                 MyCanvas.Children.Add(end);
@@ -180,53 +185,61 @@ namespace SmartStroke
             #region TrailsB
             else if (kind == 'B')
             {
-                nodes.Add(new TrailNode(1, new Point(530, 355), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(1, new Point(607, 369), MyCanvas, passer.trailsVertical));
                 TextBlock begin = new TextBlock()
                 {
                     Text = "Begin",
-                    Margin = new Thickness(600, 360, 0, 0),
+                    Margin = new Thickness(607, 339, 0, 0),
                     Foreground = new SolidColorBrush(Colors.Black),
-                    FontSize = 15
+                    FontSize = 25
                 };
                 RotateTransform r = new RotateTransform();
                 r.Angle = 90;
                 if (passer.trailsVertical)
                 {
+                    begin.Margin = new Thickness(697, 369, 0, 0);
                     begin.RenderTransform = r;
                 }
                 MyCanvas.Children.Add(begin);
-                nodes.Add(new TrailNode('A', new Point(240, 488), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(2, new Point(265, 249), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode('B', new Point(766, 318), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(3, new Point(654, 394), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode('C', new Point(453, 486), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(4, new Point(812, 488), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode('D', new Point(797, 586), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(5, new Point(389, 582), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode('E', new Point(168, 544), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(6, new Point(189, 373), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode('F', new Point(103, 205), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(7, new Point(518, 162), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode('G', new Point(402, 103), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(8, new Point(882, 83), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode('H', new Point(681, 182), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(9, new Point(816, 185), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode('I', new Point(892, 428), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(10, new Point(881, 638), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode('J', new Point(302, 613), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(11, new Point(87, 642), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode('K', new Point(56, 54), MyCanvas, passer.trailsVertical));
-                nodes.Add(new TrailNode(12, new Point(478, 45), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode('A', new Point(333, 509), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(2, new Point(251, 195), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode('B', new Point(859, 317), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(3, new Point(717, 331), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode('C', new Point(501, 491), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(4, new Point(881, 401), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode('D', new Point(905, 587), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(5, new Point(571, 575), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode('E', new Point(181, 571), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(6, new Point(243, 317), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode('F', new Point(153, 137), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(7, new Point(625, 223), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode('G', new Point(419, 135), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(8, new Point(917, 109), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode('H', new Point(547, 149), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(9, new Point(919, 231), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode('I', new Point(927, 479), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(10, new Point(1059, 661), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode('J', new Point(325, 607), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(11, new Point(63, 649), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode('K', new Point(65, 69), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(12, new Point(459, 69), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode('L', new Point(219, 101), MyCanvas, passer.trailsVertical));
+                nodes.Add(new TrailNode(13, new Point(1057, 63), MyCanvas, passer.trailsVertical));
                 TextBlock end = new TextBlock()
                 {
                     Text = "End",
-                    Margin = new Thickness(550, 55, 0, 0),
+                    Margin = new Thickness(nodes[nodes.Count-1].getLocation().X+10,
+                        nodes[nodes.Count - 1].getLocation().Y - 30, 0, 0),
                     Foreground = new SolidColorBrush(Colors.Black),
-                    FontSize = 15
+                    FontSize = 25
                 };
 
-                if(passer.trailsVertical)
+                if (passer.trailsVertical)
+                {
+                    end.Margin = new Thickness(nodes[nodes.Count-1].getLocation().X+80,
+                        nodes[nodes.Count - 1].getLocation().Y, 0, 0);
                     end.RenderTransform = r;
+                }
 
                 MyCanvas.Children.Add(end);
             }
@@ -234,6 +247,34 @@ namespace SmartStroke
         }
 
         #endregion
+
+        /*
+         * Perceptive Pixel - DPIX/DPIY = 40, DPILog = 96 Res=1920X1080 Scale = 100
+         * Slate            - DPIX/DPIY = 135,DPILog = 96 Res=1920X1080 Scale = 100
+         * Surface          - DPIX/DPIY = 120.DPILog = 207Res=1920X1080 Scale = 140
+         */
+        private void determineScreenSize()
+        {
+            DisplayInformation display = DisplayInformation.GetForCurrentView();
+            float dpi = display.LogicalDpi;
+            float xdpi = display.RawDpiX;
+            float ydpi = display.RawDpiY;
+            double dots = xdpi * Window.Current.Bounds.Width;
+            ResolutionScale scale = display.ResolutionScale;
+
+            //if large screen
+            if(xdpi < 50)
+            {
+                MyCanvas.Height = 768;
+                MyCanvas.Width = 1366;
+                //timer_box.Text = "PIXEL";
+            }
+            else
+            {
+                MyCanvas.Height = 768;
+                MyCanvas.Width = 1366;
+            }
+        }
 
         // Return which index of node the user has hit
         private int stylusHitTest(double x, double y)
@@ -266,11 +307,11 @@ namespace SmartStroke
         private void timer_tick(object sender, object e)
         {
             //update the textbox with the current time in the stopwatch
-            /*
-            timer_box.Text = String.Format("{0}:{1}:{2}",
+            /*timer_box.Text = String.Format("{0}:{1}:{2}",
                 timer.Elapsed.Minutes.ToString(),
                 timer.Elapsed.Seconds.ToString("D2"),
                 (timer.Elapsed.Milliseconds / 10).ToString("D2"));
+        
              */
         }
 
@@ -395,8 +436,10 @@ namespace SmartStroke
                             testReplay.endTest();
 
                             submitButton.IsEnabled = true;
+                            submitButton.IsHitTestVisible = true;
 
                             saveButton.IsEnabled = true;
+                            saveButton.IsHitTestVisible = true;
                             
                             allLines.Add(inkManager.GetStrokes()[inkManager.GetStrokes().Count - 1], currentLine);
                             currentLine = new List<Line>();
@@ -406,31 +449,20 @@ namespace SmartStroke
                     }
                     // Stylus did not contact the next node in the correct order.
                     // Need to change the color of the corrected node to Yellow and the
-                    // incorrect node hit to red to notify the user this is not correct.
+                        // incorrect node hit to red to notify the user this is not correct.
                     else if ((indexHit >= 0) && indexHit > currentIndex)
                     {
                         // If the user ran over a node that was already completed, ignore executing
-                        // this code
+                            // this code
                         //if (!nodes[indexHit].getCompleted() && nodes[indexHit].getEllipse().Fill != null)
                         //{
 
+                        //TODO: need to take out the successive red nodes(only the first err should be red)
                         //TODO: after an err, no lines should be able to be drawn if they are still holding down the pen (when you collide with ANOTHER node after the first wrong one, it continues drawing)
 
                         //set error colors
-                        if (incorrectNodes.Count < 1)
-                        {
+                        if(incorrectNodes.Count < 1)
                             nodes[indexHit].setFillColor(new SolidColorBrush(Colors.Red));
-                            // Create a TestError object.
-                            // Begin node   = nodes[currentIndex]
-                            // end node     = nodes[indexHit]
-                            // expected end = nodes[currentIndex + 1]
-
-                            TestError err = new TestError(nodes[currentIndex],
-                                                          nodes[currentIndex + 1],
-                                                          nodes[indexHit]);
-
-                            testReplay.addError(err);
-                        }
                         nodes[currentIndex].setFillColor(new SolidColorBrush(Colors.Yellow));
 
                         //reset the index back 1
@@ -521,7 +553,9 @@ namespace SmartStroke
         // Test is finished.. take a picture of the screen.
         private void SubmitButtonClicked(object sender, RoutedEventArgs e)
         {
+            //passer.currentPatient = null;
             testReplay.saveTestReplay();
+            passer.trailsVertical = true;
             this.Frame.Navigate(typeof(MainMenu), passer);
 
         }
@@ -665,14 +699,6 @@ namespace SmartStroke
                 if (!passer.trailsVertical)
                 {
                     type = TEST_TYPE.TRAILS_A_H;
-                    RotateTransform r = new RotateTransform();
-                    r.Angle = 0;
-                    saveButton.RenderTransform = r;
-                    submitButton.RenderTransform = r;
-                    cancelButton.RenderTransform = r;
-                    saveButton.Margin = new Thickness(35, 210, 0, 510);
-                    submitButton.Margin = new Thickness(35, 85, 0, 600);
-                    cancelButton.Margin = new Thickness(35, 320, 0, 400);
                 }
             }
             else if (passer.trailsTestVersion == 'B')
@@ -681,14 +707,6 @@ namespace SmartStroke
                 if(!passer.trailsVertical)
                 {
                     type = TEST_TYPE.TRAILS_B_H;
-                    RotateTransform r = new RotateTransform();
-                    r.Angle = 0;
-                    saveButton.RenderTransform = r;
-                    submitButton.RenderTransform = r;
-                    cancelButton.RenderTransform = r;
-                    saveButton.Margin = new Thickness(35, 210, 0, 510);
-                    submitButton.Margin = new Thickness(35, 85, 0, 600);
-                    cancelButton.Margin = new Thickness(35, 320, 0, 400);
                 }
             }
             testReplay = new TestReplay(passer.currentPatient, type);
