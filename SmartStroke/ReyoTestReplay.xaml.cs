@@ -32,10 +32,16 @@ namespace SmartStroke
 
         DispatcherTimer timer;
         Stopwatch stopwatch;
-        int actionIndex;
-        int linesIndex;
-        List<List<Line>> allLines;
-        List<Line> currentLine;
+
+        int actionIndex1;
+        int linesIndex1;
+        List<List<Line>> allLines1;
+        List<Line> currentLine1;
+
+        int actionIndex2;
+        int linesIndex2;
+        List<List<Line>> allLines2;
+        List<Line> currentLine2;
 
         private const double DRAW_WIDTH = 4.0;
         private const double ERASE_WIDTH = 30.0;
@@ -49,30 +55,28 @@ namespace SmartStroke
             timer.Tick += timer_tick;
             timer.Interval = new TimeSpan(0, 0, 0, 0, 1);
             stopwatch = new Stopwatch();
-            actionIndex = 0;
-            linesIndex = 0;
-            allLines = new List<List<Line>>();
-            currentLine = new List<Line>();
+            actionIndex1 = 0;
+            linesIndex1 = 0;
+            allLines1 = new List<List<Line>>();
+            currentLine1 = new List<Line>();
+            actionIndex2 = 0;
+            linesIndex2 = 0;
+            allLines2 = new List<List<Line>>();
+            currentLine2 = new List<Line>();
         }
 
-        // Load a previous clock test from a test replay object.
-        // Need to create a new TestReplay object so that you do not add
-        // more lines - test replay load will currently append information.
         async private Task loadTest()
         {
-            //testReplay = new TestReplay();
             List<String> filenames = passer.currentPatient.getTestFilenames();
             foreach (String filename in filenames)
             {
                 if (filename.Contains(currentlySelectedDate1))
                 {
                     await testReplay1.loadTestReplay(filename);
-                    break;
                 }
                 if (filename.Contains(currentlySelectedDate2))
                 {
                     await testReplay2.loadTestReplay(filename);
-                    break;
                 }
             }
         }
@@ -95,60 +99,104 @@ namespace SmartStroke
 
         private void timer_tick(object sender, object e)
         {
-            //get all actions
-            var allActions = testReplay1.getTestActions(); //TODO: bug - this list does not include deletions
+            var allActions1 = testReplay1.getTestActions();
 
-            if (actionTimeHasPassed(allActions[actionIndex], testReplay1))
+            if(allActions1.Count > actionIndex1)
+            if (actionTimeHasPassed(allActions1[actionIndex1], testReplay1))
             {
-                //that is, if the action is a stroke, draw a line on the canvas for each line in that stroke (use getRenderingSegments to get lines)
-                if (allActions[actionIndex].getActionType() == ACTION_TYPE.STROKE)
+                if (allActions1[actionIndex1].getActionType() == ACTION_TYPE.STROKE)
                 {
-                    Stroke stroke = allActions[actionIndex] as Stroke;
+                    Stroke stroke = allActions1[actionIndex1] as Stroke;
                     List<LineData> lines = stroke.getLines();
 
-                    if (lineDataTimeHasPassed(lines[linesIndex], testReplay1))
+                    if (lineDataTimeHasPassed(lines[linesIndex1], testReplay1))
                     {
                         Line line = new Line();
-                        line.X1 = lines[linesIndex].getLine().X1;
-                        line.Y1 = lines[linesIndex].getLine().Y1;
-                        line.X2 = lines[linesIndex].getLine().X2;
-                        line.Y2 = lines[linesIndex].getLine().Y2;
+                        line.X1 = lines[linesIndex1].getLine().X1;
+                        line.Y1 = lines[linesIndex1].getLine().Y1;
+                        line.X2 = lines[linesIndex1].getLine().X2;
+                        line.Y2 = lines[linesIndex1].getLine().Y2;
                         line.StrokeThickness = DRAW_WIDTH;
                         line.Stroke = new SolidColorBrush(DRAW_COLOR);
 
                         MyCanvas.Children.Add(line);
-                        currentLine.Add(line);
-                        linesIndex++;
+                        currentLine1.Add(line);
+                        linesIndex1++;
                     }
 
-                    if (linesIndex >= lines.Count)
+                    if (linesIndex1 >= lines.Count)
                     {
-                        linesIndex = 0;
-                        allLines.Add(currentLine);
-                        currentLine = new List<Line>();
-                        actionIndex++;
+                        linesIndex1 = 0;
+                        allLines1.Add(currentLine1);
+                        currentLine1 = new List<Line>();
+                        actionIndex1++;
                     }
                 }
                 //if the action is an erasure, remove all the lines that were part of the stroke that was erased
-                else if (allActions[actionIndex].getActionType() == ACTION_TYPE.DEL_STROKE)
+                else if (allActions1[actionIndex1].getActionType() == ACTION_TYPE.DEL_STROKE)
                 {
-                    int strokeDeletedIndex = (allActions[actionIndex] as DeleteStroke).getIndex();
+                    int strokeDeletedIndex = (allActions1[actionIndex1] as DeleteStroke).getIndex();
 
-                    foreach (Line line in allLines[strokeDeletedIndex])
+                    foreach (Line line in allLines1[strokeDeletedIndex])
                     {
                         MyCanvas.Children[MyCanvas.Children.IndexOf(line)].Opacity = .2;
                     }
-                    actionIndex++;
-                }
-
-                if (actionIndex >= allActions.Count)
-                {
-                    stopwatch.Stop();
-                    timer.Stop();
-
-                    replayButton.IsEnabled = true;
+                    actionIndex1++;
                 }
             }
+            var allActions2 = testReplay2.getTestActions();
+            if (allActions2.Count > actionIndex2)
+            if (actionTimeHasPassed(allActions2[actionIndex2], testReplay2))
+            {
+                if (allActions2[actionIndex2].getActionType() == ACTION_TYPE.STROKE)
+                {
+                    Stroke stroke = allActions2[actionIndex2] as Stroke;
+                    List<LineData> lines = stroke.getLines();
+
+                    if (lineDataTimeHasPassed(lines[linesIndex2], testReplay2))
+                    {
+                        Line line = new Line();
+                        line.X1 = lines[linesIndex2].getLine().X1;
+                        line.Y1 = lines[linesIndex2].getLine().Y1;
+                        line.X2 = lines[linesIndex2].getLine().X2;
+                        line.Y2 = lines[linesIndex2].getLine().Y2;
+                        line.StrokeThickness = DRAW_WIDTH;
+                        line.Stroke = new SolidColorBrush(DRAW_COLOR);
+
+                        MyCanvas.Children.Add(line);
+                        currentLine2.Add(line);
+                        linesIndex2++;
+                    }
+
+                    if (linesIndex2 >= lines.Count)
+                    {
+                        linesIndex2 = 0;
+                        allLines1.Add(currentLine2);
+                        currentLine2 = new List<Line>();
+                        actionIndex2++;
+                    }
+                }
+                //if the action is an erasure, remove all the lines that were part of the stroke that was erased
+                else if (allActions2[actionIndex2].getActionType() == ACTION_TYPE.DEL_STROKE)
+                {
+                    int strokeDeletedIndex = (allActions2[actionIndex2] as DeleteStroke).getIndex();
+
+                    foreach (Line line in allLines2[strokeDeletedIndex])
+                    {
+                        MyCanvas.Children[MyCanvas.Children.IndexOf(line)].Opacity = .2;
+                    }
+                    actionIndex2++;
+                }
+            }
+            if (actionIndex2 >= allActions2.Count && actionIndex1 >= allActions1.Count)
+            {
+                stopwatch.Stop();
+                timer.Stop();
+
+                replayButton.IsEnabled = true;
+            }
+
+
         }
 
         async private void renderTestReplay(object sender, RoutedEventArgs e)
@@ -160,17 +208,20 @@ namespace SmartStroke
             await loadTest();
             replayButton.IsEnabled = false;
 
-            //reset all the things
-            foreach (var stroke in allLines)
+            foreach (var stroke in allLines1)
             {
                 foreach(Line line in stroke)
                 {
                     MyCanvas.Children.Remove(line);
                 }
             }
-            actionIndex = 0;
-            linesIndex = 0;
-            allLines.Clear();
+            actionIndex1 = 0;
+            linesIndex1 = 0;
+            allLines1.Clear();
+
+            actionIndex2 = 0;
+            linesIndex2 = 0;
+            allLines2.Clear();
 
             stopwatch.Start();
             timer.Start();
@@ -292,6 +343,7 @@ namespace SmartStroke
 
             passer = e.Parameter as InfoPasser;
             testReplay1 = new TestReplay(passer.currentPatient, TEST_TYPE.REY_OSTERRIETH);
+            testReplay2 = new TestReplay(passer.currentPatient, TEST_TYPE.REY_OSTERRIETH);
 
             if (passer.currentPatient.getTestFilenames().Count > 0)
             {
