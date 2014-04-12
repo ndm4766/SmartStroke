@@ -16,7 +16,8 @@
 
         <Grid Name="canvasGrid" Grid.Column="0">
             <Canvas Name="MyCanvas" Background="Transparent" Margin="10"/>
-            <Rectangle Name="outline" Stroke="Black" StrokeThickness="10" Margin="10"/>
+            <Rectangle x:Name="outline_Copy" Stroke="Black" StrokeThickness="10" Margin="20,210,594,197"/>
+            <Rectangle x:Name="outline_Copy1" Stroke="Black" StrokeThickness="10" Margin="597,210,17,197"/>
         </Grid>
 
         <Grid Name="optionsGrid" Grid.Column="1">

@@ -112,10 +112,10 @@ namespace SmartStroke
                     if (lineDataTimeHasPassed(lines[linesIndex1], testReplay1))
                     {
                         Line line = new Line();
-                        line.X1 = lines[linesIndex1].getLine().X1;
-                        line.Y1 = lines[linesIndex1].getLine().Y1;
-                        line.X2 = lines[linesIndex1].getLine().X2;
-                        line.Y2 = lines[linesIndex1].getLine().Y2;
+                        line.X1 = lines[linesIndex1].getLine().X1 * .45 + 20;
+                        line.Y1 = lines[linesIndex1].getLine().Y1 * .45 + 197;
+                        line.X2 = lines[linesIndex1].getLine().X2 * .45 + 20;
+                        line.Y2 = lines[linesIndex1].getLine().Y2 * .45 + 197;
                         line.StrokeThickness = DRAW_WIDTH;
                         line.Stroke = new SolidColorBrush(DRAW_COLOR);
 
@@ -156,10 +156,10 @@ namespace SmartStroke
                     if (lineDataTimeHasPassed(lines[linesIndex2], testReplay2))
                     {
                         Line line = new Line();
-                        line.X1 = lines[linesIndex2].getLine().X1;
-                        line.Y1 = lines[linesIndex2].getLine().Y1;
-                        line.X2 = lines[linesIndex2].getLine().X2;
-                        line.Y2 = lines[linesIndex2].getLine().Y2;
+                        line.X1 = lines[linesIndex2].getLine().X1 * .45 + 597;
+                        line.Y1 = lines[linesIndex2].getLine().Y1 * .45 + 197;
+                        line.X2 = lines[linesIndex2].getLine().X2 * .45 + 597;
+                        line.Y2 = lines[linesIndex2].getLine().Y2 * .45 + 197;
                         line.StrokeThickness = DRAW_WIDTH;
                         line.Stroke = new SolidColorBrush(DRAW_COLOR);
 
