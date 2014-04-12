@@ -308,7 +308,8 @@ namespace SmartStroke
             {
                 if (filename.Contains(testReplay.getTestType().ToString()))
                 {
-                    testDatesBox.Items.Add(testReplay.getDisplayedDatetime(filename));
+                    testDatesBox1.Items.Add(testReplay.getDisplayedDatetime(filename));
+                    testDatesBox2.Items.Add(testReplay.getDisplayedDatetime(filename));
                 }
             }
         }
@@ -322,11 +323,14 @@ namespace SmartStroke
         }
 
 
-        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ListBox_SelectionChanged1(object sender, SelectionChangedEventArgs e)
         {
-            currentlySelectedDate = testReplay.getFilenameString(testDatesBox.SelectedItem.ToString());
+            currentlySelectedDate = testReplay.getFilenameString(testDatesBox1.SelectedItem.ToString());
         }
-
+        private void ListBox_SelectionChanged2(object sender, SelectionChangedEventArgs e)
+        {
+            currentlySelectedDate = testReplay.getFilenameString(testDatesBox2.SelectedItem.ToString());
+        }
         private void menuClicked(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(MainMenu), passer);

@@ -22,11 +22,18 @@
         <Grid Name="optionsGrid" Grid.Column="1">
             <Viewbox>
                 <Grid>
-                    <Button Content="Return to Menu" Margin="16,13,0,685" Height="70" Width="150" Click="menuClicked" FontSize="17" FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF"  />
-                    <Button Content="Replay" Name="replayButton" Margin="16,97,0,601" Height="70" Width="150" Click="renderTestReplay" FontSize="17" FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF"  />
-                    <Button Content="Time Elapsed" Name="timeVizButton" Margin="16,187,0,511" Height="70" Width="150" Click="showTimeViz" FontSize="17" FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF"  />
-                    <ListBox Name="testDatesBox" HorizontalAlignment="Left" FontSize="15" BorderThickness="2" BorderBrush="Black" ScrollViewer.VerticalScrollMode="Enabled" Height="261" Margin="10,300,0,0" VerticalAlignment="Top" Width="180" SelectionChanged="ListBox_SelectionChanged" />
-                    <TextBlock Name="timeIntervalBlock" HorizontalAlignment="Left" Margin="10,582,0,0" TextWrapping="Wrap" Text=""  FontSize="30" FontFamily="Segoe UI Light" Foreground="#606060" VerticalAlignment="Top" Height="164" Width="180"/>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="175*"/>
+                        <RowDefinition Height="81*"/>
+                    </Grid.RowDefinitions>
+                    <Button Content="Return to Menu" Margin="16,13,0,442" Height="70" Width="150" Click="menuClicked" FontSize="17" FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF"  />
+                    <Button Content="Replay" Name="replayButton" Margin="16,97,0,358" Height="70" Width="150" Click="renderTestReplay" FontSize="17" FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF"  />
+                    <Button Content="Time Elapsed" Name="timeVizButton" Margin="16,187,0,268" Height="70" Width="150" Click="showTimeViz" FontSize="17" FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF"  />
+                    <ListBox Name="testDatesBox1" HorizontalAlignment="Left" FontSize="15" BorderThickness="2" BorderBrush="Black" ScrollViewer.VerticalScrollMode="Enabled" Height="183" Margin="10,327,0,0" VerticalAlignment="Top" Width="180" SelectionChanged="ListBox_SelectionChanged1" />
+                    <TextBlock Name="timeIntervalBlock" HorizontalAlignment="Left" Margin="10,57,0,0" TextWrapping="Wrap" Text=""  FontSize="30" FontFamily="Segoe UI Light" Foreground="#606060" VerticalAlignment="Top" Height="164" Width="180" Grid.Row="1"/>
+                    <ListBox x:Name="testDatesBox2" HorizontalAlignment="Left" FontSize="15" BorderThickness="2" BorderBrush="Black" ScrollViewer.VerticalScrollMode="Enabled" Height="183" Margin="10,48,0,0" VerticalAlignment="Top" Width="180" SelectionChanged="ListBox_SelectionChanged2" Grid.Row="1" />
+                    <TextBlock HorizontalAlignment="Left" Height="33" Margin="17,10,0,0" TextWrapping="Wrap" Text="Test 2" VerticalAlignment="Top" Width="163" FontSize="25" FontWeight="Bold" TextAlignment="Center" Grid.Row="1"/>
+                    <TextBlock HorizontalAlignment="Left" Height="33" Margin="19,294,0,0" TextWrapping="Wrap" Text="Test 1" VerticalAlignment="Top" Width="163" FontSize="25" FontWeight="Bold" TextAlignment="Center"/>
                 </Grid>
             </Viewbox>
         </Grid>
