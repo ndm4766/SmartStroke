@@ -18,30 +18,24 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Shapes;
 
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
-
 namespace SmartStroke
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class ReyoTestReplay : Page
     {
         InfoPasser passer = new InfoPasser();
 
-        //test replay container
-        private TestReplay testReplay;
+        private TestReplay testReplay1;
+        private TestReplay testReplay2;
+
+        string currentlySelectedDate1;
+        string currentlySelectedDate2;
+
         DispatcherTimer timer;
         Stopwatch stopwatch;
         int actionIndex;
         int linesIndex;
         List<List<Line>> allLines;
         List<Line> currentLine;
-
-        private InkManager inkManager;
-        private InkDrawingAttributes drawingAttributes;
-
-        string currentlySelectedDate;
 
         private const double DRAW_WIDTH = 4.0;
         private const double ERASE_WIDTH = 30.0;
@@ -70,25 +64,30 @@ namespace SmartStroke
             List<String> filenames = passer.currentPatient.getTestFilenames();
             foreach (String filename in filenames)
             {
-                if(filename.Contains(currentlySelectedDate))
+                if (filename.Contains(currentlySelectedDate1))
                 {
-                    await testReplay.loadTestReplay(filename);
+                    await testReplay1.loadTestReplay(filename);
+                    break;
+                }
+                if (filename.Contains(currentlySelectedDate2))
+                {
+                    await testReplay2.loadTestReplay(filename);
                     break;
                 }
             }
         }
 
-        private bool actionTimeHasPassed(TestAction action)
+        private bool actionTimeHasPassed(TestAction action, TestReplay TR)
         {
-            TimeSpan span = action.getStartTime().Subtract(testReplay.getStartTime());
+            TimeSpan span = action.getStartTime().Subtract(TR.getStartTime());
             double seconds = span.TotalSeconds;
             bool b = seconds < stopwatch.Elapsed.TotalSeconds;
             return b;
         }
 
-        private bool lineDataTimeHasPassed(LineData lineData)
+        private bool lineDataTimeHasPassed(LineData lineData, TestReplay TR)
         {
-            TimeSpan span = lineData.getDateTime().Subtract(testReplay.getStartTime());
+            TimeSpan span = lineData.getDateTime().Subtract(TR.getStartTime());
             double seconds = span.TotalSeconds;
             bool b = seconds < stopwatch.Elapsed.TotalSeconds;
             return b;
@@ -97,9 +96,9 @@ namespace SmartStroke
         private void timer_tick(object sender, object e)
         {
             //get all actions
-            var allActions = testReplay.getTestActions(); //TODO: bug - this list does not include deletions
+            var allActions = testReplay1.getTestActions(); //TODO: bug - this list does not include deletions
 
-            if (actionTimeHasPassed(allActions[actionIndex]))
+            if (actionTimeHasPassed(allActions[actionIndex], testReplay1))
             {
                 //that is, if the action is a stroke, draw a line on the canvas for each line in that stroke (use getRenderingSegments to get lines)
                 if (allActions[actionIndex].getActionType() == ACTION_TYPE.STROKE)
@@ -107,7 +106,7 @@ namespace SmartStroke
                     Stroke stroke = allActions[actionIndex] as Stroke;
                     List<LineData> lines = stroke.getLines();
 
-                    if (lineDataTimeHasPassed(lines[linesIndex]))
+                    if (lineDataTimeHasPassed(lines[linesIndex], testReplay1))
                     {
                         Line line = new Line();
                         line.X1 = lines[linesIndex].getLine().X1;
@@ -188,7 +187,7 @@ namespace SmartStroke
         {
             removeAllStrokes();
             await loadTest();
-            var allActions = testReplay.getTestActions();
+            var allActions = testReplay1.getTestActions();
             var smartStrokes = allActions.OfType<SmartStroke.Stroke>();
             //var strokes = inkManager.GetStrokes();
             int strokeNum = 0;
@@ -231,7 +230,7 @@ namespace SmartStroke
                 strokeNum++;
 
             }
-            DateTime prevTime = testReplay.getStartTime();
+            DateTime prevTime = testReplay1.getStartTime();
             strokeNum = 0;
             foreach (var stroke in smartStrokes)
             {
@@ -242,7 +241,7 @@ namespace SmartStroke
                 {
 
                     Line l = lineData.getLine();
-                    int secondsSinceStartOfTest = (int)Math.Floor((smartLines[lineNum].getDateTime() - testReplay.getStartTime()).TotalSeconds);
+                    int secondsSinceStartOfTest = (int)Math.Floor((smartLines[lineNum].getDateTime() - testReplay1.getStartTime()).TotalSeconds);
                     //assign 1 of 8 colors
                     if ((secondsSinceStartOfTest / timeInterval + 1) % 8 == 1) { color = new SolidColorBrush(Color.FromArgb(255, 255, 192, 0)); }
                     else if ((secondsSinceStartOfTest / timeInterval + 1) % 8 == 2) { color = new SolidColorBrush(Color.FromArgb(255, 255, 255, 0)); }
@@ -279,7 +278,7 @@ namespace SmartStroke
 
         private int getColorTimeInterval()
         {
-            double testDuration = (testReplay.getEndTime() - testReplay.getStartTime()).TotalSeconds;
+            double testDuration = (testReplay1.getEndTime() - testReplay1.getStartTime()).TotalSeconds;
             if (testDuration <= 8) { return 1; }
             else if (testDuration <= 40) { return 5; }
             else if (testDuration <= 120) { return 15; }
@@ -292,11 +291,12 @@ namespace SmartStroke
             base.OnNavigatedTo(e);
 
             passer = e.Parameter as InfoPasser;
-            testReplay = new TestReplay(passer.currentPatient, TEST_TYPE.REY_OSTERRIETH);
+            testReplay1 = new TestReplay(passer.currentPatient, TEST_TYPE.REY_OSTERRIETH);
 
             if (passer.currentPatient.getTestFilenames().Count > 0)
             {
-                currentlySelectedDate = passer.currentPatient.getTestFilenames()[0];
+                currentlySelectedDate1 = passer.currentPatient.getTestFilenames()[0];
+                currentlySelectedDate2 = passer.currentPatient.getTestFilenames()[0];
             }
             else
             {
@@ -306,10 +306,10 @@ namespace SmartStroke
             var stuff = passer.currentPatient.getTestFilenames();
             foreach(string filename in stuff)
             {
-                if (filename.Contains(testReplay.getTestType().ToString()))
+                if (filename.Contains(testReplay1.getTestType().ToString()))
                 {
-                    testDatesBox1.Items.Add(testReplay.getDisplayedDatetime(filename));
-                    testDatesBox2.Items.Add(testReplay.getDisplayedDatetime(filename));
+                    testDatesBox1.Items.Add(testReplay1.getDisplayedDatetime(filename));
+                    testDatesBox2.Items.Add(testReplay1.getDisplayedDatetime(filename));
                 }
             }
         }
@@ -325,11 +325,11 @@ namespace SmartStroke
 
         private void ListBox_SelectionChanged1(object sender, SelectionChangedEventArgs e)
         {
-            currentlySelectedDate = testReplay.getFilenameString(testDatesBox1.SelectedItem.ToString());
+            currentlySelectedDate1 = testReplay1.getFilenameString(testDatesBox1.SelectedItem.ToString());
         }
         private void ListBox_SelectionChanged2(object sender, SelectionChangedEventArgs e)
         {
-            currentlySelectedDate = testReplay.getFilenameString(testDatesBox2.SelectedItem.ToString());
+            currentlySelectedDate2 = testReplay1.getFilenameString(testDatesBox2.SelectedItem.ToString());
         }
         private void menuClicked(object sender, RoutedEventArgs e)
         {
