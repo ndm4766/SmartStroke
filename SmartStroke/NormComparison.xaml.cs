@@ -163,36 +163,8 @@ namespace SmartStroke
             return times.Average();
         }
 
-        public List<PlotPoint> averagize(List<Performance> data)
+        public List<string> generateAgeStrings()
         {
-            List<PlotPoint> output = new List<PlotPoint>();
-
-            List<Performance> first = new List<Performance>();
-            List<Performance> second = new List<Performance>();
-            List<Performance> third = new List<Performance>();
-            List<Performance> fourth = new List<Performance>();
-            List<Performance> fifth = new List<Performance>();
-            List<Performance> sixth = new List<Performance>();
-            List<Performance> seventh = new List<Performance>();
-            List<Performance> eighth = new List<Performance>();
-            List<Performance> ninth = new List<Performance>();
-            List<Performance> tenth = new List<Performance>();
-            List<Performance> eleventh = new List<Performance>();
-            List<Performance> twelfth = new List<Performance>();
-            
-            first = data.FindAll(delegate(Performance s) { return (s.Age > 17 && s.Age <= 24); } );
-            second = data.FindAll(delegate(Performance s) { return (s.Age > 24 && s.Age <= 34); });
-            third = data.FindAll(delegate(Performance s) { return (s.Age > 34 && s.Age <= 44); });
-            fourth = data.FindAll(delegate(Performance s) { return (s.Age > 44 && s.Age <= 54); });
-            fifth = data.FindAll(delegate(Performance s) { return (s.Age > 54 && s.Age <= 59); });
-            sixth = data.FindAll(delegate(Performance s) { return (s.Age > 59 && s.Age <= 64); });
-            seventh = data.FindAll(delegate(Performance s) { return (s.Age > 64 && s.Age <= 69); } );
-            eighth = data.FindAll(delegate(Performance s) { return (s.Age > 70 && s.Age <= 74); });
-            ninth = data.FindAll(delegate(Performance s) { return (s.Age > 75 && s.Age <= 79); });
-            tenth = data.FindAll(delegate(Performance s) { return (s.Age > 80 && s.Age <= 84); });
-            eleventh = data.FindAll(delegate(Performance s) { return (s.Age > 85 && s.Age <= 89); });
-            twelfth = data.FindAll(delegate(Performance s) { return (s.Age > 89); });
-
             List<String> ageStrings = new List<string>();
             ageStrings.Add("18-24");
             ageStrings.Add("25-34");
@@ -207,6 +179,37 @@ namespace SmartStroke
             ageStrings.Add("85-89");
             ageStrings.Add("90+");
 
+            return ageStrings;
+        }
+
+        public List<List<Performance>> generateAgeGroups(List<Performance> data)
+        {
+            List<Performance> first = new List<Performance>();
+            List<Performance> second = new List<Performance>();
+            List<Performance> third = new List<Performance>();
+            List<Performance> fourth = new List<Performance>();
+            List<Performance> fifth = new List<Performance>();
+            List<Performance> sixth = new List<Performance>();
+            List<Performance> seventh = new List<Performance>();
+            List<Performance> eighth = new List<Performance>();
+            List<Performance> ninth = new List<Performance>();
+            List<Performance> tenth = new List<Performance>();
+            List<Performance> eleventh = new List<Performance>();
+            List<Performance> twelfth = new List<Performance>();
+
+            first = data.FindAll(delegate(Performance s) { return (s.Age > 17 && s.Age <= 24); });
+            second = data.FindAll(delegate(Performance s) { return (s.Age > 24 && s.Age <= 34); });
+            third = data.FindAll(delegate(Performance s) { return (s.Age > 34 && s.Age <= 44); });
+            fourth = data.FindAll(delegate(Performance s) { return (s.Age > 44 && s.Age <= 54); });
+            fifth = data.FindAll(delegate(Performance s) { return (s.Age > 54 && s.Age <= 59); });
+            sixth = data.FindAll(delegate(Performance s) { return (s.Age > 59 && s.Age <= 64); });
+            seventh = data.FindAll(delegate(Performance s) { return (s.Age > 64 && s.Age <= 69); });
+            eighth = data.FindAll(delegate(Performance s) { return (s.Age > 70 && s.Age <= 74); });
+            ninth = data.FindAll(delegate(Performance s) { return (s.Age > 75 && s.Age <= 79); });
+            tenth = data.FindAll(delegate(Performance s) { return (s.Age > 80 && s.Age <= 84); });
+            eleventh = data.FindAll(delegate(Performance s) { return (s.Age > 85 && s.Age <= 89); });
+            twelfth = data.FindAll(delegate(Performance s) { return (s.Age > 89); });
+
             List<List<Performance>> allAgeGroups = new List<List<Performance>>();
             allAgeGroups.Add(first);
             allAgeGroups.Add(second);
@@ -220,6 +223,19 @@ namespace SmartStroke
             allAgeGroups.Add(tenth);
             allAgeGroups.Add(eleventh);
             allAgeGroups.Add(twelfth);
+
+            return allAgeGroups;
+        }
+
+        public List<PlotPoint> averagize(List<Performance> data)
+        {
+            List<PlotPoint> output = new List<PlotPoint>();
+
+            List<List<Performance>> allAgeGroups = new List<List<Performance>>();
+            allAgeGroups = generateAgeGroups(data);
+
+            List<string> ageStrings = new List<string>();
+            ageStrings = generateAgeStrings();
 
             for (int i = 0; i < allAgeGroups.Count; i++)
             {
@@ -261,59 +277,11 @@ namespace SmartStroke
         {
             List<PlotPoint> output = new List<PlotPoint>();
 
-            List<Performance> first = new List<Performance>();
-            List<Performance> second = new List<Performance>();
-            List<Performance> third = new List<Performance>();
-            List<Performance> fourth = new List<Performance>();
-            List<Performance> fifth = new List<Performance>();
-            List<Performance> sixth = new List<Performance>();
-            List<Performance> seventh = new List<Performance>();
-            List<Performance> eighth = new List<Performance>();
-            List<Performance> ninth = new List<Performance>();
-            List<Performance> tenth = new List<Performance>();
-            List<Performance> eleventh = new List<Performance>();
-            List<Performance> twelfth = new List<Performance>();
-
-            first = data.FindAll(delegate(Performance s) { return (s.Age > 17 && s.Age <= 24); });
-            second = data.FindAll(delegate(Performance s) { return (s.Age > 24 && s.Age <= 34); });
-            third = data.FindAll(delegate(Performance s) { return (s.Age > 34 && s.Age <= 44); });
-            fourth = data.FindAll(delegate(Performance s) { return (s.Age > 44 && s.Age <= 54); });
-            fifth = data.FindAll(delegate(Performance s) { return (s.Age > 54 && s.Age <= 59); });
-            sixth = data.FindAll(delegate(Performance s) { return (s.Age > 59 && s.Age <= 64); });
-            seventh = data.FindAll(delegate(Performance s) { return (s.Age > 64 && s.Age <= 69); });
-            eighth = data.FindAll(delegate(Performance s) { return (s.Age > 70 && s.Age <= 74); });
-            ninth = data.FindAll(delegate(Performance s) { return (s.Age > 75 && s.Age <= 79); });
-            tenth = data.FindAll(delegate(Performance s) { return (s.Age > 80 && s.Age <= 84); });
-            eleventh = data.FindAll(delegate(Performance s) { return (s.Age > 85 && s.Age <= 89); });
-            twelfth = data.FindAll(delegate(Performance s) { return (s.Age > 89); });
-
-            List<String> ageStrings = new List<string>();
-            ageStrings.Add("18-24");
-            ageStrings.Add("25-34");
-            ageStrings.Add("35-44");
-            ageStrings.Add("45-54");
-            ageStrings.Add("55-59");
-            ageStrings.Add("60-64");
-            ageStrings.Add("65-69");
-            ageStrings.Add("70-74");
-            ageStrings.Add("75-79");
-            ageStrings.Add("80-84");
-            ageStrings.Add("85-89");
-            ageStrings.Add("90+");
-
             List<List<Performance>> allAgeGroups = new List<List<Performance>>();
-            allAgeGroups.Add(first);
-            allAgeGroups.Add(second);
-            allAgeGroups.Add(third);
-            allAgeGroups.Add(fourth);
-            allAgeGroups.Add(fifth);
-            allAgeGroups.Add(sixth);
-            allAgeGroups.Add(seventh);
-            allAgeGroups.Add(eighth);
-            allAgeGroups.Add(ninth);
-            allAgeGroups.Add(tenth);
-            allAgeGroups.Add(eleventh);
-            allAgeGroups.Add(twelfth);
+            allAgeGroups = generateAgeGroups(data);
+
+            List<string> ageStrings = new List<string>();
+            ageStrings = generateAgeStrings();
 
             for (int i = 0; i < allAgeGroups.Count; i++)
             {
