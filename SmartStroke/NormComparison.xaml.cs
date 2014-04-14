@@ -35,7 +35,7 @@ namespace SmartStroke
         private TestReplay testReplay;
         int chartChoice = -1;
 
-        //............................................
+        //Initializes the Lists that store the plot points for graphing
         List<PlotPoint> TrailsAGroup = new List<PlotPoint>();
         List<PlotPoint> TrailsBGroup = new List<PlotPoint>();
         List<PlotPoint> TrailsA_HGroup = new List<PlotPoint>();
@@ -71,6 +71,7 @@ namespace SmartStroke
             get { return this.navigationHelper; }
         }
 
+        //Simplified class for storing patient test data
         public class Performance
         {
             public int Age { get; set; }
@@ -78,6 +79,7 @@ namespace SmartStroke
             public string Test { get; set; }
         }
 
+        //Class for storing the minimal data for plotting a test
         public class PlotPoint
         {
             public string Age { get; set; }
@@ -97,6 +99,7 @@ namespace SmartStroke
             fileNames = new List<string>();
         }
 
+        //Function for returning the age range of a Performance class data point, currently unused but still could be useful
         public string ageRange(Performance data)
         {
             string range = "";
@@ -152,6 +155,7 @@ namespace SmartStroke
             return range;
         }
 
+        //Returns the average time of a list of Performance data points
         public double returnAverage(List<Performance> data)
         {
             List<double> times = new List<double>();
@@ -163,6 +167,7 @@ namespace SmartStroke
             return times.Average();
         }
 
+        //Returns a string of the age ranges used by the graph
         public List<string> generateAgeStrings()
         {
             List<String> ageStrings = new List<string>();
@@ -182,6 +187,8 @@ namespace SmartStroke
             return ageStrings;
         }
 
+        //Transforms and returns the list of raw Performance data into a list of list of performance 
+        //data, where the sublist contains performance data that falls within a certain age range
         public List<List<Performance>> generateAgeGroups(List<Performance> data)
         {
             List<Performance> first = new List<Performance>();
@@ -227,6 +234,7 @@ namespace SmartStroke
             return allAgeGroups;
         }
 
+        //Takes the average of performance times within each age range
         public List<PlotPoint> averagize(List<Performance> data)
         {
             List<PlotPoint> output = new List<PlotPoint>();
@@ -250,6 +258,7 @@ namespace SmartStroke
             return output;
         }
 
+        //Calculates and stores the average of each age group in a list of plotpoints
         public double returnMedian(List<Performance> data)
         {
             List<Performance> sortedData = new List<Performance>();
@@ -273,6 +282,7 @@ namespace SmartStroke
             return output;
         }
 
+        //Calculates and stores the median of each age group in a list of plotpoints
         public List<PlotPoint> medianize(List<Performance> data)
         {
             List<PlotPoint> output = new List<PlotPoint>();
@@ -353,6 +363,7 @@ namespace SmartStroke
             LoadChartContents();
         }
 
+        //Loads data and graphs points
         private async void LoadChartContents()
         {
             await loadJson();
@@ -396,6 +407,8 @@ namespace SmartStroke
                 }
             }
 
+
+            //Initializes data separate data structures for the different tests
             List<Performance> TrailsA = new List<Performance>();
             List<Performance> TrailsB = new List<Performance>();
             List<Performance> TrailsA_H = new List<Performance>();
@@ -410,6 +423,8 @@ namespace SmartStroke
                 });
             }
 
+            //Adds each performance point to the appropiate data structure that is belongs
+            //to based on the type of test 
             for (int i = 0; i < sortPatientAge.Count; i++)
             {
                 switch (sortPatientAge[i].Test)
@@ -452,6 +467,7 @@ namespace SmartStroke
                 TrailsB_HGroup.Add(new PlotPoint { Age = ageRange(TrailsB_H[i]), Time = TrailsB_H[i].Time });
             }
 
+            //Stores the averages and medians of each test type
             avgTrailsAGrouped = averagize(TrailsA);
             avgTrailsA_HGrouped = averagize(TrailsA_H);
             avgTrailsBGrouped = averagize(TrailsB);
@@ -462,16 +478,18 @@ namespace SmartStroke
             medTrailsBGrouped = medianize(TrailsB);
             medTrailsB_HGrouped = medianize(TrailsB_H);
 
+            //Reveals the chart after the data is loaded and calculated
             ScatterChart.Opacity = 100;
             ageAxis.Opacity = 100;
             timeAxis.Opacity = 100;
-
             progressNorm.IsActive = false;
 
+            //Sets the Trails A vertical as the default test to be graphed
             dataSelection.SelectedIndex = 0;
-
         }
 
+        //Older class that was used for plotting patient info
+        //currently unused but still could be useful later
         public class PatientPlot
         {
             public string patientName;
@@ -550,10 +568,13 @@ namespace SmartStroke
             popup.ShowAsync(new Point(0, 0));
         }
 
+        //Function for handling the combo box that controls which type of test is graphed
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             chartChoice = dataSelection.SelectedIndex;
             
+            //Simply switches to the appropiate data structures to be graphed
+            //based on the selection in the combo box
             switch (chartChoice)
             {
                 case 0:
