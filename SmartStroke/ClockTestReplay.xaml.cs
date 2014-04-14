@@ -29,8 +29,8 @@ namespace SmartStroke
 
         //test replay container
         private TestReplay testReplay;
-        DispatcherTimer timer;
-        Stopwatch stopwatch;
+        DispatcherTimer timer; //timer for executing the tick function over and over
+        Stopwatch stopwatch; //stopwatch to compare against the times saved with each action and line
         int actionIndex;
         int linesIndex;
         //Dictionary<Stroke, List<Line>> allLines; //necessary bec the lines are already children of the other page
@@ -101,6 +101,7 @@ namespace SmartStroke
             }
         }
 
+        // check if the stopwatch timer has passed the next action in the list
         private bool actionTimeHasPassed(TestAction action)
         {
             TimeSpan span = action.getStartTime().Subtract(testReplay.getStartTime());
@@ -109,6 +110,7 @@ namespace SmartStroke
             return b;
         }
 
+        // check if the stopwatch timer has passed the next line in the current stroke
         private bool lineDataTimeHasPassed(LineData lineData)
         {
             TimeSpan span = lineData.getDateTime().Subtract(testReplay.getStartTime());
@@ -132,6 +134,7 @@ namespace SmartStroke
 
                     if (lineDataTimeHasPassed(lines[linesIndex]))
                     {
+                        //create the line to draw on the canvas
                         Line line = new Line();
                         line.X1 = lines[linesIndex].getLine().X1;
                         line.Y1 = lines[linesIndex].getLine().Y1;
@@ -180,6 +183,7 @@ namespace SmartStroke
 
         private void renderGranularTestReplay(object sender, RoutedEventArgs e)
         {
+            //clear the stopwatch and timer
             stopwatch.Reset();
             timer.Stop();
 
@@ -202,10 +206,6 @@ namespace SmartStroke
             timer.Start();
         }
 
-        
-
-        
-
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -213,6 +213,7 @@ namespace SmartStroke
             passer = e.Parameter as InfoPasser;
             testReplay = new TestReplay(passer.currentPatient, TEST_TYPE.CLOCK);
 
+            // set default selected test
             if (passer.currentPatient.getTestFilenames().Count > 0)
             {
                 currentlySelectedDate = passer.currentPatient.getTestFilenames()[0];
@@ -222,6 +223,7 @@ namespace SmartStroke
                 granularReplayButton.IsEnabled = false;
             }
 
+            // display the filenames in the listview
             var stuff = passer.currentPatient.getTestFilenames();
             foreach(string filename in stuff)
             {
@@ -240,6 +242,7 @@ namespace SmartStroke
             stopwatch.Stop();
         }
 
+        // react to the newly selected test
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             currentlySelectedDate = testReplay.getFilenameString(testDatesBox.SelectedItem.ToString());

@@ -122,33 +122,7 @@ namespace SmartStroke
             // True is the Default value for fitToCurve.
             drawingAttributes.FitToCurve = false;
             inkManager.SetDefaultDrawingAttributes(drawingAttributes);
-
-            determineScreenSize();
         }
-
-
-        private void determineScreenSize()
-        {
-            DisplayInformation display = DisplayInformation.GetForCurrentView();
-            float dpi = display.LogicalDpi;
-            float xdpi = display.RawDpiX;
-            float ydpi = display.RawDpiY;
-            double dots = xdpi * Window.Current.Bounds.Width;
-            ResolutionScale scale = display.ResolutionScale;
-
-            //if large screen
-            if (xdpi < 50)
-            {
-                MyCanvas.Height = 768;
-                MyCanvas.Width = 1366;
-            }
-            else
-            {
-                MyCanvas.Height = 768;
-                MyCanvas.Width = 1366;
-            }
-        }
-
 
         private bool eraserHitTest(InkStroke s, Point testPoint)
         {
@@ -165,7 +139,6 @@ namespace SmartStroke
         {
             return Math.Sqrt(Math.Pow((x2 - x1), 2) + Math.Pow((y2 - y1), 2));
         }
-
 
 
         #region PointerEvents
