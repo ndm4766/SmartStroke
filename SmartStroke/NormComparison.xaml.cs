@@ -178,6 +178,7 @@ namespace SmartStroke
             List<Performance> ninth = new List<Performance>();
             List<Performance> tenth = new List<Performance>();
             List<Performance> eleventh = new List<Performance>();
+            List<Performance> twelfth = new List<Performance>();
             
             first = data.FindAll(delegate(Performance s) { return (s.Age > 17 && s.Age <= 24); } );
             second = data.FindAll(delegate(Performance s) { return (s.Age > 24 && s.Age <= 34); });
@@ -185,11 +186,12 @@ namespace SmartStroke
             fourth = data.FindAll(delegate(Performance s) { return (s.Age > 44 && s.Age <= 54); });
             fifth = data.FindAll(delegate(Performance s) { return (s.Age > 54 && s.Age <= 59); });
             sixth = data.FindAll(delegate(Performance s) { return (s.Age > 59 && s.Age <= 64); });
-            seventh = data.FindAll(delegate(Performance s) { return (s.Age > 64 && s.Age <= 74); } );
-            eighth = data.FindAll(delegate(Performance s) { return (s.Age > 74 && s.Age <= 79); });
-            ninth = data.FindAll(delegate(Performance s) { return (s.Age > 79 && s.Age <= 84); });
-            tenth = data.FindAll(delegate(Performance s) { return (s.Age > 84 && s.Age <= 89); });
-            eleventh = data.FindAll(delegate(Performance s) { return (s.Age > 89); });
+            seventh = data.FindAll(delegate(Performance s) { return (s.Age > 64 && s.Age <= 69); } );
+            eighth = data.FindAll(delegate(Performance s) { return (s.Age > 70 && s.Age <= 74); });
+            ninth = data.FindAll(delegate(Performance s) { return (s.Age > 75 && s.Age <= 79); });
+            tenth = data.FindAll(delegate(Performance s) { return (s.Age > 80 && s.Age <= 84); });
+            eleventh = data.FindAll(delegate(Performance s) { return (s.Age > 85 && s.Age <= 89); });
+            twelfth = data.FindAll(delegate(Performance s) { return (s.Age > 89); });
 
             List<String> ageStrings = new List<string>();
             ageStrings.Add("18-24");
@@ -198,7 +200,8 @@ namespace SmartStroke
             ageStrings.Add("45-54");
             ageStrings.Add("55-59");
             ageStrings.Add("60-64");
-            ageStrings.Add("65-74");
+            ageStrings.Add("65-69");
+            ageStrings.Add("70-74");
             ageStrings.Add("75-79");
             ageStrings.Add("80-84");
             ageStrings.Add("85-89");
@@ -216,6 +219,7 @@ namespace SmartStroke
             allAgeGroups.Add(ninth);
             allAgeGroups.Add(tenth);
             allAgeGroups.Add(eleventh);
+            allAgeGroups.Add(twelfth);
 
             for (int i = 0; i < allAgeGroups.Count; i++)
             {
@@ -268,6 +272,7 @@ namespace SmartStroke
             List<Performance> ninth = new List<Performance>();
             List<Performance> tenth = new List<Performance>();
             List<Performance> eleventh = new List<Performance>();
+            List<Performance> twelfth = new List<Performance>();
 
             first = data.FindAll(delegate(Performance s) { return (s.Age > 17 && s.Age <= 24); });
             second = data.FindAll(delegate(Performance s) { return (s.Age > 24 && s.Age <= 34); });
@@ -275,11 +280,12 @@ namespace SmartStroke
             fourth = data.FindAll(delegate(Performance s) { return (s.Age > 44 && s.Age <= 54); });
             fifth = data.FindAll(delegate(Performance s) { return (s.Age > 54 && s.Age <= 59); });
             sixth = data.FindAll(delegate(Performance s) { return (s.Age > 59 && s.Age <= 64); });
-            seventh = data.FindAll(delegate(Performance s) { return (s.Age > 64 && s.Age <= 74); });
-            eighth = data.FindAll(delegate(Performance s) { return (s.Age > 74 && s.Age <= 79); });
-            ninth = data.FindAll(delegate(Performance s) { return (s.Age > 79 && s.Age <= 84); });
-            tenth = data.FindAll(delegate(Performance s) { return (s.Age > 84 && s.Age <= 89); });
-            eleventh = data.FindAll(delegate(Performance s) { return (s.Age > 89); });
+            seventh = data.FindAll(delegate(Performance s) { return (s.Age > 64 && s.Age <= 69); });
+            eighth = data.FindAll(delegate(Performance s) { return (s.Age > 70 && s.Age <= 74); });
+            ninth = data.FindAll(delegate(Performance s) { return (s.Age > 75 && s.Age <= 79); });
+            tenth = data.FindAll(delegate(Performance s) { return (s.Age > 80 && s.Age <= 84); });
+            eleventh = data.FindAll(delegate(Performance s) { return (s.Age > 85 && s.Age <= 89); });
+            twelfth = data.FindAll(delegate(Performance s) { return (s.Age > 89); });
 
             List<String> ageStrings = new List<string>();
             ageStrings.Add("18-24");
@@ -288,7 +294,8 @@ namespace SmartStroke
             ageStrings.Add("45-54");
             ageStrings.Add("55-59");
             ageStrings.Add("60-64");
-            ageStrings.Add("65-74");
+            ageStrings.Add("65-69");
+            ageStrings.Add("70-74");
             ageStrings.Add("75-79");
             ageStrings.Add("80-84");
             ageStrings.Add("85-89");
@@ -306,6 +313,7 @@ namespace SmartStroke
             allAgeGroups.Add(ninth);
             allAgeGroups.Add(tenth);
             allAgeGroups.Add(eleventh);
+            allAgeGroups.Add(twelfth);
 
             for (int i = 0; i < allAgeGroups.Count; i++)
             {
@@ -425,26 +433,6 @@ namespace SmartStroke
             List<Performance> TrailsA_H = new List<Performance>();
             List<Performance> TrailsB_H = new List<Performance>();
 
-            /*
-
-            List<PlotPoint> TrailsAGroup = new List<PlotPoint>();
-            List<PlotPoint> TrailsBGroup = new List<PlotPoint>();
-            List<PlotPoint> TrailsA_HGroup = new List<PlotPoint>();
-            List<PlotPoint> TrailsB_HGroup = new List<PlotPoint>();
-
-            List<PlotPoint> avgTrailsAGrouped = new List<PlotPoint>();
-            List<PlotPoint> medTrailsAGrouped = new List<PlotPoint>();
-
-            List<PlotPoint> avgTrailsBGrouped = new List<PlotPoint>();
-            List<PlotPoint> medTrailsBGrouped = new List<PlotPoint>();
-
-            List<PlotPoint> avgTrailsA_HGrouped = new List<PlotPoint>();
-            List<PlotPoint> medTrailsA_HGrouped = new List<PlotPoint>();
-
-            List<PlotPoint> avgTrailsB_HGrouped = new List<PlotPoint>();
-            List<PlotPoint> medTrailsB_HGrouped = new List<PlotPoint>();
-             */
-
             List<Performance> sortPatientAge = new List<Performance>(allResults);
             if (allResults.Count > 0)
             {
@@ -505,10 +493,6 @@ namespace SmartStroke
             medTrailsA_HGrouped = medianize(TrailsA_H);
             medTrailsBGrouped = medianize(TrailsB);
             medTrailsB_HGrouped = medianize(TrailsB_H);
-
-            (ScatterChart.Series[0] as ScatterSeries).ItemsSource = TrailsAGroup;
-            (ScatterChart.Series[1] as LineSeries).ItemsSource = avgTrailsAGrouped;
-            (ScatterChart.Series[2] as LineSeries).ItemsSource = medTrailsAGrouped;
 
             ScatterChart.Opacity = 100;
             ageAxis.Opacity = 100;
