@@ -38,14 +38,14 @@
                 <ColumnDefinition Width="120"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="backButton" Margin="39,59,39,0" Command="{Binding NavigationHelper.GoBackCommand, ElementName=pageRoot}"
+            <Button x:Name="backButton" Margin="16,20,0,0" Command="{Binding NavigationHelper.GoBackCommand, ElementName=pageRoot}"
 				Style="{StaticResource NavigationBackButtonNormalStyle}"
 				VerticalAlignment="Top"
 				AutomationProperties.Name="Back"
 				AutomationProperties.AutomationId="BackButton"
 				AutomationProperties.ItemType="Navigation Button"/>
-            <TextBlock x:Name="pageTitle" Text="{StaticResource AppName}" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
-				IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,30,40"/>
+            <TextBlock x:Name="pageTitle" Text="{StaticResource AppName}" Style="{StaticResource HeaderTextBlockStyle}" 
+				IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="91,0,59,80" Grid.ColumnSpan="2"/>
         </Grid>
         <Grid Grid.Row="1">
 
@@ -79,7 +79,7 @@
                             <CheckBox Content="Female" HorizontalAlignment="Left" Margin="7,190,0,0" VerticalAlignment="Top"/>
                             <CheckBox Content="Graph Average Line" HorizontalAlignment="Left" Margin="7,215,0,0" VerticalAlignment="Top"/>
                             <CheckBox Content="Graph Median Line" HorizontalAlignment="Left" Margin="7,240,0,0" VerticalAlignment="Top"/>
-                            
+
                             <ComboBox HorizontalAlignment="Left" Margin="4,17,0,0" VerticalAlignment="Top" Width="73"/>
                             <ComboBox HorizontalAlignment="Left" Margin="95,18,0,0" VerticalAlignment="Top" Width="73"/>
                             <ComboBox HorizontalAlignment="Left" Margin="4,73,0,0" VerticalAlignment="Top" Width="73"/>
