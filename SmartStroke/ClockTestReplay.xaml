@@ -20,12 +20,18 @@
         <Grid Name="optionsGrid" Grid.Column="1" >
             <Viewbox>
                 <Grid>
-                    <Button Content="Menu" Name="menuButton" Click="menuClicked" Margin="18,24,0,676" Height="68" Width="159" FontSize="23" FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF" />
-                    <Button Content="Replay Test" Name="granularReplayButton" Click="renderGranularTestReplay" Margin="18,130,0,570" Height="68" Width="159" FontSize="23" FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF"  />
-                    <ListBox Name="testDatesBox" HorizontalAlignment="Left" FontSize="15" BorderThickness="2" BorderBrush="Black" ScrollViewer.VerticalScrollMode="Enabled" Height="271" Margin="10,247,0,0" VerticalAlignment="Top" Width="180" SelectionChanged="ListBox_SelectionChanged" />
+                    <Button Content="Replay Test" Name="granularReplayButton" Click="renderGranularTestReplay" Margin="18,34,0,666" Height="68" Width="159" FontSize="23" FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF"  />
+                    <ListBox Name="testDatesBox" HorizontalAlignment="Left" FontSize="15" BorderThickness="2" BorderBrush="Black" ScrollViewer.VerticalScrollMode="Enabled" Height="636" Margin="7,116,0,0" VerticalAlignment="Top" Width="180" SelectionChanged="ListBox_SelectionChanged" />
                 </Grid>
             </Viewbox>
 
         </Grid>
+        <Button x:Name="backButton" Click="menuClicked" Margin="16,20,0,0" Command="{Binding NavigationHelper.GoBackCommand, ElementName=pageRoot}"
+        	Style="{StaticResource NavigationBackButtonNormalStyle}"
+        	VerticalAlignment="Top"
+        	AutomationProperties.Name="Back"
+        	AutomationProperties.AutomationId="BackButton"
+        	AutomationProperties.ItemType="Navigation Button"/>
+        <TextBlock x:Name="pageTitle" Text="Clock-Drawing Test Replay" Style="{StaticResource HeaderTextBlockStyle}" IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="90,0,457,707"/>
     </Grid>
 </Page>

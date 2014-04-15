@@ -10,11 +10,11 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
         <TextBlock x:Name="pageTitle" Text="Clock-Drawing Test Instructions" Style="{StaticResource HeaderTextBlockStyle}" IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="90,0,60,707"/>
-        
-        <TextBlock HorizontalAlignment="Left" Margin="90,139,0,0" TextWrapping="Wrap" Foreground="#454545" FontFamily="Segoe UI Ligjht" FontSize="34" VerticalAlignment="Top" Height="294" Width="813">
+
+        <TextBlock HorizontalAlignment="Left" Margin="300,307,0,0" TextWrapping="Wrap" Foreground="#454545" FontFamily="Segoe UI Ligjht" FontSize="34" VerticalAlignment="Top" Height="294" Width="813">
             		<Run Text="Please draw a clock, putting in all the numbers, and set the hands for 10 after 11.  There is no time limit."/>
         </TextBlock>
-        <Button Name="BeginButton" Content="Begin" Foreground="#FFFFFF" FontFamily="Segoe UI Light" Background="#203864" HorizontalAlignment="Left" Margin="1052,179,0,0" VerticalAlignment="Top" Click="beginTest" Height="72" Width="152" />
+        <Button Name="BeginButton" Content="Begin" Foreground="#FFFFFF" FontFamily="Segoe UI Light" Background="#203864" HorizontalAlignment="Left" Margin="613,417,0,0" VerticalAlignment="Top" Click="beginTest" Height="72" Width="152" />
         <Button x:Name="backButton" Margin="16,20,0,0" Click="backButtonClick" Command="{Binding NavigationHelper.GoBackCommand, ElementName=pageRoot}"
         	Style="{StaticResource NavigationBackButtonNormalStyle}"
         	VerticalAlignment="Top"

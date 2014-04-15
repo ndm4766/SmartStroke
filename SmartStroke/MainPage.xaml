@@ -8,7 +8,7 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <TextBlock FontSize="72" Margin="554,230,0,0" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Sign In" VerticalAlignment="Top" Height="98" Width="258" RenderTransformOrigin="0.5,0.5" />
+        <TextBlock FontSize="72" Margin="558,230,0,0" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Sign In" VerticalAlignment="Top" Height="98" Width="258" RenderTransformOrigin="0.5,0.5" />
         <TextBox Name="userId" HorizontalAlignment="Left" Margin="489,333,0,0" TextWrapping="Wrap" Text="User Id" VerticalAlignment="Top" Height="50" Width="380"/>
         <PasswordBox Name="userPassword" HorizontalAlignment="Left" Margin="489,427,0,0" PlaceholderText="Password" VerticalAlignment="Top" Height="50" Width="380"/>
         <Button FontSize="36" Content="Log In" HorizontalAlignment="Left" Margin="612,501,0,0" VerticalAlignment="Top" Click="Button_Click" FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF"/>
