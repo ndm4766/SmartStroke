@@ -79,9 +79,7 @@ namespace SmartStroke
         }
         private void logout(object sender, RoutedEventArgs e)
         {
-            passer = new InfoPasser();
-            passer.currentPatient = null;
-            this.Frame.Navigate(typeof(MainPage), passer);
+            this.Frame.Navigate(typeof(PatientSelection), passer);
         }
         private void clock_click(object sender, RoutedEventArgs e)
         {
