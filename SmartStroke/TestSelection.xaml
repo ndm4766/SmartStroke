@@ -37,14 +37,14 @@
                 <ColumnDefinition Width="120"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="backButton" Margin="16,20,0,0" Command="{Binding NavigationHelper.GoBackCommand, ElementName=pageRoot}"
+            <Button x:Name="backButton" Margin="39,59,39,0" Command="{Binding NavigationHelper.GoBackCommand, ElementName=pageRoot}"
                         Style="{StaticResource NavigationBackButtonNormalStyle}"
                         VerticalAlignment="Top"
                         AutomationProperties.Name="Back"
                         AutomationProperties.AutomationId="BackButton"
                         AutomationProperties.ItemType="Navigation Button"/>
-            <TextBlock x:Name="pageTitle" Text="{StaticResource AppName}" Style="{StaticResource HeaderTextBlockStyle}" 
-                        IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="87,0,63,79" Grid.ColumnSpan="2"/>
+            <TextBlock x:Name="pageTitle" Text="{StaticResource AppName}" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
+                        IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,30,40"/>
         </Grid>
         <!--<TextBlock Text = "{Binding Source = {x:Static SystemParameters.FullPrimaryScreenHeight}}" />-->
 
@@ -53,7 +53,7 @@
             <Button Name="viewTrailsA" Content="View Old A" IsEnabled="False" HorizontalAlignment="Center" Margin="0,0,0,0" Grid.Row="1" VerticalAlignment="Top" Click="trailsAOld"/>
             <Button Name="viewTrailsB" Content="View Old B" IsEnabled="False" HorizontalAlignment="Center" Margin="0,0,0,0" Grid.Row="1" VerticalAlignment="Top" Click="trailsBOld"/>
         </StackPanel>
-
+        
         <StackPanel Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" x:Name="RightStackPanel" VerticalAlignment="Center" Margin="680,69,0,471" Width="680">
             <Button Content="Clock Test" HorizontalAlignment="Center" Margin="0,0,0,0" Grid.Row="1" VerticalAlignment="Top" Click="select_clock_test"/>
             <Button Name="viewClock" Content="View Old" IsEnabled="False" HorizontalAlignment="Center" Margin="0,0,0,0" Grid.Row="1" VerticalAlignment="Top" Click="view_old_clock_click"/>

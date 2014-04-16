@@ -9,7 +9,7 @@ using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Data; 
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
@@ -34,6 +34,12 @@ namespace SmartStroke
         List<string> fileNames;
         private TestReplay testReplay;
         int chartChoice = -1;
+
+        //Initializes data structures for the different tests
+        List<Performance> TrailsA = new List<Performance>();
+        List<Performance> TrailsB = new List<Performance>();
+        List<Performance> TrailsA_H = new List<Performance>();
+        List<Performance> TrailsB_H = new List<Performance>();
 
         //Initializes the Lists that store the plot points for graphing
         List<PlotPoint> TrailsAGroup = new List<PlotPoint>();
@@ -258,7 +264,7 @@ namespace SmartStroke
             return output;
         }
 
-        //Calculates and stores the average of each age group in a list of plotpoints
+        //Calculates and stores the median of each age group in a list of plotpoints
         public double returnMedian(List<Performance> data)
         {
             List<Performance> sortedData = new List<Performance>();
@@ -363,57 +369,112 @@ namespace SmartStroke
             LoadChartContents();
         }
 
+        Performance performanceListMax(List<Performance> data)
+        {
+            Performance current = data[0];
+
+            try
+            {
+                for (int i = 1; i < data.Count; i++)
+                {
+                    if (data[i].Time > current.Time)
+                    {
+                        current = data[i];
+                    }
+                    else
+                    {
+                        //do nothing
+                    }
+                }
+            }
+            catch
+            {
+                //do nothing, no data
+            }
+            return current;
+        }
+
+        Performance performanceListMin(List<Performance> data)
+        {
+            Performance current = data[0];
+
+            try
+            {
+                for (int i = 1; i < data.Count; i++)
+                {
+                    if (data[i].Time < current.Time)
+                    {
+                        current = data[i];
+                    }
+                    else
+                    {
+                        //do nothing
+                    }
+                }
+            }
+            catch
+            {
+                //do nothing, no data
+            }
+            return current;
+        }
         //Loads data and graphs points
+
+        public List<PlotPoint> generatePlotPoints(List<Performance> data)
+        {
+            List<PlotPoint> output = new List<PlotPoint>();
+
+            for (int i = 0; i < data.Count; i++)
+            {
+                output.Add(new PlotPoint { Age = ageRange(data[i]), Time = data[i].Time });
+            }
+            return output;
+        }
+
         private async void LoadChartContents()
         {
             await loadJson();
 
             List<Performance> allResults = new List<Performance>();
 
-            // Go through all the patients and display the complete data.
-            // Do not separate into different categories.
-            for (int i = 0; i < patientList.Count; i++)
-            {
-                testReplay = new TestReplay();
-                // Find the file that corresponds with this patient name and load it
-                foreach (string name in fileNames)
+                // Go through all the patients and display the complete data.
+                // Do not separate into different categories.
+                for (int i = 0; i < patientList.Count; i++)
                 {
-                    if (name.Contains(patientList[i].patientName))
+                    testReplay = new TestReplay();
+                    // Find the file that corresponds with this patient name and load it
+                    foreach (string name in fileNames)
                     {
-                        await testReplay.loadTestReplay(name);
-                        var actions = testReplay.getTestActions();
-                        if (actions.Count < 1) continue;
-
-                        DateTime start = actions[0].getStartTime();
-                        DateTime end = actions[actions.Count - 1].getEndTime();
-                        TimeSpan TimeDifference = end - start;
-
-                        //Get name of test
-                        string testName = name.Trim(new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' });
-                        int j = 0;
-                        for (; !Char.IsNumber(testName[j]); j++)
+                        if (name.Contains(patientList[i].patientName))
                         {
-                            //increase j
+                            await testReplay.loadTestReplay(name);
+                            var actions = testReplay.getTestActions();
+                            if (actions.Count < 1) continue;
+
+                            DateTime start = actions[0].getStartTime();
+                            DateTime end = actions[actions.Count - 1].getEndTime();
+                            TimeSpan TimeDifference = end - start;
+
+                            //Get name of test
+                            string testName = name.Trim(new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' });
+                            int j = 0;
+                            for (; !Char.IsNumber(testName[j]); j++)
+                            {
+                                //increase j
+                            }
+                            testName = testName.Substring(0, j);
+
+                            double seconds = TimeDifference.Minutes * 60 + TimeDifference.Seconds + TimeDifference.Milliseconds / 100;
+                            int tempAge = Convert.ToInt32(patientList[i].patientAge);
+
+                            allResults.Add(new Performance() { Age = tempAge, Time = seconds, Test = testName });
+
+                            break;
                         }
-                        testName = testName.Substring(0, j);
-
-                        double seconds = TimeDifference.Minutes * 60 + TimeDifference.Seconds + TimeDifference.Milliseconds / 100;
-                        int tempAge = Convert.ToInt32(patientList[i].patientAge);
-
-                        allResults.Add(new Performance() { Age = tempAge, Time = seconds, Test = testName });
-
-                        break;
                     }
                 }
-            }
 
-
-            //Initializes data separate data structures for the different tests
-            List<Performance> TrailsA = new List<Performance>();
-            List<Performance> TrailsB = new List<Performance>();
-            List<Performance> TrailsA_H = new List<Performance>();
-            List<Performance> TrailsB_H = new List<Performance>();
-
+            
             List<Performance> sortPatientAge = new List<Performance>(allResults);
             if (allResults.Count > 0)
             {
@@ -422,6 +483,24 @@ namespace SmartStroke
                     return arg1.Age.CompareTo(arg2.Age);
                 });
             }
+
+            for (int i = sortPatientAge[0].Age; i < sortPatientAge[sortPatientAge.Count - 1].Age; i++)
+            {
+                minAgeRange.Items.Add(Convert.ToDouble(i));
+                maxAgeRange.Items.Add(Convert.ToDouble(i));
+            }
+
+            for (int i = Convert.ToInt32(Math.Floor(performanceListMin(sortPatientAge).Time)); i <= Convert.ToInt32(Math.Ceiling(performanceListMax(sortPatientAge).Time)); i++)
+            {
+                minTimeRange.Items.Add(i);
+                maxTimeRange.Items.Add(i);
+            }
+
+            minAgeRange.SelectedIndex = 0;
+            maxAgeRange.SelectedIndex = (maxAgeRange.Items.Count - 1);
+
+            minTimeRange.SelectedIndex = 0;
+            maxTimeRange.SelectedIndex = (maxTimeRange.Items.Count - 1);
 
             //Adds each performance point to the appropiate data structure that is belongs
             //to based on the type of test 
@@ -447,25 +526,10 @@ namespace SmartStroke
                 }
             }
 
-            for (int i = 0; i < TrailsA.Count; i++)
-            {
-                TrailsAGroup.Add(new PlotPoint { Age = ageRange(TrailsA[i]), Time = TrailsA[i].Time });
-            }
-
-            for (int i = 0; i < TrailsB.Count; i++)
-            {
-                TrailsBGroup.Add(new PlotPoint { Age = ageRange(TrailsB[i]), Time = TrailsB[i].Time });
-            }
-
-            for (int i = 0; i < TrailsA_H.Count; i++)
-            {
-                TrailsA_HGroup.Add(new PlotPoint { Age = ageRange(TrailsA_H[i]), Time = TrailsA_H[i].Time });
-            }
-
-            for (int i = 0; i < TrailsB_H.Count; i++)
-            {
-                TrailsB_HGroup.Add(new PlotPoint { Age = ageRange(TrailsB_H[i]), Time = TrailsB_H[i].Time });
-            }
+            TrailsAGroup = generatePlotPoints(TrailsA);
+            TrailsBGroup = generatePlotPoints(TrailsB);
+            TrailsA_HGroup = generatePlotPoints(TrailsA_H);
+            TrailsB_HGroup = generatePlotPoints(TrailsB_H);
 
             //Stores the averages and medians of each test type
             avgTrailsAGrouped = averagize(TrailsA);
@@ -568,8 +632,41 @@ namespace SmartStroke
             popup.ShowAsync(new Point(0, 0));
         }
 
-        //Function for handling the combo box that controls which type of test is graphed
-        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        public List<Performance> filter(List<Performance> data)
+        {
+            List<Performance> output = new List<Performance>();
+
+            int minAge = Convert.ToInt32(minAgeRange.SelectedItem.ToString());
+            int maxAge = Convert.ToInt32(maxAgeRange.SelectedItem.ToString());
+
+            int minTime = Convert.ToInt32(minTimeRange.SelectedItem.ToString());
+            int maxTime = Convert.ToInt32(maxTimeRange.SelectedItem.ToString());
+
+            if (minAge > maxAge)
+            {
+                int tempA = minAge;
+                int tempB = maxAge;
+
+                minAge = tempB;
+                maxAge = tempA;
+            }
+
+            if (minTime > maxTime)
+            {
+                int tempA = minTime;
+                int tempB = maxTime;
+
+                minTime = tempB;
+                maxTime = tempA;
+            }
+
+            output = data.Where(x => x.Age >= minAge && x.Age <= maxAge).ToList();
+            output = output.Where(x => x.Time >= minTime && x.Time <= maxTime).ToList();
+
+            return output;
+        }
+
+        public void graphPoints()
         {
             chartChoice = dataSelection.SelectedIndex;
             
@@ -578,30 +675,79 @@ namespace SmartStroke
             switch (chartChoice)
             {
                 case 0:
-                    (ScatterChart.Series[0] as ScatterSeries).ItemsSource = TrailsAGroup;
-                    (ScatterChart.Series[1] as LineSeries).ItemsSource = avgTrailsAGrouped;
-                    (ScatterChart.Series[2] as LineSeries).ItemsSource = medTrailsAGrouped;
+                    List<Performance> filteredTrailsA = filter(TrailsA);
+            
+                    List<PlotPoint> plotTrailsA = new List<PlotPoint>(generatePlotPoints(filteredTrailsA));
+                    List<PlotPoint> plotAvgTrailsAGroup = new List<PlotPoint>( averagize(filteredTrailsA));
+                    List<PlotPoint> plotMedTrailsAGroup = new List<PlotPoint>(medianize(filteredTrailsA));
+
+                    (ScatterChart.Series[0] as ScatterSeries).ItemsSource = plotTrailsA;
+                    (ScatterChart.Series[1] as LineSeries).ItemsSource = plotAvgTrailsAGroup;
+                    (ScatterChart.Series[2] as LineSeries).ItemsSource = plotMedTrailsAGroup;
                     break;
                 case 1:
-                    (ScatterChart.Series[0] as ScatterSeries).ItemsSource = TrailsBGroup;
-                    (ScatterChart.Series[1] as LineSeries).ItemsSource = avgTrailsBGrouped;
-                    (ScatterChart.Series[2] as LineSeries).ItemsSource = medTrailsBGrouped;
+                    List<Performance> filteredTrailsB = filter(TrailsB);
+            
+                    List<PlotPoint> plotTrailsB = new List<PlotPoint>(generatePlotPoints(filteredTrailsB));
+                    List<PlotPoint> plotAvgTrailsBGroup = new List<PlotPoint>( averagize(filteredTrailsB) );
+                    List<PlotPoint> plotMedTrailsBGroup = new List<PlotPoint>( medianize(filteredTrailsB) );
+            
+                    (ScatterChart.Series[0] as ScatterSeries).ItemsSource = plotTrailsB;
+                    (ScatterChart.Series[1] as LineSeries).ItemsSource = plotAvgTrailsBGroup;
+                    (ScatterChart.Series[2] as LineSeries).ItemsSource = plotMedTrailsBGroup;
                     break;
                 case 2:
-                    (ScatterChart.Series[0] as ScatterSeries).ItemsSource = TrailsA_HGroup;
-                    (ScatterChart.Series[1] as LineSeries).ItemsSource = avgTrailsA_HGrouped;
-                    (ScatterChart.Series[2] as LineSeries).ItemsSource = medTrailsA_HGrouped;
+                    List<Performance> filteredTrailsA_H = filter(TrailsA_H);
+            
+                    List<PlotPoint> plotTrailsA_H = new List<PlotPoint>(generatePlotPoints(filteredTrailsA_H));
+                    List<PlotPoint> plotAvgTrailsA_HGroup = new List<PlotPoint>(averagize(filteredTrailsA_H) );
+                    List<PlotPoint> plotMedTrailsA_HGroup = new List<PlotPoint>(medianize(filteredTrailsA_H) );
+
+                    (ScatterChart.Series[0] as ScatterSeries).ItemsSource = plotTrailsA_H;
+                    (ScatterChart.Series[1] as LineSeries).ItemsSource = plotAvgTrailsA_HGroup;
+                    (ScatterChart.Series[2] as LineSeries).ItemsSource = plotMedTrailsA_HGroup;
                     break;
                 case 3:
-                    (ScatterChart.Series[0] as ScatterSeries).ItemsSource = TrailsB_HGroup;
-                    (ScatterChart.Series[1] as LineSeries).ItemsSource = avgTrailsB_HGrouped;
-                    (ScatterChart.Series[2] as LineSeries).ItemsSource = medTrailsB_HGrouped;
+                    List<Performance> filteredTrailsB_H = filter(TrailsB_H);
+
+                    List<PlotPoint> plotTrailsB_H = new List<PlotPoint>(generatePlotPoints(filteredTrailsB_H));
+                    List<PlotPoint> plotAvgTrailsB_HGroup = new List<PlotPoint>(averagize(filteredTrailsB_H) );
+                    List<PlotPoint> plotMedTrailsB_HGroup = new List<PlotPoint>(medianize(filteredTrailsB_H) );
+
+                    (ScatterChart.Series[0] as ScatterSeries).ItemsSource = plotTrailsB_H;
+                    (ScatterChart.Series[1] as LineSeries).ItemsSource = plotAvgTrailsB_HGroup;
+                    (ScatterChart.Series[2] as LineSeries).ItemsSource = plotMedTrailsB_HGroup;
                     break;
                 default:
                     //do nothing
                     break;
             }
+        }
 
+        //Function for handling the combo box that controls which type of test is graphed
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            graphPoints();
+        }
+
+        private void minTimeRange_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            graphPoints();
+        }
+
+        private void maxTimeRange_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            graphPoints();
+        }
+
+        private void minAgeRange_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            graphPoints();
+        }
+
+        private void maxAgeRange_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            graphPoints();
         }
     }
 }

@@ -176,11 +176,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Logo.scale-100.png" />
-    <Content Include="Assets\mediCSlogo.scale-100.png" />
+    <Content Include="Assets\mediCSlogo.png" />
     <Content Include="Assets\SmallLogo.scale-100.png" />
     <Content Include="Assets\SplashScreen.scale-100.png" />
     <Content Include="Assets\StoreLogo.scale-100.png" />
-    <Content Include="Assets\Wide310x150Logo.scale-100.png" />
     <Content Include="Common\ReadMe.txt" />
     <Content Include="Properties\images\pen.png" />
     <Content Include="Properties\images\trailsA.jpg" />

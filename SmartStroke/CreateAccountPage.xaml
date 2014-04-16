@@ -37,14 +37,14 @@
                 <ColumnDefinition Width="120"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="backButton" Margin="16,20,0,0" Command="{Binding NavigationHelper.GoBackCommand, ElementName=pageRoot}"
+            <Button x:Name="backButton" Margin="39,59,39,0" Command="{Binding NavigationHelper.GoBackCommand, ElementName=pageRoot}"
                         Style="{StaticResource NavigationBackButtonNormalStyle}"
                         VerticalAlignment="Top"
                         AutomationProperties.Name="Back"
                         AutomationProperties.AutomationId="BackButton"
                         AutomationProperties.ItemType="Navigation Button"/>
-            <TextBlock x:Name="pageTitle" Style="{StaticResource HeaderTextBlockStyle}" 
-                        IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="86,0,64,79" SelectionChanged="pageTitle_SelectionChanged" Grid.ColumnSpan="2" Text="Account Creation"/>
+            <TextBlock x:Name="pageTitle" Text="{StaticResource AppName}" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
+                        IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,30,40" SelectionChanged="pageTitle_SelectionChanged"/>
         </Grid>
         <TextBox x:Name="registerUsernameInputText" FontFamily="Segoe UI Light" FontSize="36" BorderThickness="1" BorderBrush="#000000" HorizontalAlignment="Center" Margin="374,123,350,0" Grid.Row="1"  Text="Username" VerticalAlignment="Top" Width="642" Height="70"/>
         <PasswordBox x:Name="registerPasswordInputText" FontFamily="Segoe UI Light" FontSize="36" BorderThickness="1" BorderBrush="#000000" HorizontalAlignment="Center" Margin="374,228,350,0" Grid.Row="1" VerticalAlignment="Top" Width="642" Height="71"/>
