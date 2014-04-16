@@ -37,7 +37,7 @@
                 <ColumnDefinition Width="120"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="backButton" Margin="39,59,39,0" Command="{Binding NavigationHelper.GoBackCommand, ElementName=pageRoot}"
+            <Button x:Name="backButton" Margin="16,20,0,0" Command="{Binding NavigationHelper.GoBackCommand, ElementName=pageRoot}"
                         Style="{StaticResource NavigationBackButtonNormalStyle}"
                         VerticalAlignment="Top"
                         AutomationProperties.Name="Back"
@@ -59,6 +59,7 @@
         <Button Name="SubmitButton" Content="Submit" Foreground="#FFFFFF" FontSize="24" FontFamily="Segoe UI Light" Background="#203864" HorizontalAlignment="Left" Margin="1079,253,0,0" Grid.Row="1" VerticalAlignment="Top" IsEnabled="False" Click="SubmitButtonClicked" Height="58" Width="118" />
         <TextBlock HorizontalAlignment="Left" Margin="262,225,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Sex" FontSize="30" FontFamily="Segoe UI Light" Foreground="#606060" VerticalAlignment="Top" Height="44" Width="57"/>
         <TextBlock HorizontalAlignment="Left" Margin="389,225,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Birthday" FontSize="30" FontFamily="Segoe UI Light" Foreground="#606060" VerticalAlignment="Top" Height="44" Width="240"/>
+        <TextBlock x:Name="pageTitle" Text="Patient Creation" Style="{StaticResource HeaderTextBlockStyle}" IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="90,0,60,79"/>
 
 
     </Grid>
