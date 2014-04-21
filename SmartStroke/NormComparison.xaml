@@ -38,14 +38,14 @@
                 <ColumnDefinition Width="120"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="backButton" Margin="39,59,39,0" Command="{Binding NavigationHelper.GoBackCommand, ElementName=pageRoot}"
+            <Button x:Name="backButton" Margin="16,20,0,0" Command="{Binding NavigationHelper.GoBackCommand, ElementName=pageRoot}"
 				Style="{StaticResource NavigationBackButtonNormalStyle}"
 				VerticalAlignment="Top"
 				AutomationProperties.Name="Back"
 				AutomationProperties.AutomationId="BackButton"
 				AutomationProperties.ItemType="Navigation Button"/>
-            <TextBlock x:Name="pageTitle" Text="{StaticResource AppName}" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
-				IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,30,40"/>
+            <TextBlock x:Name="pageTitle" Text="{StaticResource AppName}" Style="{StaticResource HeaderTextBlockStyle}" 
+				IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="91,0,59,80" Grid.ColumnSpan="2"/>
         </Grid>
         <Grid Grid.Row="1">
 
@@ -60,6 +60,7 @@
             </Charting:Chart>
             <Charting:AxisLabel x:Name="ageAxis" DataContext="Age" HorizontalAlignment="Center" Height="100" Margin="636,0,630,10" VerticalAlignment="Bottom" Width="100" Opacity="0"/>
             <Charting:AxisLabel x:Name="timeAxis" DataContext="Time (seconds)" HorizontalAlignment="Left" Height="100" Margin="20,-70,0,0" VerticalAlignment="Center" Width="100" Opacity="0"/>
+            
             <Button Content="Options" HorizontalAlignment="Left" Margin="1270,0,0,0" VerticalAlignment="Top" Width="89" Click="chartOptions">
                 <Button.Flyout>
                     <Flyout>
@@ -75,15 +76,15 @@
                             <TextBox HorizontalAlignment="Left" Margin="100,125,0,0" TextWrapping="Wrap" Text="Max" VerticalAlignment="Top" Width="70"/>
                             <TextBlock HorizontalAlignment="Left" Margin="175,135,0,0" Grid.Row="1" TextWrapping="Wrap" Text="years" VerticalAlignment="Top"/>
 
-                            <CheckBox Content="Male" HorizontalAlignment="Left" Margin="7,165,0,0" VerticalAlignment="Top"/>
-                            <CheckBox Content="Female" HorizontalAlignment="Left" Margin="7,190,0,0" VerticalAlignment="Top"/>
-                            <CheckBox Content="Graph Average Line" HorizontalAlignment="Left" Margin="7,215,0,0" VerticalAlignment="Top"/>
-                            <CheckBox Content="Graph Median Line" HorizontalAlignment="Left" Margin="7,240,0,0" VerticalAlignment="Top"/>
+                            <CheckBox x:Name="maleCheckBox" Content="Male" HorizontalAlignment="Left" Margin="7,165,0,0" VerticalAlignment="Top"/>
+                            <CheckBox x:Name="femaleCheckBox" Content="Female" HorizontalAlignment="Left" Margin="7,190,0,0" VerticalAlignment="Top"/>
+                            <CheckBox x:Name="avgGraphCheckBox" Content="Graph Average Line" HorizontalAlignment="Left" Margin="7,215,0,0" VerticalAlignment="Top"/>
+                            <CheckBox x:Name="medGraphCheckBox" Content="Graph Median Line" HorizontalAlignment="Left" Margin="7,240,0,0" VerticalAlignment="Top"/>
                             
-                            <ComboBox HorizontalAlignment="Left" Margin="4,17,0,0" VerticalAlignment="Top" Width="73"/>
-                            <ComboBox HorizontalAlignment="Left" Margin="95,18,0,0" VerticalAlignment="Top" Width="73"/>
-                            <ComboBox HorizontalAlignment="Left" Margin="4,73,0,0" VerticalAlignment="Top" Width="73"/>
-                            <ComboBox HorizontalAlignment="Left" Margin="95,73,0,0" VerticalAlignment="Top" Width="73"/>
+                            <ComboBox x:Name="minTimeRange" HorizontalAlignment="Left" Margin="4,17,0,0" VerticalAlignment="Top" Width="73" SelectionChanged="minTimeRange_SelectionChanged"/>
+                            <ComboBox x:Name="maxTimeRange" HorizontalAlignment="Left" Margin="95,18,0,0" VerticalAlignment="Top" Width="73" SelectionChanged="maxTimeRange_SelectionChanged"/>
+                            <ComboBox x:Name="minAgeRange" HorizontalAlignment="Left" Margin="4,73,0,0" VerticalAlignment="Top" Width="73" SelectionChanged="minAgeRange_SelectionChanged"/>
+                            <ComboBox x:Name="maxAgeRange" HorizontalAlignment="Left" Margin="95,73,0,0" VerticalAlignment="Top" Width="73" SelectionChanged="maxAgeRange_SelectionChanged"/>
 
                         </Grid>
                     </Flyout>

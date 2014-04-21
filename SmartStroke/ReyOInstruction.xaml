@@ -28,9 +28,14 @@
         </Grid.RowDefinitions>
 
         <TextBlock x:Name="pageTitle" Text="Rey-Osterrieth Test Instructions" Style="{StaticResource HeaderTextBlockStyle}" 
-                        IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="101,0,217,47"/>
-        <TextBlock HorizontalAlignment="Left" Margin="101,90,0,0" Grid.Row="1" TextWrapping="Wrap" Foreground="#454545" FontFamily="Segoe UI Ligjht" FontSize="34" Text="Make a copy of the design as best as possible. The copy can be an approximation as far as the proportions are concerned, but care should be taken not to forget any detail. There is no time limit." VerticalAlignment="Top" Height="294" Width="813"/>
+                        IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="83,0,235,79"/>
+        <TextBlock HorizontalAlignment="Left" Margin="83,0,0,0" Grid.Row="1" TextWrapping="Wrap" Foreground="#454545" FontFamily="Segoe UI Ligjht" FontSize="34" Text="Make a copy of the design as best as possible. The copy can be an approximation as far as the proportions are concerned, but care should be taken not to forget any detail. There is no time limit." VerticalAlignment="Top" Height="294" Width="813"/>
         <Button Name="BeginButton" Content="Begin" Foreground="#FFFFFF" FontFamily="Segoe UI Light" Background="#203864" HorizontalAlignment="Left" Margin="1066,80,0,0" Grid.Row="1" VerticalAlignment="Top" Click="beginTest" Height="72" Width="154" />
-        <Button x:Name="backButton" Content="Back to Menu" Foreground="#FFFFFF" FontFamily="Segoe UI Light" Background="#203864" HorizontalAlignment="Left" Margin="1066,188,0,0" Grid.Row="1" VerticalAlignment="Top" Click="backButtonClick" Height="72" Width="154" />
+        <Button x:Name="backButton_Copy" Margin="16,20,0,0" Click="backButtonClick" Command="{Binding NavigationHelper.GoBackCommand, ElementName=pageRoot}"
+        	Style="{StaticResource NavigationBackButtonNormalStyle}"
+        	VerticalAlignment="Top"
+        	AutomationProperties.Name="Back"
+        	AutomationProperties.AutomationId="BackButton"
+        	AutomationProperties.ItemType="Navigation Button"/>
     </Grid>
 </Page>

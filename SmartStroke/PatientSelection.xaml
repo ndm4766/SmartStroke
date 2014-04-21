@@ -8,12 +8,13 @@
     mc:Ignorable="d" Margin="0,-1,0,1">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <TextBlock Name="greeting" FontSize="36" HorizontalAlignment="Left" Margin="130,30,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="148" Width="1190"/>
-        <Button FontSize="36" Content="Add new Patient" HorizontalAlignment="Left" Margin="127,300,0,0" VerticalAlignment="Top" Height="108" Width="343" Click="newPatient" FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF"/>
-        <Button FontSize="36" Content="View Norms" HorizontalAlignment="Left" Margin="127, 445,0,0" VerticalAlignment="Top" Height="108" Width="343" Click="viewNorms" FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF"/>
-        <Button Content="Logout" HorizontalAlignment="Left" FontSize="36" FontFamily="Segoe UI Light" Margin="127,590,0,0" VerticalAlignment="Top" Height="108" Width="343" Background="#203864" Foreground="#FFFFFF" Click="logout" />
+        <TextBlock Name="greeting" FontSize="36" HorizontalAlignment="Left" Margin="90,112,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="153" Width="581"/>
+        <Button FontSize="36" Content="Add new Patient" HorizontalAlignment="Left" Margin="163,289,0,0" VerticalAlignment="Top" Height="108" Width="343" Click="newPatient" FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF"/>
+        <Button FontSize="36" Content="View Norms" HorizontalAlignment="Left" Margin="163,427,0,0" VerticalAlignment="Top" Height="108" Width="343" Click="viewNorms" FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF"/>
         <TextBox Name="search" FontSize="36" HorizontalAlignment="Left" Margin="750,178,0,0" TextWrapping="Wrap" Text="Search for a Patient" VerticalAlignment="Top" Height="87" Width="530" TextChanged="searchPatients" GotFocus="clearText"/>
         <ListBox Name="MedicalID" HorizontalAlignment="Left" FontSize="24" BorderThickness="0" ScrollViewer.VerticalScrollMode="Enabled" Height="340" Margin="750,265,0,0" VerticalAlignment="Top" Width="530" SelectionChanged="ListBox_SelectionChanged">
         </ListBox>
+        <Button x:Name="backButton" Margin="16,20,0,0" Style="{StaticResource NavigationBackButtonNormalStyle}" VerticalAlignment="Top" AutomationProperties.Name="Back" AutomationProperties.AutomationId="BackButton" AutomationProperties.ItemType="Navigation Button" Click="logout"/>
+        <TextBlock x:Name="pageTitle" Text="Select/Add Patient" Style="{StaticResource HeaderTextBlockStyle}" IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="90,0,657,707"/>
     </Grid>
 </Page>

@@ -16,7 +16,6 @@
                     <TextBlock Text="Trails A" TextWrapping="Wrap" TextAlignment="Center"/>
                 </Button>
                 <Button Content="Start Clock Drawing Test" HorizontalAlignment="Left" FontSize="36" FontFamily="Segoe UI Light" Margin="87,260,0,0" VerticalAlignment="Top" Background="#203864" Foreground="#FFFFFF" Click="clock_click" Width="499" Height="151"/>
-                <Button Content="Logout" HorizontalAlignment="Left" FontSize="24" FontFamily="Segoe UI Light" Margin="42,645,0,-1" VerticalAlignment="Top" Height="66" Width="120" Background="#203864" Foreground="#FFFFFF" Click="logout" RenderTransformOrigin="0.5,0.5"/>
                 <Button Content="Start Rey-Osterrieth Test" HorizontalAlignment="Left" FontSize="36" FontFamily="Segoe UI Light" Margin="87,448,0,0" VerticalAlignment="Top" Height="151" Width="499" Background="#203864" Foreground="#FFFFFF" Click="reyo_click" />
                 <Button HorizontalAlignment="Left" FontSize="36" FontFamily="Segoe UI Light" Margin="358,78,0,0" VerticalAlignment="Top" Height="151" Width="228" Background="#203864" Foreground="#FFFFFF" Click="trailsB_click">
                     <TextBlock Text="Trails B" TextWrapping="Wrap" TextAlignment="Center"/>
@@ -36,10 +35,11 @@
                 <Button Name="viewReyo" Content="Completed Rey-Osterrieth Tests" IsEnabled="False" HorizontalAlignment="Center" FontSize="34" FontFamily="Segoe UI Light" Margin="741,448,123,0" VerticalAlignment="Top" Height="151" Width="502" Background="#203864" Foreground="#FFFFFF" Click="view_old_reyo_click"/>
                 <Rectangle HorizontalAlignment="Left" Height="577" Margin="697,54,0,0" Stroke="#203864" StrokeThickness="4.5" VerticalAlignment="Top" Width="583"/>
                 <Rectangle HorizontalAlignment="Left" Height="38" Margin="718,38,0,0" Fill="#FFFFFF" VerticalAlignment="Top" Width="117"/>
-                <TextBlock HorizontalAlignment="Left" Margin="720,35,0,0" TextWrapping="Wrap" Text="Review" FontSize="36" FontFamily="Segoe UI Light"  VerticalAlignment="Top"/>
+                <TextBlock HorizontalAlignment="Left" Margin="722,35,0,0" TextWrapping="Wrap" Text="Replay" FontSize="36" FontFamily="Segoe UI Light"  VerticalAlignment="Top"/>
                 <Button Content="Graphs" HorizontalAlignment="Left" FontSize="24" FontFamily="Segoe UI Light" Margin="1163,645,0,-1" VerticalAlignment="Top" Height="66" Width="120" Background="#203864" Foreground="#FFFFFF" Click="goToNorms" RenderTransformOrigin="0.5,0.5"/>
             </Grid>
         </Viewbox>
-        <Button x:Name="backButton" Margin="16,20,0,0" Style="{StaticResource NavigationBackButtonNormalStyle}" VerticalAlignment="Top" AutomationProperties.Name="Back" AutomationProperties.AutomationId="BackButton" AutomationProperties.ItemType="Navigation Button" Click="goToPatientScreen"/>
+        <TextBlock x:Name="pageTitle" Text="Main Menu" Style="{StaticResource HeaderTextBlockStyle}" IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="90,0,657,707"/>
+        <Button x:Name="backButton" Margin="16,20,0,0" Style="{StaticResource NavigationBackButtonNormalStyle}" VerticalAlignment="Top" AutomationProperties.Name="Back" AutomationProperties.AutomationId="BackButton" AutomationProperties.ItemType="Navigation Button" Click="logout"/>
     </Grid>
 </Page>
