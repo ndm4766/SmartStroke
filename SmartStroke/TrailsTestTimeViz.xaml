@@ -14,7 +14,7 @@
         </Grid.ColumnDefinitions>
 
         <Grid Name="canvasGrid" Grid.Column="0" >
-            <Canvas Name="MyCanvas" Background="Transparent" Margin="10"/>
+            <Canvas Name="MyCanvas" Background="Transparent" Margin="-57,10,77,10"/>
         </Grid>
 
         <Grid Name="optionsGrid" Grid.Column="1" >

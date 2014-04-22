@@ -269,7 +269,6 @@ namespace SmartStroke
         private void removeAllStrokes()
         {
             MyCanvas.Children.Clear();
-            populateNodes(passer.trailsTestVersion, nodes);
         }
 
         // Display statistics for the test such as test time, errors, left-right analysis
@@ -282,6 +281,59 @@ namespace SmartStroke
 
 
             // Add a Textarea for time taken between nodes
+            #region paths
+            ListBox nodes = new ListBox();
+            nodes.Margin = new Thickness(400, 100, 0,0);
+            nodes.Height = 575;
+            nodes.Width = 150;
+
+            if (passer.trailsTestVersion == 'A')
+            {
+                for(int i = 1; i < 25; i++)
+                {
+                    string s = "";
+                    s += i.ToString();
+                    s += "   ->   ";
+                    s += (i+1).ToString();
+                    s += "\n";
+                    nodes.Items.Add(s);
+                }
+            }
+            else if (passer.trailsTestVersion == 'B')
+            {
+                int num = 1;
+                char let = 'A';
+                for (int i = 1; i < 25; i++)
+                {
+                    if(i % 2 == 1)
+                    {
+                        string s = num.ToString() + "   ->   " + ((char)(let)).ToString();
+                        nodes.Items.Add(s);
+                        num += 1;
+                    }
+                    else
+                    {
+                        string s = let.ToString() + "   ->   " + (num).ToString();
+                        nodes.Items.Add(s);
+                        let = (char)(1+let);
+                    }
+                }
+            }
+            nodes.FontSize = 17;
+            MyCanvas.Children.Add(nodes);
+            #endregion
+
+            // Add a Textarea for actual times
+            #region times
+            ListBox times = new ListBox();
+            times.Margin = new Thickness(600, 100, 0, 0);
+            times.Height = 575;
+            times.Width = 150;
+            times.FontSize = 17;
+            MyCanvas.Children.Add(times);
+
+            // Go through all nodes and plot times
+            #endregion
 
             // Add some buttons for swtiching from times to left-right analysis
         }
@@ -289,6 +341,9 @@ namespace SmartStroke
         private void viewColorTimeMode()
         {
             removeAllStrokes();
+
+            populateNodes(passer.trailsTestVersion, nodes);
+            
             var allActions = testReplay.getTestActions();
             var smartStrokes = allActions.OfType<SmartStroke.Stroke>();
             var strokes = inkManager.GetStrokes();
