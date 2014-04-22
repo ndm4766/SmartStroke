@@ -21,7 +21,7 @@
             <Viewbox>
                 <Grid>
                     <Button Content="Replay Test" Name="granularReplayButton" Click="renderGranularTestReplay" Margin="18,34,0,666" Height="68" Width="159" FontSize="23" FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF"  />
-                    <ListBox Name="testDatesBox" HorizontalAlignment="Left" FontSize="15" BorderThickness="2" BorderBrush="Black" ScrollViewer.VerticalScrollMode="Enabled" Height="636" Margin="7,116,0,0" VerticalAlignment="Top" Width="180" SelectionChanged="ListBox_SelectionChanged" />
+                    <ComboBox Name="testDatesBox" PlaceholderText="Select a test" HorizontalAlignment="Left" FontSize="15" BorderThickness="2" BorderBrush="Black" ScrollViewer.VerticalScrollMode="Enabled" Height="50" Margin="7,116,0,0" VerticalAlignment="Top" Width="185" SelectionChanged="ListBox_SelectionChanged" />
                 </Grid>
             </Viewbox>
 
