@@ -27,6 +27,7 @@ namespace SmartStroke
     public sealed partial class NormComparison : Page
     {
         const string filename = "userInfo.txt";
+        //const string filename = "registeredUsers.txt";
         InfoPasser passer = new InfoPasser();
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
@@ -90,6 +91,7 @@ namespace SmartStroke
         {
             public string Age { get; set; }
             public double Time { get; set; }
+            public string foo { get; set; }
         }
 
         public Windows.Data.Json.JsonArray patients = new Windows.Data.Json.JsonArray();
@@ -437,13 +439,28 @@ namespace SmartStroke
 
             List<Performance> allResults = new List<Performance>();
 
+            try
+            {
+                List<string> currentPatients = passer.currentPatient.getTestFilenames();
+            }
+
+            catch
+            {
+                //no passed data
+            }
+
                 // Go through all the patients and display the complete data.
                 // Do not separate into different categories.
-                for (int i = 0; i < patientList.Count; i++)
+
+            foreach (string name in fileNames)
+            
+            //for (int i = 0; i < patientList.Count; i++)
                 {
                     testReplay = new TestReplay();
                     // Find the file that corresponds with this patient name and load it
-                    foreach (string name in fileNames)
+                    //foreach (string name in fileNames)
+                    
+                    for (int i = 0; i < patientList.Count; i++ )
                     {
                         if (name.Contains(patientList[i].patientName))
                         {
@@ -464,6 +481,31 @@ namespace SmartStroke
                             }
                             testName = testName.Substring(0, j);
 
+                            //Get education level
+
+                            //-------Open and read file----------------------------
+                            Windows.Storage.StorageFile myFile = await Windows.Storage.ApplicationData.Current.LocalFolder.GetFileAsync(name);
+                            //read
+                            String data = await Windows.Storage.FileIO.ReadTextAsync(myFile);
+                            //-----------------------------------------------------
+
+                            string educationLevel = "";
+                            for (int charSpot = 47; charSpot < data.Count(); charSpot++)
+                            {
+                                if (data[charSpot] != '\n')
+                                {
+                                    educationLevel = educationLevel + data[charSpot];
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                            }
+
+                            string gender = data.Substring(43, 2);
+                            //43
+
+                            //Get performance time
                             double seconds = TimeDifference.Minutes * 60 + TimeDifference.Seconds + TimeDifference.Milliseconds / 100;
                             int tempAge = Convert.ToInt32(patientList[i].patientAge);
 
@@ -484,12 +526,24 @@ namespace SmartStroke
                 });
             }
 
+
+            int minAgeIndex = sortPatientAge[0].Age;
+            while (minAgeIndex < sortPatientAge[sortPatientAge.Count - 1].Age)
+            {
+                minAgeRange.Items.Add(Convert.ToDouble(minAgeIndex));
+                maxAgeRange.Items.Add(Convert.ToDouble(minAgeIndex));
+                minAgeIndex++;
+            }
+            minAgeRange.Items.Add(Convert.ToDouble(minAgeIndex));
+            maxAgeRange.Items.Add(Convert.ToDouble(minAgeIndex));
+
+            /*
             for (int i = sortPatientAge[0].Age; i < sortPatientAge[sortPatientAge.Count - 1].Age; i++)
             {
                 minAgeRange.Items.Add(Convert.ToDouble(i));
                 maxAgeRange.Items.Add(Convert.ToDouble(i));
-            }
-
+            }*/
+            
             for (int i = Convert.ToInt32(Math.Floor(performanceListMin(sortPatientAge).Time)); i <= Convert.ToInt32(Math.Ceiling(performanceListMax(sortPatientAge).Time)); i++)
             {
                 minTimeRange.Items.Add(i);
@@ -561,7 +615,7 @@ namespace SmartStroke
             public string patientAge;
             public string patientSex;
             public string patientEducation;
-
+                
             public PatientPlot(string name, string birthday, string age, string sex, string education)
             {
                 patientName = name;
