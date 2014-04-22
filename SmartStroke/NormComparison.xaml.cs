@@ -439,11 +439,11 @@ namespace SmartStroke
 
                 // Go through all the patients and display the complete data.
                 // Do not separate into different categories.
-                for (int i = 0; i < patientList.Count; i++)
+                foreach (string name in fileNames)
                 {
                     testReplay = new TestReplay();
                     // Find the file that corresponds with this patient name and load it
-                    foreach (string name in fileNames)
+                    for (int i = 0; i < patientList.Count; i++)
                     {
                         if (name.Contains(patientList[i].patientName))
                         {
