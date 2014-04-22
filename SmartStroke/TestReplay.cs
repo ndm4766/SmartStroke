@@ -216,14 +216,14 @@ namespace SmartStroke
 
         // Overload the operator == on two TestErrors. Useful to count how
         // many times the user made the same error in a test.
-        public static bool operator ==(TestError te1, TestError te2)
+        /*public static bool operator ==(TestError te1, TestError te2)
         {
             return te1.getBegin() == te2.getBegin();
         }
         public static bool operator !=(TestError te1, TestError te2)
         {
             return te1.getBegin() != te2.getBegin();
-        }
+        }*/
 
         // Convert the TestError object to a string to actually save it into
         // The TestReplay Object

@@ -272,6 +272,20 @@ namespace SmartStroke
             populateNodes(passer.trailsTestVersion, nodes);
         }
 
+        // Display statistics for the test such as test time, errors, left-right analysis
+        private void viewStatistics()
+        {
+            // Start with a clean screen
+            removeAllStrokes();
+
+            // Add a Textarea for time taken
+
+
+            // Add a Textarea for time taken between nodes
+
+            // Add some buttons for swtiching from times to left-right analysis
+        }
+
         private void viewColorTimeMode()
         {
             removeAllStrokes();
@@ -367,9 +381,7 @@ namespace SmartStroke
 
 
             nodes.Clear();
-            populateNodes(passer.trailsTestVersion, nodes);      // Populate the list of trail nodes (no longer occurs in constructor bec need to have passer to know which test to load)
-
-            //TODO must have real patient info here
+            
             TEST_TYPE type = TEST_TYPE.TRAILS_A;
             if (passer.trailsTestVersion == 'A')
                 type = TEST_TYPE.TRAILS_A;
@@ -405,9 +417,6 @@ namespace SmartStroke
                     break;
                 }
             }
-            //testDatesBox.SelectionChanged -= testSelected;
-            //viewColorTimeMode();
-            //testDatesBox.SelectionChanged += testSelected;
         }
 
         void testSelected(object sender, SelectionChangedEventArgs e)
@@ -423,6 +432,12 @@ namespace SmartStroke
         private void displayTimeElapsed(object sender, RoutedEventArgs e)
         {
             viewColorTimeMode();
+        }
+
+        // Button clicked to display the statistics for the test
+        private void displayStatistics(object sender, RoutedEventArgs e)
+        {
+            viewStatistics();
         }
     }
 }
