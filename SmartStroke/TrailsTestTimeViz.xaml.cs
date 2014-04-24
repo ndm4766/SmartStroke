@@ -277,8 +277,15 @@ namespace SmartStroke
             // Start with a clean screen
             removeAllStrokes();
 
-            // Add a Textarea for time taken
+            // Determine the total time taken for the test from the file.
+            TimeSpan testTime = testReplay.getEndTime() - testReplay.getStartTime();
 
+            // Add a Textarea for time taken
+            TextBlock text = new TextBlock();
+            text.Margin = new Thickness(500, 75, 0, 0);
+            text.Text = "Total Time: " + testTime.Seconds + " Seconds";
+            text.FontSize = 20;
+            MyCanvas.Children.Add(text);
 
             // Add a Textarea for time taken between nodes
             #region paths
@@ -333,6 +340,10 @@ namespace SmartStroke
             MyCanvas.Children.Add(times);
 
             // Go through all nodes and plot times
+            var actions = testReplay.getTestActions();
+            var errors = testReplay.getErrors();
+
+
             #endregion
 
             // Add some buttons for swtiching from times to left-right analysis
