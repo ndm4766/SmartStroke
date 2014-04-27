@@ -53,14 +53,21 @@
 
             <Charting:Chart x:Name="ScatterChart" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="100,0,0,0" Width="1200" Height="500" Opacity="0">
 
-                <Charting:ScatterSeries Title="Patient Points" Margin="0" IndependentValuePath="Age" DependentValuePath="Time"  IsSelectionEnabled="True"/>
-                <Charting:LineSeries Title="Average Test Time" Margin="0" IndependentValuePath="Age" DependentValuePath="Time" IsSelectionEnabled="True"/>
-                <Charting:LineSeries Title="Median Test Time" Margin="0" IndependentValuePath="Age" DependentValuePath="Time" IsSelectionEnabled="True"/>
+                <Charting:ScatterSeries x:Name="points" Title="Patient Points" Margin="0" IndependentValuePath="Age" DependentValuePath="Time"  IsSelectionEnabled="True"/>
+                <Charting:LineSeries x:Name="avg" Title="Average Test Time" Margin="0" IndependentValuePath="Age" DependentValuePath="Time" IsSelectionEnabled="True"/>
+                <Charting:LineSeries x:Name="med" Title="Median Test Time" Margin="0" IndependentValuePath="Age" DependentValuePath="Time" IsSelectionEnabled="True"/>
 
             </Charting:Chart>
             <Charting:AxisLabel x:Name="ageAxis" DataContext="Age" HorizontalAlignment="Center" Height="100" Margin="636,0,630,10" VerticalAlignment="Bottom" Width="100" Opacity="0"/>
             <Charting:AxisLabel x:Name="timeAxis" DataContext="Time (seconds)" HorizontalAlignment="Left" Height="100" Margin="20,-70,0,0" VerticalAlignment="Center" Width="100" Opacity="0"/>
-            
+
+            <ComboBox x:Name="dataSelection" HorizontalAlignment="Left" Margin="1186,49,0,0" VerticalAlignment="Top" Width="170" SelectionChanged="refresh">
+                <x:String>Trails A Vertical</x:String>
+                <x:String>Trails B Vertical</x:String>
+                <x:String>Trails A Horizontal</x:String>
+                <x:String>Trails B Horizontal</x:String>
+            </ComboBox>
+
             <Button Content="Options" HorizontalAlignment="Left" Margin="1270,0,0,0" VerticalAlignment="Top" Width="89" Click="chartOptions">
                 <Button.Flyout>
                     <Flyout>
@@ -68,34 +75,31 @@
 
                             <TextBlock HorizontalAlignment="Left" Margin="60,0,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Time Range" VerticalAlignment="Top"/>
                             <TextBlock HorizontalAlignment="Left" Margin="176,25,0,0" TextWrapping="Wrap" Text="seconds" VerticalAlignment="Top"/>
+                            <ComboBox x:Name="minTimeRange" HorizontalAlignment="Left" Margin="4,17,0,0" VerticalAlignment="Top" Width="73" SelectionChanged="refresh"/>
+                            <ComboBox x:Name="maxTimeRange" HorizontalAlignment="Left" Margin="95,17,0,0" VerticalAlignment="Top" Width="73" SelectionChanged="refresh"/>
 
                             <TextBlock HorizontalAlignment="Left" Margin="60,55,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Age Range" VerticalAlignment="Top"/>
                             <TextBlock HorizontalAlignment="Left" Margin="175,80,0,0" Grid.Row="1" TextWrapping="Wrap" Text="years" VerticalAlignment="Top"/>
+                            <ComboBox x:Name="minAgeRange" HorizontalAlignment="Left" Margin="4,73,0,0" VerticalAlignment="Top" Width="73" SelectionChanged="refresh"/>
+                            <ComboBox x:Name="maxAgeRange" HorizontalAlignment="Left" Margin="95,73,0,0" VerticalAlignment="Top" Width="73" SelectionChanged="refresh"/>
 
-                            <TextBlock HorizontalAlignment="Left" Margin="50,110,0,0" TextWrapping="Wrap" Text="Education Range" VerticalAlignment="Top" Height="32"/>
-                            <TextBox HorizontalAlignment="Left" Margin="100,125,0,0" TextWrapping="Wrap" Text="Max" VerticalAlignment="Top" Width="70"/>
-                            <TextBlock HorizontalAlignment="Left" Margin="175,135,0,0" Grid.Row="1" TextWrapping="Wrap" Text="years" VerticalAlignment="Top"/>
+                            <TextBlock HorizontalAlignment="Left" Margin="60,115,0,0" TextWrapping="Wrap" Text="Education" VerticalAlignment="Top" Height="32"/>
+                            <CheckBox x:Name="highschoolCheckBox" Content="Highschool" HorizontalAlignment="Left" Margin="0,125,0,0" VerticalAlignment="Top" IsChecked="True" Checked="refresh" Unchecked="refresh"/>
+                            <CheckBox x:Name="associatesCheckBox" Content="Associates" HorizontalAlignment="Left" Margin="120,125,0,0" VerticalAlignment="Top" IsChecked="True" Checked="refresh" Unchecked="refresh"/>
+                            <CheckBox x:Name="bachelorsCheckBox" Content="Bachelors" HorizontalAlignment="Left" Margin="0,150,0,0" VerticalAlignment="Top" IsChecked="True" Checked="refresh" Unchecked="refresh"/>
+                            <CheckBox x:Name="mastersCheckBox" Content="Masters" HorizontalAlignment="Left" Margin="120,150,0,0" VerticalAlignment="Top" IsChecked="True" Checked="refresh" Unchecked="refresh"/>
+                            <CheckBox x:Name="PHDCheckBox" Content="PHD" HorizontalAlignment="Left" Margin="120,175,0,0" VerticalAlignment="Top" IsChecked="True" Checked="refresh" Unchecked="refresh"/>
 
-                            <CheckBox x:Name="maleCheckBox" Content="Male" HorizontalAlignment="Left" Margin="7,165,0,0" VerticalAlignment="Top"/>
-                            <CheckBox x:Name="femaleCheckBox" Content="Female" HorizontalAlignment="Left" Margin="7,190,0,0" VerticalAlignment="Top"/>
-                            <CheckBox x:Name="avgGraphCheckBox" Content="Graph Average Line" HorizontalAlignment="Left" Margin="7,215,0,0" VerticalAlignment="Top"/>
-                            <CheckBox x:Name="medGraphCheckBox" Content="Graph Median Line" HorizontalAlignment="Left" Margin="7,240,0,0" VerticalAlignment="Top"/>
-                            
-                            <ComboBox x:Name="minTimeRange" HorizontalAlignment="Left" Margin="4,17,0,0" VerticalAlignment="Top" Width="73" SelectionChanged="minTimeRange_SelectionChanged"/>
-                            <ComboBox x:Name="maxTimeRange" HorizontalAlignment="Left" Margin="95,18,0,0" VerticalAlignment="Top" Width="73" SelectionChanged="maxTimeRange_SelectionChanged"/>
-                            <ComboBox x:Name="minAgeRange" HorizontalAlignment="Left" Margin="4,73,0,0" VerticalAlignment="Top" Width="73" SelectionChanged="minAgeRange_SelectionChanged"/>
-                            <ComboBox x:Name="maxAgeRange" HorizontalAlignment="Left" Margin="95,73,0,0" VerticalAlignment="Top" Width="73" SelectionChanged="maxAgeRange_SelectionChanged"/>
+                            <CheckBox x:Name="maleCheckBox" Content="Male" HorizontalAlignment="Left" Margin="0,210,0,0" VerticalAlignment="Top" IsChecked="True" Checked="refresh" Unchecked="refresh"/>
+                            <CheckBox x:Name="femaleCheckBox" Content="Female" HorizontalAlignment="Left" Margin="120,210,0,0" VerticalAlignment="Top" IsChecked="True" Checked="refresh" Unchecked="refresh"/>
+
+                            <CheckBox x:Name="avgGraphCheckBox" Content="Graph Average Line" HorizontalAlignment="Left" Margin="0,245,0,0" VerticalAlignment="Top" IsChecked="True" Checked="avgGraphCheckBox_Checked" Unchecked="avgGraphCheckBox_Unchecked"/>
+                            <CheckBox x:Name="medGraphCheckBox" Content="Graph Median Line" HorizontalAlignment="Left" Margin="0,270,0,0" VerticalAlignment="Top" IsChecked="True" Checked="medGraphCheckBox_Checked" Unchecked="medGraphCheckBox_Unchecked"/>
 
                         </Grid>
                     </Flyout>
                 </Button.Flyout>
             </Button>
-            <ComboBox x:Name="dataSelection" HorizontalAlignment="Left" Margin="1186,49,0,0" VerticalAlignment="Top" Width="170" SelectionChanged="ComboBox_SelectionChanged">
-                <x:String>Trails A Vertical</x:String>
-                <x:String>Trails B Vertical</x:String>
-                <x:String>Trails A Horizontal</x:String>
-                <x:String>Trails B Horizontal</x:String>
-            </ComboBox>
         </Grid>
     </Grid>
 </Page>

@@ -9,7 +9,7 @@ using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data; 
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
@@ -84,6 +84,8 @@ namespace SmartStroke
             public int Age { get; set; }
             public double Time { get; set; }
             public string Test { get; set; }
+            public string Education { get; set; }
+            public string Gender { get; set; }
         }
 
         //Class for storing the minimal data for plotting a test
@@ -255,13 +257,15 @@ namespace SmartStroke
 
             for (int i = 0; i < allAgeGroups.Count; i++)
             {
-                try {
-                    output.Add(new PlotPoint {Age = ageStrings[i], Time = returnAverage(allAgeGroups[i])} );
-                } 
-                catch {
+                try
+                {
+                    output.Add(new PlotPoint { Age = ageStrings[i], Time = returnAverage(allAgeGroups[i]) });
+                }
+                catch
+                {
                     //do nothing
                 }
-                
+
             }
             return output;
         }
@@ -305,7 +309,7 @@ namespace SmartStroke
             {
                 try
                 {
-                    output.Add(new PlotPoint { Age = ageStrings[i], Time = returnMedian(allAgeGroups[i]) } );
+                    output.Add(new PlotPoint { Age = ageStrings[i], Time = returnMedian(allAgeGroups[i]) });
                 }
                 catch
                 {
@@ -313,7 +317,7 @@ namespace SmartStroke
                 }
             }
 
-                return output;
+            return output;
         }
 
         /// <summary>
@@ -449,74 +453,78 @@ namespace SmartStroke
                 //no passed data
             }
 
-                // Go through all the patients and display the complete data.
-                // Do not separate into different categories.
+            // Go through all the patients and display the complete data.
+            // Do not separate into different categories.
 
             foreach (string name in fileNames)
-            
+
             //for (int i = 0; i < patientList.Count; i++)
+            {
+                testReplay = new TestReplay();
+                // Find the file that corresponds with this patient name and load it
+                //foreach (string name in fileNames)
+
+                for (int i = 0; i < patientList.Count; i++)
                 {
-                    testReplay = new TestReplay();
-                    // Find the file that corresponds with this patient name and load it
-                    //foreach (string name in fileNames)
-                    
-                    for (int i = 0; i < patientList.Count; i++ )
+                    if (name.Contains(patientList[i].patientName))
                     {
-                        if (name.Contains(patientList[i].patientName))
+                        await testReplay.loadTestReplay(name);
+                        var actions = testReplay.getTestActions();
+                        if (actions.Count < 1) continue;
+
+                        DateTime start = actions[0].getStartTime();
+                        DateTime end = actions[actions.Count - 1].getEndTime();
+                        TimeSpan TimeDifference = end - start;
+
+                        //Get name of test
+                        string testName = name.Trim(new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' });
+                        int j = 0;
+                        for (; !Char.IsNumber(testName[j]); j++)
                         {
-                            await testReplay.loadTestReplay(name);
-                            var actions = testReplay.getTestActions();
-                            if (actions.Count < 1) continue;
-
-                            DateTime start = actions[0].getStartTime();
-                            DateTime end = actions[actions.Count - 1].getEndTime();
-                            TimeSpan TimeDifference = end - start;
-
-                            //Get name of test
-                            string testName = name.Trim(new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' });
-                            int j = 0;
-                            for (; !Char.IsNumber(testName[j]); j++)
-                            {
-                                //increase j
-                            }
-                            testName = testName.Substring(0, j);
-
-                            //Get education level
-
-                            //-------Open and read file----------------------------
-                            Windows.Storage.StorageFile myFile = await Windows.Storage.ApplicationData.Current.LocalFolder.GetFileAsync(name);
-                            //read
-                            String data = await Windows.Storage.FileIO.ReadTextAsync(myFile);
-                            //-----------------------------------------------------
-
-                            string educationLevel = "";
-                            for (int charSpot = 47; charSpot < data.Count(); charSpot++)
-                            {
-                                if (data[charSpot] != '\n')
-                                {
-                                    educationLevel = educationLevel + data[charSpot];
-                                }
-                                else
-                                {
-                                    break;
-                                }
-                            }
-
-                            string gender = data.Substring(43, 2);
-                            //43
-
-                            //Get performance time
-                            double seconds = TimeDifference.Minutes * 60 + TimeDifference.Seconds + TimeDifference.Milliseconds / 100;
-                            int tempAge = Convert.ToInt32(patientList[i].patientAge);
-
-                            allResults.Add(new Performance() { Age = tempAge, Time = seconds, Test = testName });
-
-                            break;
+                            //increase j
                         }
+                        testName = testName.Substring(0, j);
+
+                        //Get education level
+
+                        //-------Open and read file----------------------------
+                        Windows.Storage.StorageFile myFile = await Windows.Storage.ApplicationData.Current.LocalFolder.GetFileAsync(name);
+                        //read
+                        String data = await Windows.Storage.FileIO.ReadTextAsync(myFile);
+                        //-----------------------------------------------------
+
+                        string educationLevel = "";
+                        for (int charSpot = 46; charSpot < data.Count(); charSpot++)
+                        {
+                            if (data[charSpot] != '\n')
+                            {
+                                educationLevel = educationLevel + data[charSpot];
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+
+                        //gender is written at about 43rd character
+                        string gender = data.Substring(42, 3);
+
+                        //gender and education strings purged of dashes and spaces
+                        string cleanEducation = System.Text.RegularExpressions.Regex.Replace(educationLevel, @"\s|\-|'", "");
+                        string cleanGender = System.Text.RegularExpressions.Regex.Replace(gender, @"\s|\-|'", "");
+
+                        //Get performance time
+                        double seconds = TimeDifference.Minutes * 60 + TimeDifference.Seconds + TimeDifference.Milliseconds / 100;
+                        int tempAge = Convert.ToInt32(patientList[i].patientAge);
+
+                        allResults.Add(new Performance() { Age = tempAge, Time = seconds, Test = testName, Education = cleanEducation, Gender = cleanGender });
+
+                        break;
                     }
                 }
+            }
 
-            
+
             List<Performance> sortPatientAge = new List<Performance>(allResults);
             if (allResults.Count > 0)
             {
@@ -526,7 +534,7 @@ namespace SmartStroke
                 });
             }
 
-
+            //Sets the min and max ages and populates the combobox list
             int minAgeIndex = sortPatientAge[0].Age;
             while (minAgeIndex < sortPatientAge[sortPatientAge.Count - 1].Age)
             {
@@ -537,13 +545,7 @@ namespace SmartStroke
             minAgeRange.Items.Add(Convert.ToDouble(minAgeIndex));
             maxAgeRange.Items.Add(Convert.ToDouble(minAgeIndex));
 
-            /*
-            for (int i = sortPatientAge[0].Age; i < sortPatientAge[sortPatientAge.Count - 1].Age; i++)
-            {
-                minAgeRange.Items.Add(Convert.ToDouble(i));
-                maxAgeRange.Items.Add(Convert.ToDouble(i));
-            }*/
-            
+            //Sets the min and max times and populates the combobox list
             for (int i = Convert.ToInt32(Math.Floor(performanceListMin(sortPatientAge).Time)); i <= Convert.ToInt32(Math.Ceiling(performanceListMax(sortPatientAge).Time)); i++)
             {
                 minTimeRange.Items.Add(i);
@@ -615,7 +617,7 @@ namespace SmartStroke
             public string patientAge;
             public string patientSex;
             public string patientEducation;
-                
+
             public PatientPlot(string name, string birthday, string age, string sex, string education)
             {
                 patientName = name;
@@ -686,6 +688,90 @@ namespace SmartStroke
             popup.ShowAsync(new Point(0, 0));
         }
 
+        public bool isHighschool(Performance data)
+        {
+            if (data.Education == "HIGHSCHOOL")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool isAssociates(Performance data)
+        {
+            if (data.Education == "ASSOCIATES")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool isBachelors(Performance data)
+        {
+            if (data.Education == "BACHELORS")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool isMasters(Performance data)
+        {
+            if (data.Education == "MASTERS")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool isPHD(Performance data)
+        {
+            if (data.Education == "PHD")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool isMale(Performance data)
+        {
+            if (data.Gender == "M")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool isFemale(Performance data)
+        {
+            if (data.Gender == "F")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public List<Performance> filter(List<Performance> data)
         {
             List<Performance> output = new List<Performance>();
@@ -717,22 +803,58 @@ namespace SmartStroke
             output = data.Where(x => x.Age >= minAge && x.Age <= maxAge).ToList();
             output = output.Where(x => x.Time >= minTime && x.Time <= maxTime).ToList();
 
+            if (highschoolCheckBox.IsChecked == false)
+            {
+                output.RemoveAll(isHighschool);
+            }
+
+            if (associatesCheckBox.IsChecked == false)
+            {
+                output.RemoveAll(isAssociates);
+            }
+
+            if (bachelorsCheckBox.IsChecked == false)
+            {
+                output.RemoveAll(isBachelors);
+            }
+
+            if (mastersCheckBox.IsChecked == false)
+            {
+                output.RemoveAll(isMasters);
+            }
+
+            if (PHDCheckBox.IsChecked == false)
+            {
+                output.RemoveAll(isPHD);
+            }
+
+            if (maleCheckBox.IsChecked == false)
+            {
+                output.RemoveAll(isMale);
+            }
+
+            if (femaleCheckBox.IsChecked == false)
+            {
+                output.RemoveAll(isFemale);
+            }
+
             return output;
         }
 
         public void graphPoints()
         {
+
             chartChoice = dataSelection.SelectedIndex;
-            
+
             //Simply switches to the appropiate data structures to be graphed
             //based on the selection in the combo box
             switch (chartChoice)
             {
                 case 0:
                     List<Performance> filteredTrailsA = filter(TrailsA);
-            
+
                     List<PlotPoint> plotTrailsA = new List<PlotPoint>(generatePlotPoints(filteredTrailsA));
-                    List<PlotPoint> plotAvgTrailsAGroup = new List<PlotPoint>( averagize(filteredTrailsA));
+                    List<PlotPoint> plotAvgTrailsAGroup = new List<PlotPoint>(averagize(filteredTrailsA));
                     List<PlotPoint> plotMedTrailsAGroup = new List<PlotPoint>(medianize(filteredTrailsA));
 
                     (ScatterChart.Series[0] as ScatterSeries).ItemsSource = plotTrailsA;
@@ -741,21 +863,21 @@ namespace SmartStroke
                     break;
                 case 1:
                     List<Performance> filteredTrailsB = filter(TrailsB);
-            
+
                     List<PlotPoint> plotTrailsB = new List<PlotPoint>(generatePlotPoints(filteredTrailsB));
-                    List<PlotPoint> plotAvgTrailsBGroup = new List<PlotPoint>( averagize(filteredTrailsB) );
-                    List<PlotPoint> plotMedTrailsBGroup = new List<PlotPoint>( medianize(filteredTrailsB) );
-            
+                    List<PlotPoint> plotAvgTrailsBGroup = new List<PlotPoint>(averagize(filteredTrailsB));
+                    List<PlotPoint> plotMedTrailsBGroup = new List<PlotPoint>(medianize(filteredTrailsB));
+
                     (ScatterChart.Series[0] as ScatterSeries).ItemsSource = plotTrailsB;
                     (ScatterChart.Series[1] as LineSeries).ItemsSource = plotAvgTrailsBGroup;
                     (ScatterChart.Series[2] as LineSeries).ItemsSource = plotMedTrailsBGroup;
                     break;
                 case 2:
                     List<Performance> filteredTrailsA_H = filter(TrailsA_H);
-            
+
                     List<PlotPoint> plotTrailsA_H = new List<PlotPoint>(generatePlotPoints(filteredTrailsA_H));
-                    List<PlotPoint> plotAvgTrailsA_HGroup = new List<PlotPoint>(averagize(filteredTrailsA_H) );
-                    List<PlotPoint> plotMedTrailsA_HGroup = new List<PlotPoint>(medianize(filteredTrailsA_H) );
+                    List<PlotPoint> plotAvgTrailsA_HGroup = new List<PlotPoint>(averagize(filteredTrailsA_H));
+                    List<PlotPoint> plotMedTrailsA_HGroup = new List<PlotPoint>(medianize(filteredTrailsA_H));
 
                     (ScatterChart.Series[0] as ScatterSeries).ItemsSource = plotTrailsA_H;
                     (ScatterChart.Series[1] as LineSeries).ItemsSource = plotAvgTrailsA_HGroup;
@@ -765,8 +887,8 @@ namespace SmartStroke
                     List<Performance> filteredTrailsB_H = filter(TrailsB_H);
 
                     List<PlotPoint> plotTrailsB_H = new List<PlotPoint>(generatePlotPoints(filteredTrailsB_H));
-                    List<PlotPoint> plotAvgTrailsB_HGroup = new List<PlotPoint>(averagize(filteredTrailsB_H) );
-                    List<PlotPoint> plotMedTrailsB_HGroup = new List<PlotPoint>(medianize(filteredTrailsB_H) );
+                    List<PlotPoint> plotAvgTrailsB_HGroup = new List<PlotPoint>(averagize(filteredTrailsB_H));
+                    List<PlotPoint> plotMedTrailsB_HGroup = new List<PlotPoint>(medianize(filteredTrailsB_H));
 
                     (ScatterChart.Series[0] as ScatterSeries).ItemsSource = plotTrailsB_H;
                     (ScatterChart.Series[1] as LineSeries).ItemsSource = plotAvgTrailsB_HGroup;
@@ -776,32 +898,48 @@ namespace SmartStroke
                     //do nothing
                     break;
             }
+
         }
 
         //Function for handling the combo box that controls which type of test is graphed
-        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void refresh(object sender, RoutedEventArgs e)
         {
-            graphPoints();
+            try
+            {
+                if (progressNorm.IsActive == false)
+                {
+                    graphPoints();
+                }
+                else
+                {
+                    //do nothing
+                }
+            }
+            catch
+            {
+                //do 
+            }
+                     
         }
 
-        private void minTimeRange_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void avgGraphCheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            graphPoints();
+            //avg.Opacity = 100;
         }
 
-        private void maxTimeRange_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void avgGraphCheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
-            graphPoints();
+            //avg.Opacity = 0;
         }
 
-        private void minAgeRange_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void medGraphCheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            graphPoints();
+            //med.Opacity = 100;
         }
 
-        private void maxAgeRange_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void medGraphCheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
-            graphPoints();
+            //med.Opacity = 0;
         }
     }
 }
