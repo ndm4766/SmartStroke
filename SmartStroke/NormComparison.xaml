@@ -93,8 +93,8 @@
                             <CheckBox x:Name="maleCheckBox" Content="Male" HorizontalAlignment="Left" Margin="0,210,0,0" VerticalAlignment="Top" IsChecked="True" Checked="refresh" Unchecked="refresh"/>
                             <CheckBox x:Name="femaleCheckBox" Content="Female" HorizontalAlignment="Left" Margin="120,210,0,0" VerticalAlignment="Top" IsChecked="True" Checked="refresh" Unchecked="refresh"/>
 
-                            <CheckBox x:Name="avgGraphCheckBox" Content="Graph Average Line" HorizontalAlignment="Left" Margin="0,245,0,0" VerticalAlignment="Top" IsChecked="True" Checked="avgGraphCheckBox_Checked" Unchecked="avgGraphCheckBox_Unchecked"/>
-                            <CheckBox x:Name="medGraphCheckBox" Content="Graph Median Line" HorizontalAlignment="Left" Margin="0,270,0,0" VerticalAlignment="Top" IsChecked="True" Checked="medGraphCheckBox_Checked" Unchecked="medGraphCheckBox_Unchecked"/>
+                            <CheckBox x:Name="avgGraphCheckBox" Content="Graph Average Line" HorizontalAlignment="Left" Margin="0,245,0,0" VerticalAlignment="Top" Checked="avgGraphCheckBox_Checked" Unchecked="avgGraphCheckBox_Unchecked"/>
+                            <CheckBox x:Name="medGraphCheckBox" Content="Graph Median Line" HorizontalAlignment="Left" Margin="0,270,0,0" VerticalAlignment="Top" Checked="medGraphCheckBox_Checked" Unchecked="medGraphCheckBox_Unchecked"/>
 
                         </Grid>
                     </Flyout>

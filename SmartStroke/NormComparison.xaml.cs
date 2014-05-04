@@ -437,6 +437,8 @@ namespace SmartStroke
             return output;
         }
 
+        //public List<double> stdDev(List<>)
+
         private async void LoadChartContents()
         {
             await loadJson();
@@ -603,6 +605,10 @@ namespace SmartStroke
             ageAxis.Opacity = 100;
             timeAxis.Opacity = 100;
             progressNorm.IsActive = false;
+
+            //enables the display of median and mean at start
+            avgGraphCheckBox.IsChecked = true;
+            medGraphCheckBox.IsChecked = true;
 
             //Sets the Trails A vertical as the default test to be graphed
             dataSelection.SelectedIndex = 0;
@@ -917,29 +923,29 @@ namespace SmartStroke
             }
             catch
             {
-                //do 
+                //do nothing
             }
                      
         }
 
         private void avgGraphCheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            //avg.Opacity = 100;
+            (ScatterChart.Series[1] as LineSeries).Opacity = 100;
         }
 
         private void avgGraphCheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
-            //avg.Opacity = 0;
+            (ScatterChart.Series[1] as LineSeries).Opacity = 0;
         }
 
         private void medGraphCheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            //med.Opacity = 100;
+            (ScatterChart.Series[2] as LineSeries).Opacity = 100;
         }
 
         private void medGraphCheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
-            //med.Opacity = 0;
+            (ScatterChart.Series[2] as LineSeries).Opacity = 0;
         }
     }
 }
