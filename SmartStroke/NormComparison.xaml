@@ -56,6 +56,7 @@
                 <Charting:ScatterSeries x:Name="points" Title="Patient Points" Margin="0" IndependentValuePath="Age" DependentValuePath="Time"  IsSelectionEnabled="True"/>
                 <Charting:LineSeries x:Name="avg" Title="Average Test Time" Margin="0" IndependentValuePath="Age" DependentValuePath="Time" IsSelectionEnabled="True"/>
                 <Charting:LineSeries x:Name="med" Title="Median Test Time" Margin="0" IndependentValuePath="Age" DependentValuePath="Time" IsSelectionEnabled="True"/>
+                <Charting:ScatterSeries x:Name="selectedPoints" Title="Selected Points" Margin="0" IndependentValuePath="Age" DependentValuePath="Time" IsSelectionEnabled="True"/>
 
             </Charting:Chart>
             <Charting:AxisLabel x:Name="ageAxis" DataContext="Age" HorizontalAlignment="Center" Height="100" Margin="636,0,630,10" VerticalAlignment="Bottom" Width="100" Opacity="0"/>

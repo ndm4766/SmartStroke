@@ -36,17 +36,30 @@ namespace SmartStroke
         private TestReplay testReplay;
         int chartChoice = -1;
 
+        List<Performance> selected = new List<Performance>();
+
         //Initializes data structures for the different tests
         List<Performance> TrailsA = new List<Performance>();
         List<Performance> TrailsB = new List<Performance>();
         List<Performance> TrailsA_H = new List<Performance>();
         List<Performance> TrailsB_H = new List<Performance>();
 
+        //Initializes data structures for selected tests
+        List<Performance> selectedTrailsA = new List<Performance>();
+        List<Performance> selectedTrailsB = new List<Performance>();
+        List<Performance> selectedTrailsA_H = new List<Performance>();
+        List<Performance> selectedTrailsB_H = new List<Performance>();
+
         //Initializes the Lists that store the plot points for graphing
         List<PlotPoint> TrailsAGroup = new List<PlotPoint>();
         List<PlotPoint> TrailsBGroup = new List<PlotPoint>();
         List<PlotPoint> TrailsA_HGroup = new List<PlotPoint>();
         List<PlotPoint> TrailsB_HGroup = new List<PlotPoint>();
+
+        List<PlotPoint> selectedTrailsAPoints = new List<PlotPoint>();
+        List<PlotPoint> selectedTrailsBPoints = new List<PlotPoint>();
+        List<PlotPoint> selectedTrailsA_HPoints = new List<PlotPoint>();
+        List<PlotPoint> selectedTrailsB_HPoints = new List<PlotPoint>();
 
         List<PlotPoint> avgTrailsAGrouped = new List<PlotPoint>();
         List<PlotPoint> medTrailsAGrouped = new List<PlotPoint>();
@@ -437,17 +450,17 @@ namespace SmartStroke
             return output;
         }
 
-        //public List<double> stdDev(List<>)
-
         private async void LoadChartContents()
         {
             await loadJson();
 
             List<Performance> allResults = new List<Performance>();
 
+            List<string> currentPatients = new List<string>();
+
             try
             {
-                List<string> currentPatients = passer.currentPatient.getTestFilenames();
+                currentPatients = passer.currentPatient.getTestFilenames();
             }
 
             catch
@@ -459,13 +472,10 @@ namespace SmartStroke
             // Do not separate into different categories.
 
             foreach (string name in fileNames)
-
-            //for (int i = 0; i < patientList.Count; i++)
             {
                 testReplay = new TestReplay();
-                // Find the file that corresponds with this patient name and load it
-                //foreach (string name in fileNames)
 
+                // Find the file that corresponds with this patient name and load it
                 for (int i = 0; i < patientList.Count; i++)
                 {
                     if (name.Contains(patientList[i].patientName))
@@ -518,14 +528,18 @@ namespace SmartStroke
                         //Get performance time
                         double seconds = TimeDifference.Minutes * 60 + TimeDifference.Seconds + TimeDifference.Milliseconds / 100;
                         int tempAge = Convert.ToInt32(patientList[i].patientAge);
-
+                        
                         allResults.Add(new Performance() { Age = tempAge, Time = seconds, Test = testName, Education = cleanEducation, Gender = cleanGender });
+                        
+                        if (currentPatients.Contains(name))
+                        {
+                            selected.Add(new Performance() { Age = tempAge, Time = seconds, Test = testName, Education = cleanEducation, Gender = cleanGender });
+                        }
 
                         break;
                     }
                 }
             }
-
 
             List<Performance> sortPatientAge = new List<Performance>(allResults);
             if (allResults.Count > 0)
@@ -584,11 +598,40 @@ namespace SmartStroke
                 }
             }
 
+            for (int i = 0; i < selected.Count; i++)
+            {
+                switch (selected[i].Test)
+                {
+                    case "TRAILS_A":
+                        selectedTrailsA.Add(selected[i]);
+                        break;
+                    case "TRAILS_B":
+                        selectedTrailsB.Add(selected[i]);
+                        break;
+                    case "TRAILS_A_H":
+                        selectedTrailsA_H.Add(selected[i]);
+                        break;
+                    case "TRAILS_B_H":
+                        selectedTrailsB_H.Add(selected[i]);
+                        break;
+                    default:
+                        //error
+                        break;
+                }
+            }
+
             TrailsAGroup = generatePlotPoints(TrailsA);
             TrailsBGroup = generatePlotPoints(TrailsB);
             TrailsA_HGroup = generatePlotPoints(TrailsA_H);
             TrailsB_HGroup = generatePlotPoints(TrailsB_H);
 
+            /*
+            selectedTrailsAPoints = generatePlotPoints(selectedTrailsA);
+            selectedTrailsBPoints = generatePlotPoints(selectedTrailsB);
+            selectedTrailsA_HPoints = generatePlotPoints(selectedTrailsA_H);
+            selectedTrailsB_HPoints = generatePlotPoints(selectedTrailsB_H);
+             * */
+            
             //Stores the averages and medians of each test type
             avgTrailsAGrouped = averagize(TrailsA);
             avgTrailsA_HGrouped = averagize(TrailsA_H);
@@ -846,7 +889,7 @@ namespace SmartStroke
 
             return output;
         }
-
+        
         public void graphPoints()
         {
 
@@ -866,6 +909,23 @@ namespace SmartStroke
                     (ScatterChart.Series[0] as ScatterSeries).ItemsSource = plotTrailsA;
                     (ScatterChart.Series[1] as LineSeries).ItemsSource = plotAvgTrailsAGroup;
                     (ScatterChart.Series[2] as LineSeries).ItemsSource = plotMedTrailsAGroup;
+
+                    
+                    if (selected.Count > 0)
+                    {
+                        
+                        List<Performance> temp = new List<Performance>();
+                        for (int i = 0; i < selected.Count; i++)
+                        {
+                            if (selected[i].Test == "TRAILS_A")
+                            {
+                                temp.Add(selected[i]);
+                            }
+                        }
+                        List<PlotPoint> selectedPlots = new List<PlotPoint>(generatePlotPoints(temp));
+                        (ScatterChart.Series[3] as ScatterSeries).ItemsSource = selectedPlots;
+                        //(ScatterChart.Series[3] as ScatterSeries).
+                    }
                     break;
                 case 1:
                     List<Performance> filteredTrailsB = filter(TrailsB);
@@ -877,6 +937,21 @@ namespace SmartStroke
                     (ScatterChart.Series[0] as ScatterSeries).ItemsSource = plotTrailsB;
                     (ScatterChart.Series[1] as LineSeries).ItemsSource = plotAvgTrailsBGroup;
                     (ScatterChart.Series[2] as LineSeries).ItemsSource = plotMedTrailsBGroup;
+
+                    if (selected.Count > 0)
+                    {
+                        List<Performance> temp = new List<Performance>();
+                        for (int i = 0; i < selected.Count; i++)
+                        {
+                            if (selected[i].Test == "TRAILS_B")
+                            {
+                                temp.Add(selected[i]);
+                            }
+                        }
+                        List<PlotPoint> selectedPlots = new List<PlotPoint>(generatePlotPoints(temp));
+                        (ScatterChart.Series[3] as LineSeries).ItemsSource = selectedPlots;
+                    }
+
                     break;
                 case 2:
                     List<Performance> filteredTrailsA_H = filter(TrailsA_H);
@@ -888,6 +963,21 @@ namespace SmartStroke
                     (ScatterChart.Series[0] as ScatterSeries).ItemsSource = plotTrailsA_H;
                     (ScatterChart.Series[1] as LineSeries).ItemsSource = plotAvgTrailsA_HGroup;
                     (ScatterChart.Series[2] as LineSeries).ItemsSource = plotMedTrailsA_HGroup;
+
+                    if (selected.Count > 0)
+                    {
+                        List<Performance> temp = new List<Performance>();
+                        for (int i = 0; i < selected.Count; i++)
+                        {
+                            if (selected[i].Test == "TRAILS_A_H")
+                            {
+                                temp.Add(selected[i]);
+                            }
+                        }
+                        List<PlotPoint> selectedPlots = new List<PlotPoint>(generatePlotPoints(temp));
+                        (ScatterChart.Series[3] as ScatterSeries).ItemsSource = selectedPlots;
+                    }
+
                     break;
                 case 3:
                     List<Performance> filteredTrailsB_H = filter(TrailsB_H);
@@ -899,6 +989,21 @@ namespace SmartStroke
                     (ScatterChart.Series[0] as ScatterSeries).ItemsSource = plotTrailsB_H;
                     (ScatterChart.Series[1] as LineSeries).ItemsSource = plotAvgTrailsB_HGroup;
                     (ScatterChart.Series[2] as LineSeries).ItemsSource = plotMedTrailsB_HGroup;
+
+                    if (selected.Count > 0)
+                    {
+                        List<Performance> temp = new List<Performance>();
+                        for (int i = 0; i < selected.Count; i++)
+                        {
+                            if (selected[i].Test == "TRAILS_B_H")
+                            {
+                                temp.Add(selected[i]);
+                            }
+                        }
+                        List<PlotPoint> selectedPlots = new List<PlotPoint>(generatePlotPoints(temp));
+                        (ScatterChart.Series[3] as ScatterSeries).ItemsSource = selectedPlots;
+                    }
+
                     break;
                 default:
                     //do nothing
