@@ -1,7 +1,10 @@
 SmartStroke
 ===========
 
-....
+How To Use This Application
+===========================
+
+Upon opening the app, you are greeted by a log-in screen that allows you to either enter an existing username/password combination.  If using the app for the first time, select the choice to make a new account and create a username and password for yourself.  If you are a returning user, just enter your existing credentials.  From there you will be directed to a screen allowing you to either select an existing patient ID by searching it in the textbox shown, or creating a new user.  If you create a new patient, you will have to enter the person's gender, birthday, and education level.  Once a patient is selected, the main screen is displayed.  From here you can either take a new test (Trails version A or B, clock-drawing, or Rey-Osterrieth tests), or analyze a past test.  Each test, when selected, will display an instructions screen first with the test directions, and then allows the user to take the test.  
 
 
 Norm Comparison/Graphs
@@ -14,4 +17,4 @@ The Options button wil display a popup menu with several options on how to displ
 Time Elapsed View
 ==================
 
-In order to see how time elapsed while the patient took the test, select an already taken test from the replay menu. Then hit the time elapsed button.
+In order to see how the patient drew the test with color-based timing information, select a test date and time taken in the list and then tap "replay".  This will show the strokes of the test colored by a certain number of sectons per color (where a color is a section of the line).  The number of seconds each color represents is shown the bottom right corner.
