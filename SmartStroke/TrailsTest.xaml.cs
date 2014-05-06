@@ -409,6 +409,12 @@ namespace SmartStroke
                             testReplay.startTest();
                         }
 
+                        if (nextIndex < nodes.Count && nextIndex != currentIndex)
+                        {
+                            NodeCompletion n = new NodeCompletion(nodes[currentIndex], nodes[nextIndex]);
+                            testReplay.addNodeCompletion(n);
+                        }
+
                         // Set the node completed value equal to true and change the color to Green
                         nodes[nextIndex].setFillColor(new SolidColorBrush(Colors.Green));
                         nodes[nextIndex].setComplete(true);
@@ -419,6 +425,7 @@ namespace SmartStroke
 
                         //reset the list of lines so that if an error is made, the lines just drawn do not get erased
                         currentEdge.Clear();
+
 
                         //if the test is done, this code is executed
                         if (nextIndex >= nodes.Count)
@@ -461,8 +468,11 @@ namespace SmartStroke
                         //TODO: after an err, no lines should be able to be drawn if they are still holding down the pen (when you collide with ANOTHER node after the first wrong one, it continues drawing)
 
                         //set error colors
-                        if(incorrectNodes.Count < 1)
+                        if (incorrectNodes.Count < 1)
+                        {
                             nodes[indexHit].setFillColor(new SolidColorBrush(Colors.Red));
+                            testReplay.addError(new TestError(nodes[currentIndex], nodes[nextIndex],nodes[indexHit]));
+                        }
                         nodes[currentIndex].setFillColor(new SolidColorBrush(Colors.Yellow));
 
                         //reset the index back 1

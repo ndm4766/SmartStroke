@@ -174,6 +174,56 @@ namespace SmartStroke
         }
     }
 
+    // Class for all node completions. This will store times between all nodes
+    public sealed class NodeCompletion
+    {
+        private TrailNode begin;
+        private TrailNode end;
+        private DateTime time;
+
+        public NodeCompletion() { }
+
+        // All node completions involve a beginning TrailNode and an ending TrailNode (they should be one different).
+        // Send in the two TrailNode objects, and make the time now's DateTime.
+        public NodeCompletion(TrailNode bgn, TrailNode ed)
+        {
+            begin = bgn;
+            end = ed;
+            time = DateTime.Now;
+        }
+
+        // Return the node the user started from which the user drew
+        public TrailNode getBegin() { return begin; }
+
+        // Return the node the user ended from which the user drew
+        public TrailNode getEnd() { return end; }
+
+        // Return the start time when the user connected nodes
+        public DateTime getTime() { return time; }
+
+        public void setTime(DateTime t) { time = t; }
+        public void setBegin(TrailNode node) { begin = node; }
+        public void setEnd(TrailNode node) { end = node; }
+
+        // Convert the NodeCompletion object to a string to actually save it into
+        // The TestReplay Object
+
+        // Should be: 
+        // beginning node
+        // end node
+        // time of error
+        public string convertToString()
+        {
+            string convert = "";
+            convert += begin.convertToString();
+            convert += end.convertToString();
+            convert += time.ToString();
+            convert += "\n";
+
+            return convert;
+        }
+    }
+
     // Class for test errors in trailsA and trailsB test
     // Allow user to see which line was an error - from and to
     public sealed class TestError
@@ -214,17 +264,6 @@ namespace SmartStroke
         public void setExpected(TrailNode node) { expectedEnd = node; }
         public void setActual(TrailNode node) { actualEnd = node; }
 
-        // Overload the operator == on two TestErrors. Useful to count how
-        // many times the user made the same error in a test.
-        /*public static bool operator ==(TestError te1, TestError te2)
-        {
-            return te1.getBegin() == te2.getBegin();
-        }
-        public static bool operator !=(TestError te1, TestError te2)
-        {
-            return te1.getBegin() != te2.getBegin();
-        }*/
-
         // Convert the TestError object to a string to actually save it into
         // The TestReplay Object
 
@@ -257,6 +296,7 @@ namespace SmartStroke
         private DateTime endTime;
         private List<TestAction> testActions;
         private List<TestError> testErrors;
+        private List<NodeCompletion> testCompletions;
         private List<PatientNote> testNotes;
         private Stroke currentStroke;
         public TestReplay()
@@ -264,6 +304,7 @@ namespace SmartStroke
             testActions = new List<TestAction>();
             testNotes = new List<PatientNote>();
             testErrors = new List<TestError>();
+            testCompletions = new List<NodeCompletion>();
         }
         public TestReplay(Patient _patient, TEST_TYPE TestType)
         {
@@ -271,6 +312,7 @@ namespace SmartStroke
             testActions = new List<TestAction>();
             testNotes = new List<PatientNote>();
             testErrors = new List<TestError>();
+            testCompletions = new List<NodeCompletion>();
             testType = TestType;
         }
         public TEST_TYPE getTestType() { return testType; }
@@ -280,8 +322,14 @@ namespace SmartStroke
         public List<TestAction> getTestActions() { return testActions; }
         public List<PatientNote> getPatientNotes() { return testNotes; }
         public List<TestError> getErrors() { return testErrors; }
+        public List<NodeCompletion> getCompletions() { return testCompletions; }
         public void startTest() { startTime = DateTime.Now; }
         
+        public void addNodeCompletion(NodeCompletion n)
+        {
+            testCompletions.Add(n);
+        }
+
         // Add a TestError to the list of errors in the TestReplay class
         public void addError(TestError e)
         {
@@ -406,7 +454,14 @@ namespace SmartStroke
                     default: { break; }
                 }
             }
-            
+
+            // Write out all the Node Completions on trails a into the file
+            testReplayString += "=====TIMES=====\n";
+            for (int i = 0; i < testCompletions.Count; i++)
+            {
+                testReplayString += testCompletions[i].convertToString();
+            }
+
             // Write out all the test errors on trails a into the file
             testReplayString += "=====ERRORS====\n";
             for (int i = 0; i < testErrors.Count; i++ )
@@ -497,6 +552,10 @@ namespace SmartStroke
                         testActions.Add(parseLineStroke(lineWords));
                     else if (lineWords[0] == "DeleteStroke")
                         testActions.Add(parseLineDelPrevStroke(lineWords));
+                    else if (lineWords[0] == "=====TIMES=====")
+                    {
+                        inActionSection = false;
+                    }
                     else if (lineWords[0] == "=====ERRORS====")
                     {
                         inActionSection = false;
@@ -509,7 +568,41 @@ namespace SmartStroke
                     // Parse all the error objects. Each one should be three nodes plus a Date
                     List<string> lineWords = testStrings[i]
                         .Split('\t').Cast<string>().ToList<string>();
-                    
+
+                    // This is a node completion object.
+                    // Should be read as:
+                    //begin   node '\t' point
+                    //end     node '\t' point
+                    //DateTime
+
+                    if (lineWords.Count == 7)
+                    {
+                        NodeCompletion completion = new NodeCompletion();
+                        // Get each of the node strings and points from the line
+                        for (int j = 0; j < 6; j += 3)
+                        {
+                            string beginText = lineWords[j];
+                            Point point;
+                            point.X = Convert.ToDouble(lineWords[j + 1]);
+                            point.Y = Convert.ToDouble(lineWords[j + 2]);
+                            bool flip = true;
+                            if (testType.ToString().Contains("_H"))
+                                flip = false;
+                            TrailNode node = new TrailNode(beginText, point, flip);
+
+                            if (j == 0)
+                                completion.setBegin(node);
+                            if (j == 3)
+                                completion.setEnd(node);
+                        }
+
+                        DateTime date = new DateTime();
+                        date = Convert.ToDateTime(lineWords[6]);
+                        completion.setTime(date);
+
+                        testCompletions.Add(completion);
+                    }
+
                     // This is an error object.
                     // Should be read as:
                     //begin   node '\t' point
@@ -517,7 +610,7 @@ namespace SmartStroke
                     //act end node '\t' point
                     //DateTime
 
-                    if(lineWords.Count == 10)
+                    else if(lineWords.Count == 10)
                     {
                         TestError error = new TestError();
                         // Get each of the node strings and points from the line
