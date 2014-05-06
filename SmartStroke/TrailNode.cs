@@ -103,6 +103,9 @@ namespace SmartStroke
         // Return the size to use for buffer zone
         public int getNodeSize() { return size/2; }
 
+        // Return what the TrailNode displays as a string
+        public string getNodeText() { if (number == 0) return letter.ToString(); return number.ToString(); }
+
         // Create the Ellipse, the TextBox, and display it on the Canvas.
         private void createShapes(string display, Point p, Canvas c)
         {

@@ -284,11 +284,29 @@ namespace SmartStroke
             text.FontSize = 20;
             MyCanvas.Children.Add(text);
         }
+
+        // Place a Textarea on the screen which will display the number of errors on the test.
+        private void createErrors()
+        {
+            // Determine the errors for the test from the file.
+            List<TestError> errors = testReplay.getErrors();
+
+            // Add a Textarea for errors
+            TextBlock text = new TextBlock();
+            text.Margin = new Thickness(550, 50, 0, 0);
+            text.Text = "Total Errors: " + errors.Count;
+            text.FontSize = 20;
+            MyCanvas.Children.Add(text);
+        }
+
         // Display statistics for the test such as test time, errors, left-right analysis
         private void viewStatistics()
         {
             // Grab all node completions
             List<NodeCompletion> completions = testReplay.getCompletions();
+
+            // Grab all test errors
+            List<TestError> errors = testReplay.getErrors();
 
             // If completions do not exist for this file, return right away.
             // Otherwise it will crash
@@ -301,6 +319,7 @@ namespace SmartStroke
             removeAllStrokes();
 
             createTime();
+            createErrors();
 
             // Add a Textarea for time taken between nodes
             #region paths
@@ -365,7 +384,26 @@ namespace SmartStroke
             MyCanvas.Children.Add(nodes);
             #endregion
 
-            // Add some buttons for swtiching from times to left-right analysis
+            // Add a Textarea for the test errors
+            #region errors
+            ListBox ers = new ListBox();
+            ers.Margin = new Thickness(750, 100, 0, 0);
+            ers.Height = 575;
+            ers.Width = 300;
+            ers.FontSize = 17;
+
+            TextBlock errTxt = new TextBlock();
+            errTxt.Margin = new Thickness(750, 75, 0, 0);
+            errTxt.FontSize = 17;
+            errTxt.Text = "Errors";
+
+            for (int i = 0; i < errors.Count; i++ )
+            {
+                ers.Items.Add(errors[i].getBegin().getNodeText() + "      To     " + errors[i].getActualEnd().getNodeText());
+            }
+            MyCanvas.Children.Add(errTxt);
+            MyCanvas.Children.Add(ers);
+            #endregion
         }
 
         private void viewColorTimeMode()
