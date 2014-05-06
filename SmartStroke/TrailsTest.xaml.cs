@@ -409,11 +409,8 @@ namespace SmartStroke
                             testReplay.startTest();
                         }
 
-                        if (nextIndex < nodes.Count && nextIndex != currentIndex)
-                        {
-                            NodeCompletion n = new NodeCompletion(nodes[currentIndex], nodes[nextIndex]);
-                            testReplay.addNodeCompletion(n);
-                        }
+                        NodeCompletion n = new NodeCompletion(nodes[currentIndex], nodes[nextIndex]);
+                        testReplay.addNodeCompletion(n);
 
                         // Set the node completed value equal to true and change the color to Green
                         nodes[nextIndex].setFillColor(new SolidColorBrush(Colors.Green));
@@ -459,14 +456,6 @@ namespace SmartStroke
                         // incorrect node hit to red to notify the user this is not correct.
                     else if ((indexHit >= 0) && indexHit > currentIndex)
                     {
-                        // If the user ran over a node that was already completed, ignore executing
-                            // this code
-                        //if (!nodes[indexHit].getCompleted() && nodes[indexHit].getEllipse().Fill != null)
-                        //{
-
-                        //TODO: need to take out the successive red nodes(only the first err should be red)
-                        //TODO: after an err, no lines should be able to be drawn if they are still holding down the pen (when you collide with ANOTHER node after the first wrong one, it continues drawing)
-
                         //set error colors
                         if (incorrectNodes.Count < 1)
                         {
@@ -491,7 +480,6 @@ namespace SmartStroke
                         }
                         testReplay.endStroke();
                         testReplay.deleteStroke(testReplay.getTestActions().Count-1);
-                        //}
                     }
                     
                         Line line = new Line()

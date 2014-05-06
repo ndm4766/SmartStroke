@@ -271,28 +271,44 @@ namespace SmartStroke
             MyCanvas.Children.Clear();
         }
 
-        // Display statistics for the test such as test time, errors, left-right analysis
-        private void viewStatistics()
+        // Place a Textarea on the screen which will display the total time taken for the test.
+        private void createTime()
         {
-            // Start with a clean screen
-            removeAllStrokes();
-
             // Determine the total time taken for the test from the file.
             TimeSpan testTime = testReplay.getEndTime() - testReplay.getStartTime();
 
             // Add a Textarea for time taken
             TextBlock text = new TextBlock();
-            text.Margin = new Thickness(500, 75, 0, 0);
+            text.Margin = new Thickness(550, 25, 0, 0);
             text.Text = "Total Time: " + testTime.Seconds + " Seconds";
             text.FontSize = 20;
             MyCanvas.Children.Add(text);
+        }
+        // Display statistics for the test such as test time, errors, left-right analysis
+        private void viewStatistics()
+        {
+            // Grab all node completions
+            List<NodeCompletion> completions = testReplay.getCompletions();
+
+            // If completions do not exist for this file, return right away.
+            // Otherwise it will crash
+            if(completions.Count < 25)
+            {
+                return;
+            }
+
+            // Start with a clean screen
+            removeAllStrokes();
+
+            createTime();
 
             // Add a Textarea for time taken between nodes
             #region paths
             ListBox nodes = new ListBox();
             nodes.Margin = new Thickness(400, 100, 0,0);
             nodes.Height = 575;
-            nodes.Width = 150;
+            nodes.Width = 300;
+            nodes.FontSize = 17;
 
             if (passer.trailsTestVersion == 'A')
             {
@@ -302,7 +318,16 @@ namespace SmartStroke
                     s += i.ToString();
                     s += "   ->   ";
                     s += (i+1).ToString();
-                    s += "\n";
+                    s += "   =   ";
+                    
+                    
+                    // Calculate how much time between each completion
+                    DateTime end = completions[i].getTime();
+                    DateTime begin = completions[i - 1].getTime();
+                    TimeSpan span = end-begin;
+                    Double time =  (span.Milliseconds / 100.0) + span.Seconds;
+                    s += time.ToString();
+                    s += "   seconds";
                     nodes.Items.Add(s);
                 }
             }
@@ -312,38 +337,32 @@ namespace SmartStroke
                 char let = 'A';
                 for (int i = 1; i < 25; i++)
                 {
+                    DateTime end = completions[i].getTime();
+                    DateTime begin = completions[i - 1].getTime();
+                    TimeSpan span = end - begin;
                     if(i % 2 == 1)
                     {
                         string s = num.ToString() + "   ->   " + ((char)(let)).ToString();
+                        Double time = (span.Milliseconds / 100.0) + span.Seconds;
+                        s += "   =   ";
+                        s += time.ToString();
+                        s += "   seconds";
                         nodes.Items.Add(s);
                         num += 1;
                     }
                     else
                     {
                         string s = let.ToString() + "   ->   " + (num).ToString();
+                        Double time = (span.Milliseconds / 100.0) + span.Seconds;
+                        s += "   =   ";
+                        s += time.ToString();
+                        s += "   seconds";
                         nodes.Items.Add(s);
                         let = (char)(1+let);
                     }
                 }
             }
-            nodes.FontSize = 17;
             MyCanvas.Children.Add(nodes);
-            #endregion
-
-            // Add a Textarea for actual times
-            #region times
-            ListBox times = new ListBox();
-            times.Margin = new Thickness(600, 100, 0, 0);
-            times.Height = 575;
-            times.Width = 150;
-            times.FontSize = 17;
-            MyCanvas.Children.Add(times);
-
-            // Go through all nodes and plot times
-            var actions = testReplay.getTestActions();
-            var errors = testReplay.getErrors();
-
-
             #endregion
 
             // Add some buttons for swtiching from times to left-right analysis
@@ -352,6 +371,8 @@ namespace SmartStroke
         private void viewColorTimeMode()
         {
             removeAllStrokes();
+
+            createTime();
 
             populateNodes(passer.trailsTestVersion, nodes);
             
