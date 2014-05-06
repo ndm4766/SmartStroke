@@ -20,7 +20,7 @@
         <Grid Name="optionsGrid" Grid.Column="1" >
             <Viewbox>
                 <Grid>
-                    <ListBox Name="testDatesBox" HorizontalAlignment="Left" FontSize="15" BorderThickness="2" BorderBrush="Black" ScrollViewer.VerticalScrollMode="Enabled" Height="271" Margin="10,215,0,0" VerticalAlignment="Top" Width="180" SelectionChanged="testSelected" />
+                    <ComboBox Name="testDatesBox" HorizontalAlignment="Left" FontSize="15" BorderThickness="2" BorderBrush="Black" ScrollViewer.VerticalScrollMode="Enabled" Height="61" Margin="10,215,0,0" VerticalAlignment="Top" Width="180" SelectionChanged="testSelected" />
                     <Button x:Name="timeElapsedButton" Content="Time Elapsed" Margin="24,30,0,673" Width="150" Height="65" Visibility="Visible" Click="displayTimeElapsed" FontSize="17" FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF"  />
                     <TextBlock Name="timeIntervalBlock" HorizontalAlignment="Left" Margin="10,522,0,0" TextWrapping="Wrap" Text=""  FontSize="30" FontFamily="Segoe UI Light" Foreground="#606060" VerticalAlignment="Top" Height="207" Width="170"/>
                     <Button x:Name="statistics" Content="Test Statistics" Margin="24,105,0,598" Width="150" Height="65" Visibility="Visible" Click="displayStatistics" FontSize="17" FontFamily="Segoe UI Light" Background="#203864" Foreground="#FFFFFF"  />
