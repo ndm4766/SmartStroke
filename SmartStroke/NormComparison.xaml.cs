@@ -390,10 +390,12 @@ namespace SmartStroke
 
         Performance performanceListMax(List<Performance> data)
         {
-            Performance current = data[0];
+            Performance current = new Performance() { Age = -1, Education = "ERROR", Test = "ERROR", Time = -1.0 };
 
             try
             {
+                current = data[0];
+
                 for (int i = 1; i < data.Count; i++)
                 {
                     if (data[i].Time > current.Time)
@@ -415,10 +417,13 @@ namespace SmartStroke
 
         Performance performanceListMin(List<Performance> data)
         {
-            Performance current = data[0];
 
-            try
-            {
+            Performance current = new Performance() { Age = -1, Education = "ERROR", Test = "ERROR", Time = -1.0 };
+
+            try {
+
+                current = data[0];
+
                 for (int i = 1; i < data.Count; i++)
                 {
                     if (data[i].Time < current.Time)
@@ -471,190 +476,203 @@ namespace SmartStroke
             // Go through all the patients and display the complete data.
             // Do not separate into different categories.
 
-            foreach (string name in fileNames)
+            if (fileNames.Count > 0)
             {
-                testReplay = new TestReplay();
 
-                // Find the file that corresponds with this patient name and load it
-                for (int i = 0; i < patientList.Count; i++)
+
+                foreach (string name in fileNames)
                 {
-                    if (name.Contains(patientList[i].patientName))
+                    testReplay = new TestReplay();
+
+                    // Find the file that corresponds with this patient name and load it
+                    for (int i = 0; i < patientList.Count; i++)
                     {
-                        await testReplay.loadTestReplay(name);
-                        var actions = testReplay.getTestActions();
-                        if (actions.Count < 1) continue;
-
-                        DateTime start = actions[0].getStartTime();
-                        DateTime end = actions[actions.Count - 1].getEndTime();
-                        TimeSpan TimeDifference = end - start;
-
-                        //Get name of test
-                        string testName = name.Trim(new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' });
-                        int j = 0;
-                        for (; !Char.IsNumber(testName[j]); j++)
+                        if (name.Contains(patientList[i].patientName))
                         {
-                            //increase j
-                        }
-                        testName = testName.Substring(0, j);
+                            await testReplay.loadTestReplay(name);
+                            var actions = testReplay.getTestActions();
+                            if (actions.Count < 1) continue;
 
-                        //Get education level
+                            DateTime start = actions[0].getStartTime();
+                            DateTime end = actions[actions.Count - 1].getEndTime();
+                            TimeSpan TimeDifference = end - start;
 
-                        //-------Open and read file----------------------------
-                        Windows.Storage.StorageFile myFile = await Windows.Storage.ApplicationData.Current.LocalFolder.GetFileAsync(name);
-                        //read
-                        String data = await Windows.Storage.FileIO.ReadTextAsync(myFile);
-                        //-----------------------------------------------------
-
-                        string educationLevel = "";
-                        for (int charSpot = 46; charSpot < data.Count(); charSpot++)
-                        {
-                            if (data[charSpot] != '\n')
+                            //Get name of test
+                            string testName = name.Trim(new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' });
+                            int j = 0;
+                            for (; !Char.IsNumber(testName[j]); j++)
                             {
-                                educationLevel = educationLevel + data[charSpot];
+                                //increase j
                             }
-                            else
+                            testName = testName.Substring(0, j);
+
+                            //Get education level
+
+                            //-------Open and read file----------------------------
+                            Windows.Storage.StorageFile myFile = await Windows.Storage.ApplicationData.Current.LocalFolder.GetFileAsync(name);
+                            //read
+                            String data = await Windows.Storage.FileIO.ReadTextAsync(myFile);
+                            //-----------------------------------------------------
+
+                            string educationLevel = "";
+                            for (int charSpot = 46; charSpot < data.Count(); charSpot++)
                             {
-                                break;
+                                if (data[charSpot] != '\n')
+                                {
+                                    educationLevel = educationLevel + data[charSpot];
+                                }
+                                else
+                                {
+                                    break;
+                                }
                             }
+
+                            //gender is written at about 43rd character
+                            string gender = data.Substring(42, 3);
+
+                            //gender and education strings purged of dashes and spaces
+                            string cleanEducation = System.Text.RegularExpressions.Regex.Replace(educationLevel, @"\s|\-|'", "");
+                            string cleanGender = System.Text.RegularExpressions.Regex.Replace(gender, @"\s|\-|'", "");
+
+                            //Get performance time
+                            double seconds = TimeDifference.Minutes * 60 + TimeDifference.Seconds + TimeDifference.Milliseconds / 100;
+                            int tempAge = Convert.ToInt32(patientList[i].patientAge);
+
+                            allResults.Add(new Performance() { Age = tempAge, Time = seconds, Test = testName, Education = cleanEducation, Gender = cleanGender });
+
+                            if (currentPatients.Contains(name))
+                            {
+                                selected.Add(new Performance() { Age = tempAge, Time = seconds, Test = testName, Education = cleanEducation, Gender = cleanGender });
+                            }
+
+                            break;
                         }
-
-                        //gender is written at about 43rd character
-                        string gender = data.Substring(42, 3);
-
-                        //gender and education strings purged of dashes and spaces
-                        string cleanEducation = System.Text.RegularExpressions.Regex.Replace(educationLevel, @"\s|\-|'", "");
-                        string cleanGender = System.Text.RegularExpressions.Regex.Replace(gender, @"\s|\-|'", "");
-
-                        //Get performance time
-                        double seconds = TimeDifference.Minutes * 60 + TimeDifference.Seconds + TimeDifference.Milliseconds / 100;
-                        int tempAge = Convert.ToInt32(patientList[i].patientAge);
-                        
-                        allResults.Add(new Performance() { Age = tempAge, Time = seconds, Test = testName, Education = cleanEducation, Gender = cleanGender });
-                        
-                        if (currentPatients.Contains(name))
-                        {
-                            selected.Add(new Performance() { Age = tempAge, Time = seconds, Test = testName, Education = cleanEducation, Gender = cleanGender });
-                        }
-
-                        break;
                     }
                 }
-            }
 
-            List<Performance> sortPatientAge = new List<Performance>(allResults);
-            if (allResults.Count > 0)
-            {
-                sortPatientAge.Sort(delegate(Performance arg1, Performance arg2)
+                List<Performance> sortPatientAge = new List<Performance>(allResults);
+                if (allResults.Count > 0)
                 {
-                    return arg1.Age.CompareTo(arg2.Age);
-                });
-            }
-
-            //Sets the min and max ages and populates the combobox list
-            int minAgeIndex = sortPatientAge[0].Age;
-            while (minAgeIndex < sortPatientAge[sortPatientAge.Count - 1].Age)
-            {
-                minAgeRange.Items.Add(Convert.ToDouble(minAgeIndex));
-                maxAgeRange.Items.Add(Convert.ToDouble(minAgeIndex));
-                minAgeIndex++;
-            }
-            minAgeRange.Items.Add(Convert.ToDouble(minAgeIndex));
-            maxAgeRange.Items.Add(Convert.ToDouble(minAgeIndex));
-
-            //Sets the min and max times and populates the combobox list
-            for (int i = Convert.ToInt32(Math.Floor(performanceListMin(sortPatientAge).Time)); i <= Convert.ToInt32(Math.Ceiling(performanceListMax(sortPatientAge).Time)); i++)
-            {
-                minTimeRange.Items.Add(i);
-                maxTimeRange.Items.Add(i);
-            }
-
-            minAgeRange.SelectedIndex = 0;
-            maxAgeRange.SelectedIndex = (maxAgeRange.Items.Count - 1);
-
-            minTimeRange.SelectedIndex = 0;
-            maxTimeRange.SelectedIndex = (maxTimeRange.Items.Count - 1);
-
-            //Adds each performance point to the appropiate data structure that is belongs
-            //to based on the type of test 
-            for (int i = 0; i < sortPatientAge.Count; i++)
-            {
-                switch (sortPatientAge[i].Test)
-                {
-                    case "TRAILS_A":
-                        TrailsA.Add(sortPatientAge[i]);
-                        break;
-                    case "TRAILS_B":
-                        TrailsB.Add(sortPatientAge[i]);
-                        break;
-                    case "TRAILS_A_H":
-                        TrailsA_H.Add(sortPatientAge[i]);
-                        break;
-                    case "TRAILS_B_H":
-                        TrailsB_H.Add(sortPatientAge[i]);
-                        break;
-                    default:
-                        //error
-                        break;
+                    sortPatientAge.Sort(delegate(Performance arg1, Performance arg2)
+                    {
+                        return arg1.Age.CompareTo(arg2.Age);
+                    });
                 }
-            }
 
-            for (int i = 0; i < selected.Count; i++)
-            {
-                switch (selected[i].Test)
+                int minAgeIndex = 0;
+
+                //Sets the min and max ages and populates the combobox list
+                try
                 {
-                    case "TRAILS_A":
-                        selectedTrailsA.Add(selected[i]);
-                        break;
-                    case "TRAILS_B":
-                        selectedTrailsB.Add(selected[i]);
-                        break;
-                    case "TRAILS_A_H":
-                        selectedTrailsA_H.Add(selected[i]);
-                        break;
-                    case "TRAILS_B_H":
-                        selectedTrailsB_H.Add(selected[i]);
-                        break;
-                    default:
-                        //error
-                        break;
+                    minAgeIndex = sortPatientAge[0].Age;
+                    while (minAgeIndex < sortPatientAge[sortPatientAge.Count - 1].Age)
+                    {
+                        minAgeRange.Items.Add(Convert.ToDouble(minAgeIndex));
+                        maxAgeRange.Items.Add(Convert.ToDouble(minAgeIndex));
+                        minAgeIndex++;
+                    }
+                    minAgeRange.Items.Add(Convert.ToDouble(minAgeIndex));
+                    maxAgeRange.Items.Add(Convert.ToDouble(minAgeIndex));
                 }
+                catch
+                {
+                    //do nothing
+                }
+                //Sets the min and max times and populates the combobox list
+                for (int i = Convert.ToInt32(Math.Floor(performanceListMin(sortPatientAge).Time)); i <= Convert.ToInt32(Math.Ceiling(performanceListMax(sortPatientAge).Time)); i++)
+                {
+                    minTimeRange.Items.Add(i);
+                    maxTimeRange.Items.Add(i);
+                }
+
+                minAgeRange.SelectedIndex = 0;
+                maxAgeRange.SelectedIndex = (maxAgeRange.Items.Count - 1);
+
+                minTimeRange.SelectedIndex = 0;
+                maxTimeRange.SelectedIndex = (maxTimeRange.Items.Count - 1);
+
+                //Adds each performance point to the appropiate data structure that is belongs
+                //to based on the type of test 
+                for (int i = 0; i < sortPatientAge.Count; i++)
+                {
+                    switch (sortPatientAge[i].Test)
+                    {
+                        case "TRAILS_A":
+                            TrailsA.Add(sortPatientAge[i]);
+                            break;
+                        case "TRAILS_B":
+                            TrailsB.Add(sortPatientAge[i]);
+                            break;
+                        case "TRAILS_A_H":
+                            TrailsA_H.Add(sortPatientAge[i]);
+                            break;
+                        case "TRAILS_B_H":
+                            TrailsB_H.Add(sortPatientAge[i]);
+                            break;
+                        default:
+                            //error
+                            break;
+                    }
+                }
+
+                for (int i = 0; i < selected.Count; i++)
+                {
+                    switch (selected[i].Test)
+                    {
+                        case "TRAILS_A":
+                            selectedTrailsA.Add(selected[i]);
+                            break;
+                        case "TRAILS_B":
+                            selectedTrailsB.Add(selected[i]);
+                            break;
+                        case "TRAILS_A_H":
+                            selectedTrailsA_H.Add(selected[i]);
+                            break;
+                        case "TRAILS_B_H":
+                            selectedTrailsB_H.Add(selected[i]);
+                            break;
+                        default:
+                            //error
+                            break;
+                    }
+                }
+
+                TrailsAGroup = generatePlotPoints(TrailsA);
+                TrailsBGroup = generatePlotPoints(TrailsB);
+                TrailsA_HGroup = generatePlotPoints(TrailsA_H);
+                TrailsB_HGroup = generatePlotPoints(TrailsB_H);
+
+                //Stores the averages and medians of each test type
+                avgTrailsAGrouped = averagize(TrailsA);
+                avgTrailsA_HGrouped = averagize(TrailsA_H);
+                avgTrailsBGrouped = averagize(TrailsB);
+                avgTrailsB_HGrouped = averagize(TrailsB_H);
+
+                medTrailsAGrouped = medianize(TrailsA);
+                medTrailsA_HGrouped = medianize(TrailsA_H);
+                medTrailsBGrouped = medianize(TrailsB);
+                medTrailsB_HGrouped = medianize(TrailsB_H);
+
+                //Reveals the chart after the data is loaded and calculated
+                ScatterChart.Opacity = 100;
+                ageAxis.Opacity = 100;
+                timeAxis.Opacity = 100;
+                progressNorm.IsActive = false;
+
+                //enables the display of median and mean at start
+                avgGraphCheckBox.IsChecked = true;
+                medGraphCheckBox.IsChecked = true;
+
+                //Sets the Trails A vertical as the default test to be graphed
+                dataSelection.SelectedIndex = 0;
+
             }
-
-            TrailsAGroup = generatePlotPoints(TrailsA);
-            TrailsBGroup = generatePlotPoints(TrailsB);
-            TrailsA_HGroup = generatePlotPoints(TrailsA_H);
-            TrailsB_HGroup = generatePlotPoints(TrailsB_H);
-
-            /*
-            selectedTrailsAPoints = generatePlotPoints(selectedTrailsA);
-            selectedTrailsBPoints = generatePlotPoints(selectedTrailsB);
-            selectedTrailsA_HPoints = generatePlotPoints(selectedTrailsA_H);
-            selectedTrailsB_HPoints = generatePlotPoints(selectedTrailsB_H);
-             * */
-            
-            //Stores the averages and medians of each test type
-            avgTrailsAGrouped = averagize(TrailsA);
-            avgTrailsA_HGrouped = averagize(TrailsA_H);
-            avgTrailsBGrouped = averagize(TrailsB);
-            avgTrailsB_HGrouped = averagize(TrailsB_H);
-
-            medTrailsAGrouped = medianize(TrailsA);
-            medTrailsA_HGrouped = medianize(TrailsA_H);
-            medTrailsBGrouped = medianize(TrailsB);
-            medTrailsB_HGrouped = medianize(TrailsB_H);
-
-            //Reveals the chart after the data is loaded and calculated
-            ScatterChart.Opacity = 100;
-            ageAxis.Opacity = 100;
-            timeAxis.Opacity = 100;
-            progressNorm.IsActive = false;
-
-            //enables the display of median and mean at start
-            avgGraphCheckBox.IsChecked = true;
-            medGraphCheckBox.IsChecked = true;
-
-            //Sets the Trails A vertical as the default test to be graphed
-            dataSelection.SelectedIndex = 0;
+            else
+            {
+                //no data
+                progressNorm.IsActive = false;
+                noData.Opacity = 100;
+            }
         }
 
         //Older class that was used for plotting patient info
@@ -725,7 +743,7 @@ namespace SmartStroke
             catch
             {
                 //json load failed
-                this.Frame.Navigate(typeof(MainPage));
+                //stay on page, but show No Saved Test Times
             }
         }
 

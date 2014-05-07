@@ -50,6 +50,8 @@
         <Grid Grid.Row="1">
 
             <ProgressRing x:Name="progressNorm" IsActive ="True" HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Center" RenderTransformOrigin="-2.4,-0.4" Height="128" Width="128"/>
+            
+            <TextBlock x:Name="noData" Text="No Saved Test Times" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="72" Opacity="0"/>
 
             <Charting:Chart x:Name="ScatterChart" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="100,0,0,0" Width="1200" Height="500" Opacity="0">
 
