@@ -1,6 +1,20 @@
 SmartStroke
 ===========
 
+Installing This Application
+==========================
+
+You have two different options for installing this application:
+
+1) The applicaion resides in the SmartStroke.sln file (this is a Visual Studio 2013 solution file). To open our application and use it, you must have Windows 8.1 and Microsoft Visual Studio 2013 on your computer. 
+To use, you must download this solution file and open it. If successful, Visual Studio will launch and the solution will be loaded. If you are running an incorrect version of Visual Studio (such as 2012), you may receive an error such as a failed 'Migration.' The csproj file in the SmartStroke.sln will not be able to migrate successfully to Visual Studio 2012 (which is a downgrade).
+
+2) You can download the file Installer.zip file at the file location:
+
+https://github.com/tracyhammond/mediCS/blob/master/SmartStroke/Installer.zip
+
+Once extracted, you will find a file called Add-AppDevPackage.ps1 in the SmartStroke_1.1.0.2_AnyCPU_Test folder. Right click on this file and choose 'Run with Powershell.' Follow the onscreen instructions to allow it to automatically run the app installer (you need administrator access). This should install the SmartStrokes application as a tile on the metro screen of Windows 8.1.
+
 How To Use This Application
 ===========================
 
@@ -18,3 +32,4 @@ Time Elapsed View
 ==================
 
 In order to see how the patient drew the test with color-based timing information, select a test date and time taken in the list and then tap "replay".  This will show the strokes of the test colored by a certain number of sectons per color (where a color is a section of the line).  The number of seconds each color represents is shown the bottom right corner.
+
